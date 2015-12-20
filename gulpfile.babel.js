@@ -3,6 +3,7 @@
 import env   from './env.json';
 
 import gulp  from 'gulp';
+import path  from 'path';
 import ts    from 'gulp-typescript'
 import del   from 'del'
 import watch from 'gulp-watch'
@@ -12,23 +13,24 @@ import reporters      from 'jasmine-reporters';
 import runSequence    from 'run-sequence'
 import jasmineBrowser from 'gulp-jasmine-browser'
 
-
 gulp.task('clean', () => { return del([env.DIR.BUILD]); });
 
-gulp.task('watch', callback => {
+gulp.task('watch', () => {
   const watchTarget = [ env.FILE.SOURCE_TS, env.FILE.TEST_TS ];
 
   gulp.watch(watchTarget, () => {
     runSequence(
-      'compile',
-      'test-console',
-      callback);
+      'compile-src',
+      'compile-test',
+      'test-console');
   });
 });
 
 gulp.task('test-console', () => {
   return gulp.src([env.FILE.TEST_JS])
-    .pipe(jasmine({ reporter: new reporters.TerminalReporter() }));
+    .pipe(jasmine({
+      verbose: true
+    }));
 });
 
 gulp.task('test-browser', () => {
@@ -38,25 +40,22 @@ gulp.task('test-browser', () => {
     .pipe(jasmineBrowser.server({port: 8888}));
 });
 
-gulp.task('compile', callback => {
-  runSequence(
-    'compile-src',
-    'compile-test',
-    callback);
-});
-
 gulp.task('compile-src', () => {
-  return compile(env.FILE.SOURCE_TS, env.DIR.BUILD_SOURCE);
+  return compile(env.FILE.SOURCE_TS, env.DIR.BASE_SOURCE);
 });
 
 gulp.task('compile-test', () => {
-  return compile(env.FILE.TEST_TS, env.DIR.BUILD_TEST);
+  return compile(env.FILE.TEST_TS, env.DIR.BASE_TEST);
 });
 
-function compile(targetFiles, outputDir) {
-  return gulp.src(targetFiles)
-    .pipe(ts({ noImplicitAny: true }))
-    .pipe(gulp.dest(outputDir));
+function compile(targetFiles, base) {
+
+  var tsProject = ts.createProject('tsconfig.json');
+
+  return tsProject.src(targetFiles, { base: base })
+    .pipe(ts(tsProject))
+    .js
+    .pipe(gulp.dest(env.DIR.BUILD));
 }
 
 
