@@ -27,9 +27,23 @@ gulp.task('watch', () => {
 });
 
 gulp.task('test-console', () => {
+  const jasmineConfig = {
+    "spec_dir": env.DIR.BUILD_TEST,
+    "spec_files": [
+      "**/*.js"
+    ],
+    "helpers": [
+      "../../node_modules/babel-register/lib/node.js",
+      "../../node_modules/babel-polyfill/lib/index.js"
+    ],
+    "stopSpecOnExpectationFailure": false,
+    "random": false
+  };
+
   return gulp.src([env.FILE.TEST_JS])
     .pipe(jasmine({
-      verbose: true
+      verbose: true,
+      config: jasmineConfig
     }));
 });
 
