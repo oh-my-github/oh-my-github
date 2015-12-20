@@ -7,6 +7,7 @@
  * - https://gist.github.com/jakearchibald/31b89cba627924972ad6
  * - http://devsmash.com/blog/whats-the-big-deal-with-generators
  * - http://www.2ality.com/2015/03/no-promises.html
+ * - http://code.runnable.com/VEB6sjQbwKQKL43K/hello-world-for-promises-for-node-js
  */
 
 describe("ES6", () => {
@@ -93,5 +94,62 @@ describe("ES6", () => {
         getResult(url, result => caller.success(result));
       }
     });
+  });
+
+  describe("Promise", () => {
+    it("reject", callback => {
+      function getPromise() {
+        return new Promise<string>((resolve, reject) => {
+          reject(new Error("Rejected error"))
+        });
+      }
+
+      getPromise()
+        .then(result => {
+          fail();
+        })
+        .catch(e => {
+          callback();
+        })
+    });
+
+    it("resolve", callback => {
+      function getPromise(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+          resolve("resolve");
+        }).then((result: string) => {
+            return result + "!";
+          });
+      }
+
+      getPromise()
+      .then((result: string) => {
+          expect(result).toEqual("resolve!");
+          callback();
+        })
+      .catch(e => fail());
+    });
+
+    it("error", callback => {
+      function getPromise(): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+          throw new Error("error");
+        })
+      }
+
+      getPromise()
+      .then((result: string) => {
+          fail();
+        })
+      .catch((e: Error) => {
+          expect(e.message).toEqual("error");
+          callback();
+        });
+    });
+  });
+
+  describe("co", () => {
+    // https://github.com/tj/co
+
   });
 });
