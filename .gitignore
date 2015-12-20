@@ -1,3 +1,17 @@
+build/
+
+# typescript tsd
+typings
+
+# typescript
+src/**/*.map
+src/**/*.js
+test/**/*.map
+test/**/*.js
+
+# IDEA
+.idea
+
 # Logs
 logs
 *.log
