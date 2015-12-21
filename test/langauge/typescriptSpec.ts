@@ -4,6 +4,212 @@ describe("Release Note Spec", () => {
 
   describe("1.6", () => {
 
+    it("Intersection types", () => {
+      /** intersection type is the logical complement of union types: A & B */
+
+      function extend<T, U>(first: T, second: U): T & U {
+        let result = <T & U> {}
+
+        for (let prop in first) {
+          result[prop] = first[prop];
+        }
+
+        for (let prop in second) {
+          if (!result.hasOwnProperty(prop)) {
+            result[prop] = second[prop];
+          }
+        }
+
+        return result;
+      }
+
+      let x = extend({ a: "HELLO" }, { b: 42 });
+
+      let a = x.a;
+      let b = x.b;
+
+      expect(a).toEqual("HELLO");
+      expect(b).toEqual(42);
+    });
+
+    it("Generic with intersection types", () => {
+      type LinkedList<T> = T & { next: LinkedList<T> };
+
+      class Person {
+        public name: string;
+        constructor(name: string) {
+          this.name = name;
+        }
+      }
+
+      let people: LinkedList<Person>;
+      expect(() => people.next.name).toThrowError(TypeError);
+
+      interface A { a: string }
+      interface B { b: string }
+      interface C { c: string }
+
+      let abc: A & B & C = {
+        a: "a", b: "b", c: "c"
+      };
+    });
+
+    it("Local type declarations", () => {
+      /**
+       * local class, interface, enum and type alias can be declared inside function
+       */
+
+      if (true) {
+        interface T { x: string }
+        let v: T;
+        expect(() =>  v.x = "hello").toThrowError(TypeError);
+      } else {
+        interface T { x: number }
+        // let v: T; // unreached code compile error
+        // v.x = 3;
+      }
+
+      interface Point { x: number; y: number; }
+      function getPointFactory(x: number, y: number) {
+        class P { x = x; y = y; }
+
+        return P;
+      }
+
+      let PointZero = getPointFactory(0, 0);
+      let PointOne  = getPointFactory(1, 1);
+
+      /** the inferred type of a function may be a type declared locally with in the function */
+      let p1 = new PointZero();
+      let p2 = new PointOne();
+
+      /**
+       * local types may reference enclosing type params and local class and interfaces
+       * may themselves be generic
+       */
+      function f3() {
+        function f<X, Y>(x: X, y: Y) {
+          class C { public x = x; public y = y; }
+          return C;
+        }
+
+        let C = f(10, "hello");
+        let v = new C();
+
+        let k: number = v.x; // number
+        let h: string = v.y; // string
+      }
+    });
+
+    it("Class expressions", () => {
+      /**
+       * In a class expression, the class name is optional
+       */
+
+      let Point = class {
+        constructor(public x: number, public y: number) {}
+
+        public length() {
+          return Math.sqrt(this.x * this.x + this.y * this.y);
+        }
+      }
+
+      let p = new Point(3, 4); // p has anonymous class type
+      expect(p.length()).toEqual(Math.sqrt(3 * 3 + 4 * 4));
+    });
+
+    it("Extending expressions", () => {
+      /** TypeScript 1.6 adds support for classes extending arbitrary expression
+       * that computes a constructor function.
+       *
+       * This means that built-in types can be extended inclass declarations.
+       *
+       */
+
+      class MyArray extends Array<number> {}
+      class MyError extends Error {}
+
+      class ThingA {
+        getGreeting() { return "Hello from A"; }
+      }
+
+      class ThingB {
+        getGreeting() { return "Hello from B"; }
+      }
+
+      interface Greeter {
+        getGreeting(): string;
+      }
+
+      interface GreeterConstructor {
+        new (): Greeter;
+      }
+
+      function getGreeterBase(): GreeterConstructor {
+        return Math.random() >= 0.5 ? ThingA : ThingB;
+      }
+
+      class GreeterTest extends getGreeterBase() {
+        sayHello() { return this.getGreeting(); }
+      }
+
+      let arr = new MyArray();
+      let e = new MyError();
+
+      let g = new GreeterTest();
+      let s = g.sayHello();
+      expect(s.startsWith("Hello from")).toEqual(true);
+    });
+
+    it("`abstract` classes and methods", () => {
+      // class Derived1 extends Base {} // compile error
+
+      class Derived2 extends Base {
+        getThing() { return 'world'; }
+        foo() {
+          return super.getOtherThing();
+        }
+      }
+
+
+      let x = new Derived2();
+      let y: Base = new Derived2();
+
+      expect(x.foo()).toEqual(x.getOtherThing());
+      expect(y.getThing()).toEqual("world");
+      expect(y.getOtherThing()).toEqual("hello");
+    });
+    
+    it("Generic type aliases", () => {
+      type Lazy<T> = T | (() => T);
+      let s: Lazy<string>;
+
+      s = "eager";
+      expect(s).toEqual("eager");
+      let s2: Lazy<string> = () => "lazy";
+
+      interface Tuple<A, B> {
+        a: A;
+        b: B;
+      }
+
+      type Pair<T> = Tuple<T, T>;
+    });
+
+    it("Stricter object literal assignment checks", () => {
+      let x: { foo: number };
+      // x = { foo: 1, baz: 2}; // compile error
+
+      let y: { foo: number, bar?: number };
+      // y = { foo: 1, baz: 2 }; // compile error
+
+      let z: { foo: number, [x: string]: any };
+      z = { foo: 1, baz: 2 }; // `baz` matched by index signature
+
+      expect(z).hasOwnProperty("foo");
+      expect(z).hasOwnProperty("baz");
+    });
+
     it("Merging ambient class and interface declaration", () => {
 
       function bar(foo: Foo) {
@@ -284,4 +490,8 @@ interface Foo {
   y: string;
 }
 
+abstract class Base {
+  abstract getThing(): string;
+  getOtherThing() { return 'hello'; }
+}
 
