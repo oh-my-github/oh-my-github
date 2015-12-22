@@ -1,5 +1,8 @@
 build/
 
+# jspm
+jspm_packages
+
 # typescript tsd
 typings
 
