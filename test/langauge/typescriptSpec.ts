@@ -1,7 +1,74 @@
 /// <reference path="../../typings/jasmine/jasmine.d.ts" />
+"use strict";
+
+import BasicCalculator from "./BasicCalculator"
+import ScientificCalculator from "./ScientificCalculator"
 
 describe("Release Note Spec", () => {
+  describe("1.7", () => {
+    it("`this`", () => {
+      let c1 = new BasicCalculator(2)
+        .add(3)
+        .multiply(2)
+        .currentValue();
 
+      expect(c1).toEqual(10);
+
+      let c2 = new ScientificCalculator(2)
+        .square()
+        .add(3)
+        .currentValue();
+
+      expect(c2).toEqual(7);
+
+      /**
+       * The `this` type is also useful with intersection types in describing libraries
+       * tht use mixin-style patterns to describe inheritence
+       *
+       * interfcae MyType {
+       *   extend<T>(other: T): this & T;
+       * }
+       */
+      
+    });
+
+    it("`async`, `await` support in ES6 targets (Node v4+)", callback => {
+
+      /**
+       * `await` suspends the execution until an asynchronous function return promise is
+       * fulfilled and unwraps the value from the `Promise` returned
+       */
+      async function computeAsync(counts: number[]): Promise<number[]> {
+
+        let result: number[] = [];
+
+        for(const c of counts) {
+          let computed = await delay(20, c);
+          result.push(computed)
+        }
+
+        return result;
+      }
+
+      async function delay(millis: number, count: number): Promise<number> { /* promised computation */
+        return new Promise<number>(resolve => {
+          setTimeout(() => {
+            resolve(count + 1)
+          }, millis);
+        })
+      }
+
+      /**
+       * async function returns Promise<T>
+       */
+      computeAsync([1, 2, 3])
+        .then(computed => {
+          expect(computed).toEqual([2, 3, 4]);
+          callback();
+        }).catch(err => fail());
+    });
+  });
+  
   describe("1.6", () => {
 
     it("Intersection types", () => {
