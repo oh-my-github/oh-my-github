@@ -34,6 +34,8 @@
     "run-sequence": "^1.1.5"
   },
   "dependencies": {
-    "co": "^4.6.0"
+    "co": "^4.6.0",
+    "octonode": "^0.7.4",
+    "prettyjson": "^1.1.3"
   }
 }

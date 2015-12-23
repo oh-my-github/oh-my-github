@@ -10,6 +10,12 @@ $ npm install
 $ tsd install
 ```
 
+### Test
+
+```
+GITHUB_TOKEN= gulp watch
+```
+
 ### IDEA Setting
 
 Use TypeScript and ES6 compiler
@@ -23,7 +29,7 @@ Use TypeScript and ES6 compiler
 - TypeScript compiler option
 
 ```
---experimentalDecorators -m system -t es6 --emitDecoratorMetadata
+--experimentalDecorators -t es6 --emitDecoratorMetadata
 ```
 
 

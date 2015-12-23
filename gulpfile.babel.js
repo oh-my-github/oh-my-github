@@ -1,6 +1,6 @@
 'use strict';
 
-import env   from './env.json';
+import env   from './env.json'
 
 import gulp  from 'gulp';
 import path  from 'path';
@@ -9,9 +9,15 @@ import del   from 'del'
 import watch from 'gulp-watch'
 
 import jasmine        from 'gulp-jasmine'
-import reporters      from 'jasmine-reporters';
+import reporters      from 'jasmine-reporters'
 import runSequence    from 'run-sequence'
 import jasmineBrowser from 'gulp-jasmine-browser'
+
+/** pre-task: assert env vars */
+env.ASSERTED_ENV.forEach(envVar => {
+  console.log(envVar);
+  assertEnv(envVar);
+});
 
 gulp.task('clean', () => { return del([env.DIR.BUILD]); });
 
@@ -63,13 +69,20 @@ gulp.task('compile-test', () => {
 });
 
 function compile(targetFiles, base) {
-
-  var tsProject = ts.createProject('tsconfig.json');
+  const tsProject = ts.createProject('tsconfig.json');
 
   return tsProject.src(targetFiles, { base: base })
     .pipe(ts(tsProject))
     .js
     .pipe(gulp.dest(env.DIR.BUILD));
+}
+
+function assertEnv(envVar) {
+  const envValue = process.env[envVar];
+  const EMPTY_STRING = "";
+
+  if (typeof envValue === 'undefined' || EMPTY_STRING === envValue)
+    throw new Error(`Invalid ENV Variable: ${envVar}`)
 }
 
 
