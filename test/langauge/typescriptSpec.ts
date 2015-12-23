@@ -29,7 +29,7 @@ describe("Release Note Spec", () => {
        *   extend<T>(other: T): this & T;
        * }
        */
-      
+
     });
 
     it("`async`, `await` support in ES6 targets (Node v4+)", callback => {
