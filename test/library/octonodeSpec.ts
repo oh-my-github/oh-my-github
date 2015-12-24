@@ -11,38 +11,38 @@ const user = "1ambda";
 const repoName1 = "scala";
 
 describe("octonode", () => {
-  describe("client", () => {
-    it("getUserInfo", callback => {
-      getUserInfo(client, user)
-        .then((userInfo: { login: string }) => {
-          expect(userInfo.login).toEqual(user);
-          callback();
-        });
-    });
-
-    it("getUserRepos", callback => {
-      getUserRepos(client, user).then((repos: { name: string }[]) => {
-        let names: string[] = repos.map(repo => repo.name);
-        expect(names).toContain("dotfiles");
-        callback();
-      })
-    });
-
-    it("getRepoStat", callback => {
-      getRepoStat(client, user, repoName1).then(repo => {
-        expect(repo.name).toEqual(repoName1);
-        expect(repo.full_name).toEqual(`${user}/${repoName1}`);
-        callback();
-      });
-    });
-
-    it("createUserProfile", callback => {
-      createUserProfile(client, user).then(profile => {
-        console.log(prettyjson.render(profile));
-        callback();
-      })
-    });
-  });
+  //describe("client", () => {
+  //  it("getUserInfo", callback => {
+  //    getUserInfo(client, user)
+  //      .then((userInfo: { login: string }) => {
+  //        expect(userInfo.login).toEqual(user);
+  //        callback();
+  //      });
+  //  });
+  //
+  //  it("getUserRepos", callback => {
+  //    getUserRepos(client, user).then((repos: { name: string }[]) => {
+  //      let names: string[] = repos.map(repo => repo.name);
+  //      expect(names).toContain("dotfiles");
+  //      callback();
+  //    })
+  //  });
+  //
+  //  it("getRepoStat", callback => {
+  //    getRepoStat(client, user, repoName1).then(repo => {
+  //      expect(repo.name).toEqual(repoName1);
+  //      expect(repo.full_name).toEqual(`${user}/${repoName1}`);
+  //      callback();
+  //    });
+  //  });
+  //
+  //  it("createUserProfile", callback => {
+  //    createUserProfile(client, user).then(profile => {
+  //      expect(profile.login).toEqual(user);
+  //      callback();
+  //    })
+  //  });
+  //});
 });
 
 interface Repository {
