@@ -32,4 +32,8 @@ Use TypeScript and ES6 compiler
 --experimentalDecorators -t es6 --emitDecoratorMetadata
 ```
 
+- IDEA TypeScript Compiler Error: `TypeError: hosts.fileExists` 
+
+See, https://gist.github.com/1ambda/d04b4406dbb4bed7daa4
+
 
