@@ -2,14 +2,17 @@
 
 import env   from './env.json'
 
-import gulp  from 'gulp';
-import path  from 'path';
 import ts    from 'gulp-typescript'
 import del   from 'del'
+import gulp  from 'gulp'
+import path  from 'path'
+import babel from 'gulp-babel'
 import watch from 'gulp-watch'
+
 
 import jasmine        from 'gulp-jasmine'
 import reporters      from 'jasmine-reporters'
+import sourcemaps     from 'gulp-sourcemaps'
 import runSequence    from 'run-sequence'
 import jasmineBrowser from 'gulp-jasmine-browser'
 
@@ -74,6 +77,11 @@ function compile(targetFiles, base) {
   return tsProject.src(targetFiles, { base: base })
     .pipe(ts(tsProject))
     .js
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ['es2015'],
+      //plugins: ['transform-runtime']
+     }))
     .pipe(gulp.dest(env.DIR.BUILD));
 }
 
