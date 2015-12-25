@@ -78,10 +78,8 @@ function compile(targetFiles, base) {
     .pipe(ts(tsProject))
     .js
     .pipe(sourcemaps.init())
-    .pipe(babel({
-      presets: ['es2015'],
-      //plugins: ['transform-runtime']
-     }))
+    .pipe(babel({ presets: ['es2015'] }))
+    .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(env.DIR.BUILD));
 }
 
