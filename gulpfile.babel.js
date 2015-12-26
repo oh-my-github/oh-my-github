@@ -29,6 +29,12 @@ gulp.task('watch', () => {
   });
 });
 
+gulp.task('watch-src', () => {
+  gulp.watch([env.FILE.SOURCE_TS], () => {
+    gulp.run(['compile-src']);
+  });
+});
+
 gulp.task('test-console', () => {
   /** pre-task: assert env vars */
   env.ASSERTED_ENV.forEach(envVar => {
