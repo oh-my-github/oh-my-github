@@ -16,12 +16,6 @@ import sourcemaps     from 'gulp-sourcemaps'
 import runSequence    from 'run-sequence'
 import jasmineBrowser from 'gulp-jasmine-browser'
 
-/** pre-task: assert env vars */
-env.ASSERTED_ENV.forEach(envVar => {
-  console.log(envVar);
-  assertEnv(envVar);
-});
-
 gulp.task('clean', () => { return del([env.DIR.BUILD]); });
 
 gulp.task('watch', () => {
@@ -36,6 +30,12 @@ gulp.task('watch', () => {
 });
 
 gulp.task('test-console', () => {
+  /** pre-task: assert env vars */
+  env.ASSERTED_ENV.forEach(envVar => {
+    console.log(envVar);
+    assertEnv(envVar);
+  });
+
   const jasmineConfig = {
     "spec_dir": env.DIR.BUILD_TEST,
     "spec_files": [
