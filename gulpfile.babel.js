@@ -10,7 +10,7 @@ import watch from 'gulp-watch'
 import clean from 'gulp-clean'
 import merge from 'merge2';
 
-
+import tslint         from "gulp-tslint";
 import jasmine        from 'gulp-jasmine'
 import reporters      from 'jasmine-reporters'
 import sourcemaps     from 'gulp-sourcemaps'
@@ -27,6 +27,10 @@ const CLEAN_TARGET = [
   `${env.DIR.BASE_TEST}/${env.FILE.ALL_JS_MAP}`,
   `${env.DIR.BASE_TEST}/${env.FILE.ALL_D_TS}`
 ];
+
+gulp.task('build', () => {
+  runSequence('lint', 'clean', 'compile-src', 'compile-test', 'test-console');
+});
 
 gulp.task('clean', () => {
   return gulp.src(CLEAN_TARGET, {read: false})
@@ -47,6 +51,12 @@ gulp.task('con-compile', ()=> {
   gulp.watch(WATCH_TARGET, () => {
     runSequence('clean', 'compile-src');
   });
+});
+
+gulp.task("tslint", () => {
+  return gulp.src("src/command.ts")
+    .pipe(tslint())
+    .pipe(tslint.report("full"));
 });
 
 gulp.task('test-console', () => {

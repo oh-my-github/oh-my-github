@@ -28,11 +28,13 @@
     "gulp-jasmine-browser": "^0.2.3",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tsd": "0.0.4",
+    "gulp-tslint": "^4.2.2",
     "gulp-typescript": "^2.10.0",
     "gulp-watch": "^4.3.5",
     "jasmine-reporters": "^2.0.7",
     "merge2": "^0.3.6",
-    "run-sequence": "^1.1.5"
+    "run-sequence": "^1.1.5",
+    "tslint": "^3.2.1"
   },
   "dependencies": {
     "cerialize": "^0.1.1",
