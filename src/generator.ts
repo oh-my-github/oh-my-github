@@ -7,4 +7,5 @@ let pretty = require('prettyjson');
 
 import {CommandFactory} from "./command";
 
-let command = CommandFactory.install();
+let command = CommandFactory.create(process.argv);
+
