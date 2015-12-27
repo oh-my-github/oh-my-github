@@ -41,15 +41,14 @@ gulp.task('con-test', () => {
   gulp.watch(WATCH_TARGET, () => {
     runSequence(
       'clean',
-      'compile-src',
-      'compile-test',
+      'compile',
       'test-console');
   });
 });
 
 gulp.task('con-compile', ()=> {
   gulp.watch(WATCH_TARGET, () => {
-    runSequence('clean', 'compile-src');
+    runSequence('clean', 'compile');
   });
 });
 
@@ -62,7 +61,6 @@ gulp.task("tslint", () => {
 gulp.task('test-console', () => {
   /** pre-task: assert env vars */
   env.ASSERTED_ENV.forEach(envVar => {
-    console.log(envVar);
     assertEnv(envVar);
   });
 
@@ -93,21 +91,14 @@ gulp.task('test-browser', () => {
     .pipe(jasmineBrowser.server({port: 8888}));
 });
 
-gulp.task('compile-src', () => {
-  return compile(env.FILE.SOURCE_TS, env.DIR.BASE_SOURCE);
-});
-
-gulp.task('compile-test', () => {
-  return compile(env.FILE.TEST_TS, env.DIR.BASE_TEST);
-});
-
-function compile(targetFiles, base) {
+gulp.task('compile', () => {
   const tsProject = ts.createProject('tsconfig.json', {
     declaration: true
   });
+
   const tsResult =
     tsProject
-      .src([targetFiles, env.FILE.IGNORED_ALL_D_TS], { base: base })
+      .src(WATCH_TARGET, { base: "." })
       .pipe(ts(tsProject));
 
   return merge([
@@ -115,13 +106,13 @@ function compile(targetFiles, base) {
       .dts
       .pipe(gulp.dest("./", {overwrite: true})),
     tsResult /** create `js`, `js.map` */
-    .js
-    .pipe(sourcemaps.init())
-    .pipe(babel({ presets: ['es2015'] }))
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(env.DIR.BUILD))
+      .js
+      .pipe(sourcemaps.init())
+      .pipe(babel({ presets: ['es2015'] }))
+      .pipe(sourcemaps.write('.'))
+      .pipe(gulp.dest(env.DIR.BUILD))
   ])
-}
+});
 
 function assertEnv(envVar) {
   const envValue = process.env[envVar];
