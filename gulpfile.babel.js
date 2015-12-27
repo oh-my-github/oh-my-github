@@ -3,11 +3,12 @@
 import env   from './env.json'
 
 import ts    from 'gulp-typescript'
-import del   from 'del'
 import gulp  from 'gulp'
 import path  from 'path'
 import babel from 'gulp-babel'
 import watch from 'gulp-watch'
+import clean from 'gulp-clean'
+import merge from 'merge2';
 
 
 import jasmine        from 'gulp-jasmine'
@@ -16,22 +17,35 @@ import sourcemaps     from 'gulp-sourcemaps'
 import runSequence    from 'run-sequence'
 import jasmineBrowser from 'gulp-jasmine-browser'
 
-gulp.task('clean', () => { return del([env.DIR.BUILD]); });
+const WATCH_TARGET = [env.FILE.SOURCE_TS, env.FILE.TEST_TS, env.FILE.IGNORED_ALL_D_TS];
+const CLEAN_TARGET = [
+  env.DIR.BUILD,
+  `${env.DIR.BASE_SOURCE}/${env.FILE.ALL_JS}`,
+  `${env.DIR.BASE_SOURCE}/${env.FILE.ALL_JS_MAP}`,
+  `${env.DIR.BASE_SOURCE}/${env.FILE.ALL_D_TS}`,
+  `${env.DIR.BASE_TEST}/${env.FILE.ALL_JS}`,
+  `${env.DIR.BASE_TEST}/${env.FILE.ALL_JS_MAP}`,
+  `${env.DIR.BASE_TEST}/${env.FILE.ALL_D_TS}`
+];
 
-gulp.task('watch', () => {
-  const watchTarget = [ env.FILE.SOURCE_TS, env.FILE.TEST_TS ];
+gulp.task('clean', () => {
+  return gulp.src(CLEAN_TARGET, {read: false})
+    .pipe(clean());
+});
 
-  gulp.watch(watchTarget, () => {
+gulp.task('con-test', () => {
+  gulp.watch(WATCH_TARGET, () => {
     runSequence(
+      'clean',
       'compile-src',
       'compile-test',
       'test-console');
   });
 });
 
-gulp.task('watch-src', () => {
-  gulp.watch([env.FILE.SOURCE_TS], () => {
-    gulp.run(['compile-src']);
+gulp.task('con-compile', ()=> {
+  gulp.watch(WATCH_TARGET, () => {
+    runSequence('clean', 'compile-src');
   });
 });
 
@@ -64,7 +78,7 @@ gulp.task('test-console', () => {
 
 gulp.task('test-browser', () => {
   return gulp.src([env.FILE.TEST_JS])
-    .pipe(watch(watchTarget))
+    .pipe(watch(WATCH_TARGET))
     .pipe(jasmineBrowser.specRunner())
     .pipe(jasmineBrowser.server({port: 8888}));
 });
@@ -78,15 +92,25 @@ gulp.task('compile-test', () => {
 });
 
 function compile(targetFiles, base) {
-  const tsProject = ts.createProject('tsconfig.json');
+  const tsProject = ts.createProject('tsconfig.json', {
+    declaration: true
+  });
+  const tsResult =
+    tsProject
+      .src([targetFiles, env.FILE.IGNORED_ALL_D_TS], { base: base })
+      .pipe(ts(tsProject));
 
-  return tsProject.src(targetFiles, { base: base })
-    .pipe(ts(tsProject))
+  return merge([
+    tsResult /** create `d.ts` */
+      .dts
+      .pipe(gulp.dest("./", {overwrite: true})),
+    tsResult /** create `js`, `js.map` */
     .js
     .pipe(sourcemaps.init())
     .pipe(babel({ presets: ['es2015'] }))
     .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest(env.DIR.BUILD));
+    .pipe(gulp.dest(env.DIR.BUILD))
+  ])
 }
 
 function assertEnv(envVar) {

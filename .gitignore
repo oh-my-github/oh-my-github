@@ -9,8 +9,10 @@ typings
 # typescript
 src/**/*.map
 src/**/*.js
+src/**/*.d.ts
 test/**/*.map
 test/**/*.js
+test/**/*.d.ts
 
 # IDEA
 .idea
