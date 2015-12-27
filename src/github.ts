@@ -9,7 +9,7 @@ let octonode = require("octonode");
 export interface GithubClient {
   get (uri: string,
        nothing: any,
-       callback: (error: Error, status: number, body: string, header: Array<Object>) => void);
+       callback: (error: Error, status: number, body: string, header: Object) => void);
 }
 
 export class GithubError extends Deserializable {
