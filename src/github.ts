@@ -9,7 +9,15 @@ let octonode = require("octonode");
 export interface GithubClient {
   get (uri: string,
        nothing: any,
-       callback: (error: Error, status: number, body: string, header: any[]) => void);
+       callback: (error: Error, status: number, body: string, header: Array<Object>) => void);
+}
+
+export class GithubError extends Deserializable {
+  @deserializeAs("name") public name: string;
+  @deserializeAs("message") public message: string;
+  @deserializeAs("statusCode") public statusCode: number;
+  @deserializeAs("headers") public headers: Object;
+  @deserializeAs("body") public body: Object;
 }
 
 export class GithubUserProfile extends Deserializable {
@@ -19,11 +27,11 @@ export class GithubUserProfile extends Deserializable {
 }
 
 export class Repository extends Deserializable {
-  @deserialize public name: string;
-  @deserialize public full_name: string;
-  @deserialize public forks_count: number;
-  @deserialize public stargazers_count: number;
-  @deserialize public watchers_count: number;
+  @deserializeAs("name") public name: string;
+  @deserializeAs("full_name") public full_name: string;
+  @deserializeAs("forks_count") public forks_count: number;
+  @deserializeAs("stargazers_count") public stargazers_count: number;
+  @deserializeAs("watchers_count") public watchers_count: number;
 }
 
 export class GithubUtil {
@@ -37,10 +45,8 @@ export class GithubUtil {
       let client = GithubUtil.createGithubClient(token);
 
       client.get(uri, {}, (err, status, body, headers) => {
-        if (err) reject(err);
-        if (status !== 200) reject(new Error(`Invalid Status: ${status}`));
-
-        resolve(body);
+        if (err) return reject(GithubError.deserialize<GithubError>(GithubError, err));
+        else return resolve(body);
       })
     })
   }
