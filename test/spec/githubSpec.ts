@@ -70,13 +70,27 @@ describe("github.ts", () => {
   describe("GithubResponse", () => {
     describe("parseLink", () => {
       it("should return nextLink given `Link` header contains `rel:\"next\"`", () => {
-        let json1 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=2>; rel="next", <https://api.github.com/user/4968473/repos?access_token=1&page=2>; rel="last"';
-        let json2 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=1>; rel="first", <https://api.github.com/user/4968473/repos?access_token=1&page=3>; rel="last"';
-        let json3 = '<https://api.github.com/user/4968473/repos?access_token=1&page=4>; rel="last"';
+        let json1 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=2>; rel="next", <https://api.github.com/user/1ambda/repos?access_token=1&page=2>; rel="last"';
+        let json2 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=1>; rel="first", <https://api.github.com/user/1ambda/repos?access_token=1&page=3>; rel="last"';
+        let json3 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=4>; rel="last"';
+        let json4 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=45000>; rel="last"';
 
         expect(GithubResponse.parseLastLinkCount(json1)).toEqual(2);
         expect(GithubResponse.parseLastLinkCount(json2)).toEqual(3);
         expect(GithubResponse.parseLastLinkCount(json3)).toEqual(4);
+        expect(GithubResponse.parseLastLinkCount(json4)).toEqual(45000);
+      });
+
+      it("should return null when cannot parse the `Link`", () => {
+        let json1 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=>; rel="last"';
+        let json2 = '<https://api.github.com/user/1ambda/repos?access_token=1&=45000>; rel="last"';
+        let json3 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=46000AA>; rel="last"';
+        let json4 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=AA47000>; rel="last"';
+
+        expect(GithubResponse.parseLastLinkCount(json1)).toEqual(null);
+        expect(GithubResponse.parseLastLinkCount(json2)).toEqual(null);
+        // TODO: expect(GithubResponse.parseLastLinkCount(json3)).toEqual(null);
+        expect(GithubResponse.parseLastLinkCount(json4)).toEqual(null);
       });
 
       it("should return null given `Link` header contains no `rel:\"next\"`", () => {

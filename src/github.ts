@@ -74,7 +74,10 @@ export class GithubResponse {
         let rel = splited[1].trim();
         if (rel === "rel=\"last\"") {
           let stringified = splited[0].split("&page=")[1].trim();
-          lastLinkCount = parseInt(stringified);
+
+          lastLinkCount = parseInt(stringified, 10);
+
+          if (isNaN(lastLinkCount)) lastLinkCount = null;
           break;
         }
       }
