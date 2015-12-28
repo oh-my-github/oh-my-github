@@ -6,6 +6,8 @@
 
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
 import * as CircularJSON from "circular-json";
+import {GithubUtil} from "./github";
+let pretty = require("prettyjson");
 
 export class Option {
   @deserializeAs("flags") public flags: string;
@@ -35,13 +37,17 @@ export class CommandFactory {
       .option("-T, --no-tests", "ignore test hook");
 
     parser
-      .command("setup [env]")
-      .description("run setup commands for all envs")
-      .option("-s, --setup_mode [mode]", "Which setup mode to use")
-      .action(function(env, options){
-        let mode = options.setup_mode || "normal";
-        env = env || "all";
-        console.log("setup for %s env(s) with %s mode", env, mode);
+      .command("profile <token> <user>")
+      .alias("p")
+      .description("get github profile using the provided token")
+      .action(function(token, user) {
+        GithubUtil.getUserSummary(token, user)
+        .then(result => {
+            console.log(pretty.render(result));
+          })
+        .catch(err => {
+            console.log(err);
+          });
       });
 
     parser

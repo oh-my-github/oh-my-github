@@ -10,7 +10,7 @@ describe("command.ts", () => {
       let commandNames = new Set(command.commands.map(cmd => cmd.name));
 
       expect(commandNames.size).toEqual(2);
-      expect(Array.from(commandNames)).toEqual(["setup", "exec"]);
+      expect(Array.from(commandNames)).toEqual(["profile", "exec"]);
     });
   });
 });
