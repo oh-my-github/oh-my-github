@@ -383,15 +383,15 @@ describe("Release Note Spec", () => {
       }
     });
 
-    it("Tagged Template Strings for ES3, ES5", () => {
-      function oddRawStrings(strs: TemplateStringsArray, n1: number, n2: number) {
-        return strs.raw.filter((raw, index) => index % 2 === 1);
-
-      }
-
-      var a = oddRawStrings `Hello \n${123} \t ${456}\n world`;
-      expect(a).toEqual([' \\t ']);
-    });
+    //it("Tagged Template Strings for ES3, ES5", () => {
+    //  function oddRawStrings(strs: TemplateStringsArray, n1: number, n2: number) {
+    //    return strs.raw.filter((raw, index) => index % 2 === 1);
+    //
+    //  }
+    //
+    //  var a = oddRawStrings `Hello \n${123} \t ${456}\n world`;
+    //  expect(a).toEqual([' \\t ']);
+    //});
   });
 
   describe("1.4", () => {

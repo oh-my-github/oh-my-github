@@ -41,8 +41,9 @@ gulp.task("con-test", () => {
   gulp.watch(WATCH_TARGET, () => {
     runSequence(
       "clean",
-      "compile",
-      "test-console");
+      "compile"
+      , "test-console"
+    );
   });
 });
 
@@ -59,6 +60,7 @@ gulp.task("tslint", () => {
 });
 
 gulp.task("test-console", () => {
+
   /** pre-task: assert env vars */
   env.ASSERTED_ENV.forEach(envVar => {
     assertEnv(envVar);
@@ -70,17 +72,17 @@ gulp.task("test-console", () => {
       "**/*.js"
     ],
     "helpers": [
-      "../../node_modules/babel-register/lib/node.js",
-      "../../node_modules/babel-polyfill/lib/index.js"
     ],
     "stopSpecOnExpectationFailure": false,
     "random": false
   };
 
-  return gulp.src([env.FILE.TEST_JS])
+  //return gulp.src([env.FILE.TEST_JS])
+  return gulp.src(["build/test/**/*.js"])
     .pipe(jasmine({
-      verbose: true,
-      config: jasmineConfig
+      config: jasmineConfig,
+      //includeStackTrace: true,
+      verbose: false
     }));
 });
 
@@ -108,7 +110,7 @@ gulp.task("compile", () => {
     tsResult /** create `js`, `js.map` */
       .js
       .pipe(sourcemaps.init())
-      .pipe(babel({ presets: ["es2015"] }))
+      .pipe(babel())
       .pipe(sourcemaps.write("."))
       .pipe(gulp.dest(env.DIR.BUILD))
   ])
