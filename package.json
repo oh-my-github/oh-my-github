@@ -46,6 +46,7 @@
     "cerialize": "^0.1.1",
     "circular-json": "^0.3.0",
     "commander": "^2.9.0",
+    "lodash": "^3.10.1",
     "octonode": "^0.7.4",
     "prettyjson": "^1.1.3"
   }
