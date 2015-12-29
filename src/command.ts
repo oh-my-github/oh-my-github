@@ -38,10 +38,32 @@ export class CommandFactory {
 
     parser
       .command("profile <token> <user>")
-      .alias("p")
       .description("get github profile using the provided token")
-      .action(function(token, user) {
-        GithubUtil.getUserSummary(token, user)
+      .option("-r, --repository", "display repository summary")
+      .option("-l, --language", "display language summary")
+      // TODO event
+      .action(function(token, user, options) {
+
+        async function createProfile(): Promise<any> {
+          let profile = await GithubUtil.getUserProfile(token, user);
+          console.log("\n[USER PROFILE]");
+          console.log(pretty.render(profile));
+
+          if (options.repository) {
+            console.log("\n[REPOSITORY]");
+            let repoSummary = await GithubUtil.getRepositorySummary(token, user);
+            console.log(pretty.render(repoSummary));
+          }
+
+          if (options.language) {
+            console.log("\n[LANGUAGE]");
+            let langSummary = await GithubUtil.getLanguageSummary(token, user);
+            console.log(`language count: ${langSummary.getLangaugeCount()}`);
+            console.log(pretty.render(langSummary.getLanguageObject()));
+          }
+        }
+
+        createProfile()
         .then(result => {
             console.log(pretty.render(result));
           })

@@ -1,8 +1,11 @@
 /// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/lodash/lodash.d.ts" />
 
 "use strict";
 
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
+import * as _ from "lodash";
 
 let octonode = require("octonode");
 
@@ -10,6 +13,24 @@ export interface GithubClient {
   get (uri: string,
        nothing: any,
        callback: (error: Error, status: number, body: any, header: Object) => void);
+}
+
+export class Language {
+  constructor(
+    public name: string,
+    public line: number) {}
+
+  public static create(body: Object): Array<Language> {
+    let langs = new Array<Language>();
+
+    try {
+      _.forOwn(body, (value, key) => { langs.push(new Language(key, value)); })
+    } catch (err) {
+      console.log(`Can't create Array<Langauge> due to ${err} (raw: ${body})`);
+    }
+
+    return langs;
+  }
 }
 
 export class GithubError extends Deserializable {
@@ -43,13 +64,25 @@ export class RepositorySummary {
   public watchers_count: number = 0;
 }
 
-export class UserSummary {
+export class LanguageSummary {
   constructor(
-    public github_profile: GithubUserProfile,
-    public repository_summary: RepositorySummary) {}
-}
+    public owner: string,
+    public langauge_lines: Map<string, number>
+  ) {}
 
-export class GithubLink {
+  public getLangaugeCount(): number {
+    return this.langauge_lines.size;
+  }
+
+  public getLanguageObject(): Object {
+    let langObj = new Object();
+
+    this.langauge_lines.forEach((line, name) => {
+      langObj[name] = line ;
+    });
+
+    return langObj;
+  }
 }
 
 export class GithubResponse {
@@ -145,6 +178,34 @@ export class GithubUtil {
     return repos;
   }
 
+  public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
+    let langs = new Array<Language>();
+    let repos = await GithubUtil.getUserRepositories(token, user);
+
+    let repoNames = repos.map(r => r.name);
+
+    if (repos.length === 0) return langs;
+
+    let ps = repoNames.map(name=> {
+      return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`);
+    });
+
+    let langObjects = await Promise.all(ps);
+
+    if (_.isEmpty(langObjects)) return langs; /* return empty set */
+
+    let lss = langObjects.map(langObject => {
+      let ls = Language.create(langObject);
+      return ls
+    });
+
+    lss = lss.filter(ls => ls.length > 0);
+
+    if (lss.length === 0) return langs;
+
+    return lss.reduce((ls1, ls2) => ls1.concat(ls2));
+  }
+
   public static async getUserProfile(token: string, user: string): Promise<GithubUserProfile> {
     let raw = await GithubUtil.getGithubResponseBody(token, `/users/${user}`);
     return GithubUserProfile.deserialize<GithubUserProfile>(GithubUserProfile, raw);
@@ -152,8 +213,6 @@ export class GithubUtil {
 
   public static async getRepositorySummary(token: string, user: string): Promise<RepositorySummary> {
     let repos = await GithubUtil.getUserRepositories(token, user);
-
-    console.log(repos.length);
 
     let summary = new RepositorySummary;
     summary.owner = user;
@@ -168,12 +227,22 @@ export class GithubUtil {
     }, summary);
   }
 
-  public static async getUserSummary(token: string, user: string): Promise<UserSummary> {
-    let profile = await GithubUtil.getUserProfile(token, user);
-    let repoSummary = await GithubUtil.getRepositorySummary(token, user);
+  public static async getLanguageSummary(token: string, user: string): Promise<LanguageSummary> {
+    let langs = await GithubUtil.getUserLanguages(token, user);
 
-    return new UserSummary(profile, repoSummary);
+    if (_.isEmpty(langs)) return null;
+
+    let langNames = langs.map(lang => lang.name);
+    let langMap = new Map<string, number>();
+
+    langs.forEach(lang => {
+      if (!langMap.has(lang.name)) langMap.set(lang.name, 0);
+
+      let currentLine = langMap.get(lang.name);
+      langMap.set(lang.name, lang.line + currentLine);
+    });
+
+    return new LanguageSummary(user, langMap);
   }
 }
-
 

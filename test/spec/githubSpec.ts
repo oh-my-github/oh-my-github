@@ -1,10 +1,12 @@
 /// <reference path="../../typings/jasmine/jasmine.d.ts" />
 /// <reference path="../../typings/node/node.d.ts" />
 
-import {GithubUserProfile, Repository, GithubUtil, GithubResponse} from "../../src/github";
+import {GithubUserProfile, Repository, GithubResponse, Language, GithubUtil} from "../../src/github";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const user1 = "1ambda";
+
+let pretty = require("prettyjson");
 
 describe("github.ts", () => {
 
@@ -63,6 +65,43 @@ describe("github.ts", () => {
             expect(err.statusCode).toEqual(404);
             callback();
           })
+      });
+    });
+  });
+
+  describe("Language", () => {
+    describe("create", () => {
+      it("should return an array of Languages given github response", () => {
+        let lang1 = { "Scala": 611551, "HTML": 6229 };
+        let lang2 = { "Scala": 5695455, "Java": 1495691, "HTML": 141830, "Shell": 30597, "JavaScript": 27425, "Protocol Buffer": 19875, "Batchfile": 287 };
+
+        let parsed1 = Language.create(lang1);
+        let parsed1_scala = parsed1.filter(r => r.name === "Scala")[0];
+        let parsed1_html = parsed1.filter(r => r.name === "HTML")[0];
+
+        let parsed2 = Language.create(lang2);
+        let parsed2_java = parsed2.filter(r => r.name === "Java")[0];
+
+        expect(parsed1.length).toEqual(2);
+        expect(parsed1.map(r => r.name)).toContain("Scala");
+        expect(parsed1.map(r => r.name)).toContain("HTML");
+        expect(parsed1_scala).toEqual(new Language("Scala", 611551));
+        expect(parsed1_html).toEqual(new Language("HTML", 6229));
+
+        expect(parsed2.length).toEqual(7);
+        expect(parsed2_java).toEqual(new Language("Java", 1495691));
+      });
+
+      it("should return an empty array given response is empty or invalid", () => {
+        let lang1 = {};
+        let lang2 = null;
+        let lang3 = undefined;
+
+        let empty = new Array<Language>();
+
+        expect(Language.create(lang1)).toEqual(empty);
+        expect(Language.create(lang2)).toEqual(empty);
+        expect(Language.create(lang3)).toEqual(empty);
       });
     });
   });
