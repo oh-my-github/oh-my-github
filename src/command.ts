@@ -91,6 +91,6 @@ export class CommandFactory {
     let serialized = CircularJSON.stringify(parser.parse(argv));
     let unserialized = CircularJSON.parse(serialized);
 
-    return Command.deserialize<Command>(Command, unserialized);
+    return Command.deserialize(Command, unserialized);
   }
 }

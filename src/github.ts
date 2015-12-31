@@ -1,5 +1,4 @@
 /// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/node/node.d.ts" />
 /// <reference path="../typings/lodash/lodash.d.ts" />
 
 "use strict";
@@ -170,7 +169,7 @@ export class GithubUtil {
     let r: any = new Promise((resolve, reject) => {
       let client = GithubUtil.createGithubClient(token);
       client.get(uri, {}, (err, status, body, headers) => {
-        if (err) return reject(GithubError.deserialize<GithubError>(GithubError, err));
+        if (err) return reject(GithubError.deserialize(GithubError, err));
         else return resolve(new GithubResponse(headers, body));
       })
     });
@@ -214,7 +213,7 @@ export class GithubUtil {
 
   public static async getUserRepositories(token: string, user: string): Promise<Array<Repository>> {
     let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/repos`);
-    let rss = raw.map(body => Repository.deserialize<Array<Repository>>(Repository, body));
+    let rss = raw.map(body => Repository.deserializeArray(Repository, body));
     let repos = rss.reduce((acc, rs) => acc.concat(rs));
     return repos;
   }
@@ -222,7 +221,6 @@ export class GithubUtil {
   //public static async getUserPublicActivities(token: string, user: string): Promise<Array
   //Write activity domain class
   //Add specs to test it
-
 
   public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
     let langs = new Array<Language>();
@@ -254,7 +252,7 @@ export class GithubUtil {
 
   public static async getUserProfile(token: string, user: string): Promise<GithubUserProfile> {
     let raw = await GithubUtil.getGithubResponseBody(token, `/users/${user}`);
-    return GithubUserProfile.deserialize<GithubUserProfile>(GithubUserProfile, raw);
+    return GithubUserProfile.deserialize(GithubUserProfile, raw);
   }
 
   public static async getRepositorySummary(token: string, user: string): Promise<RepositorySummary> {
@@ -291,3 +289,5 @@ export class GithubUtil {
     return new LanguageSummary(user, langMap);
   }
 }
+
+

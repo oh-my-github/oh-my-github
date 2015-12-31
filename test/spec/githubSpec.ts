@@ -206,7 +206,7 @@ describe("github.ts", () => {
           }
         };
 
-        let pushEvent1 = GithubPushEvent.deserialize<GithubPushEvent>(GithubPushEvent, raw1);
+        let pushEvent1 = GithubPushEvent.deserialize(GithubPushEvent, raw1);
 
         expect(pushEvent1.id).toEqual(raw1.id);
         expect(pushEvent1.type).toEqual(raw1.type);

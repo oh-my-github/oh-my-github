@@ -11,8 +11,16 @@ export const deserialize = cerialize.serialize;
 export const deserializeAs = cerialize.deserializeAs;
 export const inheritSerialization = cerialize.inheritSerialization;
 
+export interface NoParamConstructor<T> {
+  new (): T
+}
+
 export abstract class Deserializable {
-  public static deserialize<T> (constructor, json): T {
-    return cerialize.Deserialize(json, constructor);
+  public static deserialize<T>(ctor: NoParamConstructor<T>, json): T {
+    return cerialize.Deserialize(json, ctor);
+  }
+
+  public static deserializeArray<T>(ctor: NoParamConstructor<T>, json): Array<T> {
+    return cerialize.Deserialize(json, ctor);
   }
 }
