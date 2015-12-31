@@ -4,7 +4,7 @@
 
 "use strict";
 
-import {deserialize, deserializeAs, Deserializable} from "./serialize";
+import {deserialize, deserializeAs, Deserializable, inheritSerialization} from "./serialize";
 import * as _ from "lodash";
 
 let octonode = require("octonode");
@@ -120,6 +120,46 @@ export class GithubResponse {
   }
 }
 
+export abstract class GithubEvent extends Deserializable {
+  @deserializeAs("id") public id: string;
+  @deserializeAs("type") public type: string;
+  @deserializeAs("created_at") public created_at: string;
+
+  public actor: string; /** actor.login */
+  public repo: string; /** owner/repo_name */
+
+  public static OnDeserialized(instance : GithubPushEvent, json : any) : void {
+    if (!_.isEmpty(json) && !_.isEmpty(json.actor))
+      instance.actor = json.actor.login;
+
+    if (!_.isEmpty(json) && !_.isEmpty(json.repo))
+      instance.repo = json.repo.name;
+  }
+}
+
+export class GithubPushEventPayload {
+  @deserializeAs("push_id") public push_id: number;
+  @deserializeAs("size") public size: number;
+  @deserializeAs("distinct_size") public distinct_size: number;
+  @deserializeAs("ref") public ref: string;
+  @deserializeAs("head") public head: string;
+  @deserializeAs("before") public before: string;
+  public commitUrls: Array<string>;
+  public static COMMIT_URI_PREFIX: string = "https://github.com/oh-my-github/generator/commit/";
+
+  public static OnDeserialized(instance: GithubPushEventPayload, json: any): void {
+    if (!_.isEmpty(json) && !_.isEmpty(json.commits) && Array.isArray(json.commits))
+      instance.commitUrls = json.commits.map(c => {
+        return `${GithubPushEventPayload.COMMIT_URI_PREFIX}${c.sha}`
+      });
+  }
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubPushEvent extends GithubEvent {
+  @deserializeAs(GithubPushEventPayload, "payload") public payload: GithubPushEventPayload;
+}
+
 export class GithubUtil {
 
   public static createGithubClient(token: string): GithubClient {
@@ -138,6 +178,7 @@ export class GithubUtil {
     return r;
   }
 
+  /** collect all API using pagination */
   public static async getGithubReponses(token: string, uri: string): Promise<Array<GithubResponse>> {
     let responses = new Array<GithubResponse>();
 
@@ -177,6 +218,11 @@ export class GithubUtil {
     let repos = rss.reduce((acc, rs) => acc.concat(rs));
     return repos;
   }
+
+  //public static async getUserPublicActivities(token: string, user: string): Promise<Array
+  //Write activity domain class
+  //Add specs to test it
+
 
   public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
     let langs = new Array<Language>();
@@ -245,4 +291,3 @@ export class GithubUtil {
     return new LanguageSummary(user, langMap);
   }
 }
-
