@@ -41,6 +41,7 @@ export class CommandFactory {
       .description("get github profile using the provided token")
       .option("-r, --repository", "display repository summary")
       .option("-l, --language", "display language summary")
+      .option("-a, --activity", "display activity summary")
       // TODO event
       .action(function(token, user, options) {
 
@@ -60,6 +61,13 @@ export class CommandFactory {
             let langSummary = await GithubUtil.getLanguageSummary(token, user);
             console.log(`language count: ${langSummary.getLangaugeCount()}`);
             console.log(pretty.render(langSummary.getLanguageObject()));
+          }
+
+          if (options.activity) {
+            console.log("\n[ACTIVITY]");
+            let activitySummary = await GithubUtil.getUserActivities(token, user);
+            console.log(pretty.render(activitySummary));
+            console.log(`activity count: ${activitySummary.length}`);
           }
         }
 

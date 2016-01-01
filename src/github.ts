@@ -119,7 +119,7 @@ export class GithubResponse {
   }
 }
 
-export abstract class GithubEvent extends Deserializable {
+export class GithubEvent extends Deserializable {
   @deserializeAs("id") public event_id: string;
   @deserializeAs("type") public event_type: string;
   @deserializeAs("created_at") public created_at: string;
@@ -185,11 +185,13 @@ export class GithubPullRequestEventPayload {
 
 @inheritSerialization(GithubEvent)
 export class GithubPushEvent extends GithubEvent {
+  static EVENT_TYPE: string = "PushEvent";
   @deserializeAs(GithubPushEventPayload, "payload") public payload: GithubPushEventPayload;
 }
 
 @inheritSerialization(GithubEvent)
 export class GithubPullRequestEvent extends GithubEvent {
+  static EVENT_TYPE: string = "PullRequestEvent";
   @deserializeAs(GithubPullRequestEventPayload, "payload") public payload: GithubPullRequestEventPayload;
 }
 
@@ -239,22 +241,45 @@ export class GithubUtil {
     return r.body;
   }
 
+  /**
+   * 1. retrieve page header
+   * 2. get all pages
+   * 3. return flattened
+   */
   public static async getGithubResponsesBody(token: string, uri: string): Promise<Array<any>> {
     let rs = await GithubUtil.getGithubReponses(token, uri);
+    let bodies = rs.map(r => r.body); /* each body is an array */
+    let flattened = bodies.reduce((acc, body) => acc.concat(body));
 
-    return rs.map(r => r.body);
+    return flattened;
   }
 
   public static async getUserRepositories(token: string, user: string): Promise<Array<Repository>> {
     let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/repos`);
-    let rss = raw.map(body => Repository.deserializeArray(Repository, body));
-    let repos = rss.reduce((acc, rs) => acc.concat(rs));
+    let repos = Repository.deserializeArray(Repository, raw);
     return repos;
   }
 
   //public static async getUserPublicActivities(token: string, user: string): Promise<Array
   //Write activity domain class
   //Add specs to test it
+
+  public static async getUserActivities(token: string, user: string): Promise<Array<GithubEvent>> {
+    let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`)
+
+    console.log(`raw count: ` + raw.length);
+
+    let events = raw.map(e => {
+      if (GithubPushEvent.EVENT_TYPE === e.type)
+        return GithubPushEvent.deserialize(GithubPushEvent, e);
+      else if (GithubPullRequestEvent.EVENT_TYPE === e.type)
+        return GithubPullRequestEvent.deserialize(GithubPullRequestEvent, e);
+      else return null;
+    });
+
+    // TODO: deserialize event by event.type. See GithubAPI event
+    return <Array<GithubEvent>> events.filter(e => e !== null);
+  }
 
   public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
     let langs = new Array<Language>();
@@ -323,5 +348,4 @@ export class GithubUtil {
     return new LanguageSummary(user, langMap);
   }
 }
-
 
