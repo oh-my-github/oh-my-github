@@ -89,9 +89,8 @@ export class CommandFactory {
 
     /** use circular-json to avoid cyclic references */
     let serialized = CircularJSON.stringify(parser.parse(argv));
-    let unserialized = CircularJSON.parse(serialized);
-
-    let deserialized = Command.deserialize(Command, unserialized);
+    let circularDeserialized = CircularJSON.parse(serialized);
+    let deserialized = Command.deserialize(Command, circularDeserialized);
     return deserialized;
   }
 }
