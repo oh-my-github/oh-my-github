@@ -9,7 +9,9 @@ import {
   Language,
   GithubEvent,
   GithubPushEvent, GithubPushEventPayload,
-  GithubPullRequestEvent, GithubPullRequestEventPayload
+  GithubPullRequestEvent, GithubPullRequestEventPayload,
+  GithubIssuesEvent, GithubIssuesEventPayload,
+  GithubIssueCommentEvent, GithubIssueCommentEventPayload
 } from "../../src/github";
 
 import {SampleResources} from "./sampleResource"
@@ -202,6 +204,7 @@ describe("github.ts", () => {
 
         expect(payload.action).toEqual(raw.payload.action);
         expect(payload.number).toEqual(raw.payload.number);
+        expect(payload.merged).toEqual(raw.payload.pull_request.merged);
         expect(payload.pull_request_id).toEqual(raw.payload.pull_request.id);
         expect(payload.title).toEqual(raw.payload.pull_request.title);
         expect(payload.url).toEqual(raw.payload.pull_request.url);
@@ -211,6 +214,49 @@ describe("github.ts", () => {
         expect(payload.changed_files).toEqual(raw.payload.pull_request.changed_files);
       });
     });
+
+    describe("IssuesEvent", () => {
+      it("should be deserialized", () => {
+        let raw = SampleResources.issuesEvent1;
+        let issuesEvent1 = GithubIssuesEvent.deserialize(GithubIssuesEvent, raw);
+
+        expect(issuesEvent1.event_id).toEqual(raw.id);
+        expect(issuesEvent1.event_type).toEqual(raw.type);
+        expect(issuesEvent1.actor).toEqual(raw.actor.login);
+        expect(issuesEvent1.repo).toEqual(raw.repo.name);
+        expect(issuesEvent1.created_at).toEqual(raw.created_at);
+
+        let payload = issuesEvent1.payload;
+
+        expect(payload.action).toEqual(raw.payload.action);
+        expect(payload.issue_id).toEqual(raw.payload.issue.id);
+        expect(payload.number).toEqual(raw.payload.issue.number);
+        expect(payload.title).toEqual(raw.payload.issue.title);
+        expect(payload.url).toEqual(raw.payload.issue.html_url);
+      });
+    });
+
+    describe("IssueCommentEvent", () => {
+      it("should be deserialized", () => {
+        let raw = SampleResources.issueCommentEvent1;
+        let issueCommentEvent = GithubIssueCommentEvent.deserialize(GithubIssueCommentEvent, raw);
+
+        let payload = issueCommentEvent.payload;
+
+        expect(payload.action).toEqual(raw.payload.action);
+        expect(payload.issue_id).toEqual(raw.payload.issue.id);
+        expect(payload.number).toEqual(raw.payload.issue.number);
+        expect(payload.title).toEqual(raw.payload.issue.title);
+        expect(payload.url).toEqual(raw.payload.comment.html_url);
+      });
+    });
+
+    describe("TODO: ReleaseEvent", () => {
+      it("should be deserialized", () => {
+
+      });
+    });
+
   });
 });
 

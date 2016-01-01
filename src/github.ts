@@ -157,11 +157,20 @@ export class GithubPushEventPayload {
 }
 
 export class GithubPullRequestEventPayload {
+  public static ACTION_VALUE_ASSIGNED = "assigned";
+  public static ACTION_VALUE_UNASSIGNED = "unassigned";
+  public static ACTION_VALUE_LABELED = "labeled";
+  public static ACTION_VALUE_UNLABELED = "unlabeled";
+  public static ACTION_VALUE_OPENED = "opened";
+  public static ACTION_VALUE_CLOSED = "closed";
+  public static ACTION_VALUE_SYNCHRONIZED = "synchronize";
+
   @deserializeAs("action") public action: string;
   @deserializeAs("number") public number: string;
   public pull_request_id: string;
   public title: string;
   public url: string;
+  public merged: boolean;
   public commits: number;
   public additions: number;
   public deletions: number;
@@ -175,6 +184,7 @@ export class GithubPullRequestEventPayload {
       instance.pull_request_id = pr.id;
       instance.title = pr.title;
       instance.url = pr.url;
+      instance.merged = pr.merged;
       instance.commits = pr.commits;
       instance.additions= pr.additions;
       instance.deletions = pr.deletions;
@@ -183,17 +193,86 @@ export class GithubPullRequestEventPayload {
   }
 }
 
+export class GithubIssuesEventPayload {
+  public static ACTION_VALUE_ASSIGNED = "assigned";
+  public static ACTION_VALUE_UNASSIGNED = "unassigned";
+  public static ACTION_VALUE_LABELED = "labeled";
+  public static ACTION_VALUE_UNLABELED = "unlabeled";
+  public static ACTION_VALUE_OPENED = "opened";
+  public static ACTION_VALUE_CLOSED = "closed";
+  public static ACTION_VALUE_REOPENED = "reopened";
+
+  @deserializeAs("action") public action: string;
+  public issue_id: number; /* issue.id */
+  public number: string;   /* issue.number */
+  public title: string;    /* issue.title */
+  public url: string;      /* issue.html_url */
+
+  public static OnDeserialized(instance: GithubIssuesEventPayload, payload: any): void {
+    if (_.isEmpty(payload)) return;
+
+    if (!_.isEmpty(payload.issue)) {
+      let issue = payload.issue;
+
+      instance.issue_id = issue.id;
+      instance.number = issue.number;
+      instance.title = issue.title;
+      instance.url = issue.html_url;
+    }
+  }
+}
+
+export class GithubIssueCommentEventPayload {
+  public static ACTION_TYPE_CREATED: string = "created";
+
+  @deserializeAs("action") public action: string;
+  public issue_id: number; /* issue.id */
+  public number: string;   /* issue.number */
+  public title: string;    /* issue.title */
+  public url: string;      /* comment.html_url */
+
+  public static OnDeserialized(instance: GithubIssueCommentEventPayload, payload: any): void {
+    if (_.isEmpty(payload)) return;
+
+    if (!_.isEmpty(payload.issue)) {
+      let issue = payload.issue;
+
+      instance.issue_id = issue.id;
+      instance.number = issue.number;
+      instance.title = issue.title;
+    }
+
+    if (!_.isEmpty(payload.comment)) {
+      let comment = payload.comment;
+      instance.url = comment.html_url;
+    }
+  }
+}
+
 @inheritSerialization(GithubEvent)
 export class GithubPushEvent extends GithubEvent {
-  static EVENT_TYPE: string = "PushEvent";
+  public static EVENT_TYPE: string = "PushEvent";
   @deserializeAs(GithubPushEventPayload, "payload") public payload: GithubPushEventPayload;
 }
 
 @inheritSerialization(GithubEvent)
 export class GithubPullRequestEvent extends GithubEvent {
-  static EVENT_TYPE: string = "PullRequestEvent";
+  public static EVENT_TYPE: string = "PullRequestEvent";
   @deserializeAs(GithubPullRequestEventPayload, "payload") public payload: GithubPullRequestEventPayload;
 }
+
+@inheritSerialization(GithubEvent)
+export class GithubIssuesEvent extends GithubEvent {
+  public static EVENT_TYPE: string = "IssuesEvent";
+  @deserializeAs(GithubIssuesEventPayload, "payload") public payload: GithubIssuesEventPayload;
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubIssueCommentEvent extends GithubEvent {
+  public static EVENT_TYPE: string = "IssueCommentEvent";
+  @deserializeAs(GithubIssueCommentEventPayload, "payload") public payload: GithubIssueCommentEventPayload;
+}
+
 
 export class GithubUtil {
 
@@ -260,10 +339,6 @@ export class GithubUtil {
     return repos;
   }
 
-  //public static async getUserPublicActivities(token: string, user: string): Promise<Array
-  //Write activity domain class
-  //Add specs to test it
-
   public static async getUserActivities(token: string, user: string): Promise<Array<GithubEvent>> {
     let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`)
 
@@ -274,6 +349,10 @@ export class GithubUtil {
         return GithubPushEvent.deserialize(GithubPushEvent, e);
       else if (GithubPullRequestEvent.EVENT_TYPE === e.type)
         return GithubPullRequestEvent.deserialize(GithubPullRequestEvent, e);
+      else if (GithubIssuesEvent.EVENT_TYPE === e.type)
+        return GithubIssuesEvent.deserialize(GithubIssuesEvent, e);
+      else if (GithubIssueCommentEvent.EVENT_TYPE === e.type)
+        return GithubIssueCommentEvent.deserialize(GithubIssueCommentEvent, e);
       else return null;
     });
 

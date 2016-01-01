@@ -3,6 +3,218 @@
 
 
 export class SampleResources {
+  static issuesEvent1 = {
+    "id": "3485566586",
+    "type": "IssuesEvent",
+    "actor": {
+      "id": 4968473,
+      "login": "1ambda",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/1ambda",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4968473?"
+    },
+    "repo": {
+      "id": 48305777,
+      "name": "oh-my-github/generator",
+      "url": "https://api.github.com/repos/oh-my-github/generator"
+    },
+    "payload": {
+      "action": "opened",
+      "issue": {
+        "url": "https://api.github.com/repos/oh-my-github/generator/issues/2",
+        "labels_url": "https://api.github.com/repos/oh-my-github/generator/issues/2/labels{/name}",
+        "comments_url": "https://api.github.com/repos/oh-my-github/generator/issues/2/comments",
+        "events_url": "https://api.github.com/repos/oh-my-github/generator/issues/2/events",
+        "html_url": "https://github.com/oh-my-github/generator/issues/2",
+        "id": 124448241,
+        "number": 2,
+        "title": "Expose runnable (e.g index.js)",
+        "user": {
+          "login": "1ambda",
+          "id": 4968473,
+          "avatar_url": "https://avatars.githubusercontent.com/u/4968473?v=3",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/1ambda",
+          "html_url": "https://github.com/1ambda",
+          "followers_url": "https://api.github.com/users/1ambda/followers",
+          "following_url": "https://api.github.com/users/1ambda/following{/other_user}",
+          "gists_url": "https://api.github.com/users/1ambda/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/1ambda/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/1ambda/subscriptions",
+          "organizations_url": "https://api.github.com/users/1ambda/orgs",
+          "repos_url": "https://api.github.com/users/1ambda/repos",
+          "events_url": "https://api.github.com/users/1ambda/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/1ambda/received_events",
+          "type": "User",
+          "site_admin": false
+        },
+        "labels": [
+          {
+            "url": "https://api.github.com/repos/oh-my-github/generator/labels/feature",
+            "name": "feature",
+            "color": "159818"
+          }
+        ],
+        "state": "open",
+        "locked": false,
+        "assignee": {
+          "login": "1ambda",
+          "id": 4968473,
+          "avatar_url": "https://avatars.githubusercontent.com/u/4968473?v=3",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/1ambda",
+          "html_url": "https://github.com/1ambda",
+          "followers_url": "https://api.github.com/users/1ambda/followers",
+          "following_url": "https://api.github.com/users/1ambda/following{/other_user}",
+          "gists_url": "https://api.github.com/users/1ambda/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/1ambda/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/1ambda/subscriptions",
+          "organizations_url": "https://api.github.com/users/1ambda/orgs",
+          "repos_url": "https://api.github.com/users/1ambda/repos",
+          "events_url": "https://api.github.com/users/1ambda/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/1ambda/received_events",
+          "type": "User",
+          "site_admin": false
+        },
+        "milestone": null,
+        "comments": 0,
+        "created_at": "2015-12-31T08:41:08Z",
+        "updated_at": "2015-12-31T08:41:08Z",
+        "closed_at": null,
+        "body": ""
+      }
+    },
+    "public": true,
+    "created_at": "2015-12-31T08:41:08Z",
+    "org": {
+      "id": 13924389,
+      "login": "oh-my-github",
+      "gravatar_id": "",
+      "url": "https://api.github.com/orgs/oh-my-github",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13924389?"
+    }
+  };
+
+  static issueCommentEvent1 = {
+    "id": "3487031212",
+    "type": "IssueCommentEvent",
+    "actor": {
+      "id": 4968473,
+      "login": "1ambda",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/1ambda",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4968473?"
+    },
+    "repo": {
+      "id": 48305777,
+      "name": "oh-my-github/generator",
+      "url": "https://api.github.com/repos/oh-my-github/generator"
+    },
+    "payload": {
+      "action": "created",
+      "issue": {
+        "url": "https://api.github.com/repos/oh-my-github/generator/issues/1",
+        "labels_url": "https://api.github.com/repos/oh-my-github/generator/issues/1/labels{/name}",
+        "comments_url": "https://api.github.com/repos/oh-my-github/generator/issues/1/comments",
+        "events_url": "https://api.github.com/repos/oh-my-github/generator/issues/1/events",
+        "html_url": "https://github.com/oh-my-github/generator/issues/1",
+        "id": 124236660,
+        "number": 1,
+        "title": "Collect user activities (events)",
+        "user": {
+          "login": "1ambda",
+          "id": 4968473,
+          "avatar_url": "https://avatars.githubusercontent.com/u/4968473?v=3",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/1ambda",
+          "html_url": "https://github.com/1ambda",
+          "followers_url": "https://api.github.com/users/1ambda/followers",
+          "following_url": "https://api.github.com/users/1ambda/following{/other_user}",
+          "gists_url": "https://api.github.com/users/1ambda/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/1ambda/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/1ambda/subscriptions",
+          "organizations_url": "https://api.github.com/users/1ambda/orgs",
+          "repos_url": "https://api.github.com/users/1ambda/repos",
+          "events_url": "https://api.github.com/users/1ambda/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/1ambda/received_events",
+          "type": "User",
+          "site_admin": false
+        },
+        "labels": [
+          {
+            "url": "https://api.github.com/repos/oh-my-github/generator/labels/feature",
+            "name": "feature",
+            "color": "159818"
+          }
+        ],
+        "state": "open",
+        "locked": false,
+        "assignee": {
+          "login": "1ambda",
+          "id": 4968473,
+          "avatar_url": "https://avatars.githubusercontent.com/u/4968473?v=3",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/1ambda",
+          "html_url": "https://github.com/1ambda",
+          "followers_url": "https://api.github.com/users/1ambda/followers",
+          "following_url": "https://api.github.com/users/1ambda/following{/other_user}",
+          "gists_url": "https://api.github.com/users/1ambda/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/1ambda/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/1ambda/subscriptions",
+          "organizations_url": "https://api.github.com/users/1ambda/orgs",
+          "repos_url": "https://api.github.com/users/1ambda/repos",
+          "events_url": "https://api.github.com/users/1ambda/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/1ambda/received_events",
+          "type": "User",
+          "site_admin": false
+        },
+        "milestone": null,
+        "comments": 2,
+        "created_at": "2015-12-29T16:44:32Z",
+        "updated_at": "2016-01-01T11:56:59Z",
+        "closed_at": null,
+        "body": ""
+      },
+      "comment": {
+        "url": "https://api.github.com/repos/oh-my-github/generator/issues/comments/168303278",
+        "html_url": "https://github.com/oh-my-github/generator/issues/1#issuecomment-168303278",
+        "issue_url": "https://api.github.com/repos/oh-my-github/generator/issues/1",
+        "id": 168303278,
+        "user": {
+          "login": "1ambda",
+          "id": 4968473,
+          "avatar_url": "https://avatars.githubusercontent.com/u/4968473?v=3",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/1ambda",
+          "html_url": "https://github.com/1ambda",
+          "followers_url": "https://api.github.com/users/1ambda/followers",
+          "following_url": "https://api.github.com/users/1ambda/following{/other_user}",
+          "gists_url": "https://api.github.com/users/1ambda/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/1ambda/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/1ambda/subscriptions",
+          "organizations_url": "https://api.github.com/users/1ambda/orgs",
+          "repos_url": "https://api.github.com/users/1ambda/repos",
+          "events_url": "https://api.github.com/users/1ambda/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/1ambda/received_events",
+          "type": "User",
+          "site_admin": false
+        },
+        "created_at": "2016-01-01T11:56:59Z",
+        "updated_at": "2016-01-01T11:56:59Z",
+        "body": "- Push\r\n- PullRequestEvent (current domain model requires https://github.com/weichx/cerialize/pull/15 to be merged)\r\n\r\nAnd then,\r\n\r\n- IssuesEvent\r\n- IssueCommentEvent\r\n- Release"
+      }
+    },
+    "public": true,
+    "created_at": "2016-01-01T11:56:59Z",
+    "org": {
+      "id": 13924389,
+      "login": "oh-my-github",
+      "gravatar_id": "",
+      "url": "https://api.github.com/orgs/oh-my-github",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13924389?"
+    }
+  };
+
   public static pullRequestEvent1 = {
     "id": "3476129336",
     "type": "PullRequestEvent",
