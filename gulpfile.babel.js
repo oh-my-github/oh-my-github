@@ -81,7 +81,7 @@ gulp.task("test-console", () => {
   return gulp.src(["build/test/**/*.js"])
     .pipe(jasmine({
       config: jasmineConfig,
-      //includeStackTrace: true,
+      includeStackTrace: true,
       verbose: false
     }));
 });
