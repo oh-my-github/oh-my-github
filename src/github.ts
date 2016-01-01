@@ -120,14 +120,13 @@ export class GithubResponse {
 }
 
 export abstract class GithubEvent extends Deserializable {
-  @deserializeAs("id") public id: string;
-  @deserializeAs("type") public type: string;
+  @deserializeAs("id") public event_id: string;
+  @deserializeAs("type") public event_type: string;
   @deserializeAs("created_at") public created_at: string;
-
   public actor: string; /** actor.login */
   public repo: string; /** owner/repo_name */
 
-  public static OnDeserialized(instance : GithubPushEvent, json : any) : void {
+  public static OnDeserialized(instance : GithubEvent, json : any) : void {
     if (!_.isEmpty(json) && !_.isEmpty(json.actor))
       instance.actor = json.actor.login;
 
@@ -143,20 +142,55 @@ export class GithubPushEventPayload {
   @deserializeAs("ref") public ref: string;
   @deserializeAs("head") public head: string;
   @deserializeAs("before") public before: string;
-  public commitUrls: Array<string>;
+
+  public commit_urls: Array<string>;
   public static COMMIT_URI_PREFIX: string = "https://github.com/oh-my-github/generator/commit/";
 
-  public static OnDeserialized(instance: GithubPushEventPayload, json: any): void {
-    if (!_.isEmpty(json) && !_.isEmpty(json.commits) && Array.isArray(json.commits))
-      instance.commitUrls = json.commits.map(c => {
+  public static OnDeserialized(instance: GithubPushEventPayload, payload: any): void {
+    if (_.isEmpty(payload)) return;
+
+    if (!_.isEmpty(payload.commits) && Array.isArray(payload.commits))
+      instance.commit_urls = payload.commits.map(c => {
         return `${GithubPushEventPayload.COMMIT_URI_PREFIX}${c.sha}`
       });
+  }
+}
+
+export class GithubPullRequestEventPayload {
+  @deserializeAs("action") public action: string;
+  @deserializeAs("number") public number: string;
+  public pull_request_id: string;
+  public title: string;
+  public url: string;
+  public commits: number;
+  public additions: number;
+  public deletions: number;
+  public changed_files: number;
+
+  public static OnDeserialized(instance: GithubPullRequestEventPayload, payload: any): void {
+    if (_.isEmpty(payload)) return;
+
+    if (!_.isEmpty(payload.pull_request)) {
+      let pr = payload.pull_request;
+      instance.pull_request_id = pr.id;
+      instance.title = pr.title;
+      instance.url = pr.url;
+      instance.commits = pr.commits;
+      instance.additions= pr.additions;
+      instance.deletions = pr.deletions;
+      instance.changed_files = pr.changed_files;
+    }
   }
 }
 
 @inheritSerialization(GithubEvent)
 export class GithubPushEvent extends GithubEvent {
   @deserializeAs(GithubPushEventPayload, "payload") public payload: GithubPushEventPayload;
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubPullRequestEvent extends GithubEvent {
+  @deserializeAs(GithubPullRequestEventPayload, "payload") public payload: GithubPullRequestEventPayload;
 }
 
 export class GithubUtil {

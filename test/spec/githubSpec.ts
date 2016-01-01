@@ -8,7 +8,8 @@ import {
   Repository,
   Language,
   GithubEvent,
-  GithubPushEvent, GithubPushEventPayload
+  GithubPushEvent, GithubPushEventPayload,
+  GithubPullRequestEvent, GithubPullRequestEventPayload
 } from "../../src/github";
 
 import {SampleResources} from "./sampleResource"
@@ -165,27 +166,50 @@ describe("github.ts", () => {
         let raw = SampleResources.pushEvent1;
         let pushEvent1 = GithubPushEvent.deserialize(GithubPushEvent, raw);
 
-        expect(pushEvent1.id).toEqual(raw.id);
-        expect(pushEvent1.type).toEqual(raw.type);
+        expect(pushEvent1.event_id).toEqual(raw.id);
+        expect(pushEvent1.event_type).toEqual(raw.type);
         expect(pushEvent1.actor).toEqual(raw.actor.login);
         expect(pushEvent1.repo).toEqual(raw.repo.name);
         expect(pushEvent1.created_at).toEqual(raw.created_at);
 
-        expect(pushEvent1.payload.push_id).toEqual(raw.payload.push_id);
-        expect(pushEvent1.payload.size).toEqual(raw.payload.size);
-        expect(pushEvent1.payload.distinct_size).toEqual(raw.payload.distinct_size);
-        expect(pushEvent1.payload.ref).toEqual(raw.payload.ref);
-        expect(pushEvent1.payload.head).toEqual(raw.payload.head);
-        expect(pushEvent1.payload.before).toEqual(raw.payload.before);
+        let payload = pushEvent1.payload;
 
-        expect(pushEvent1.payload.commitUrls.length).toEqual(1);
-        expect(pushEvent1.payload.commitUrls[0])
+        expect(payload.push_id).toEqual(raw.payload.push_id);
+        expect(payload.size).toEqual(raw.payload.size);
+        expect(payload.distinct_size).toEqual(raw.payload.distinct_size);
+        expect(payload.ref).toEqual(raw.payload.ref);
+        expect(payload.head).toEqual(raw.payload.head);
+        expect(payload.before).toEqual(raw.payload.before);
+
+        expect(payload.commit_urls.length).toEqual(1);
+        expect(payload.commit_urls[0])
           .toEqual(`${GithubPushEventPayload.COMMIT_URI_PREFIX}7f6d1d80f5458e37db9b48958dd9fb2a07a78fd3`);
       });
     });
 
     describe("PullRequestEvent", () => {
-      let raw = SampleResources.pullRequestEvent1;
+      it("should be deserialized", () => {
+        let raw = SampleResources.pullRequestEvent1;
+        let prEvent1 = GithubPullRequestEvent.deserialize(GithubPullRequestEvent, raw);
+
+        expect(prEvent1.event_id).toEqual(raw.id);
+        expect(prEvent1.event_type).toEqual(raw.type);
+        expect(prEvent1.actor).toEqual(raw.actor.login);
+        expect(prEvent1.repo).toEqual(raw.repo.name);
+        expect(prEvent1.created_at).toEqual(raw.created_at);
+
+        let payload = prEvent1.payload;
+
+        expect(payload.action).toEqual(raw.payload.action);
+        expect(payload.number).toEqual(raw.payload.number);
+        expect(payload.pull_request_id).toEqual(raw.payload.pull_request.id);
+        expect(payload.title).toEqual(raw.payload.pull_request.title);
+        expect(payload.url).toEqual(raw.payload.pull_request.url);
+        expect(payload.commits).toEqual(raw.payload.pull_request.commits);
+        expect(payload.additions).toEqual(raw.payload.pull_request.additions);
+        expect(payload.deletions).toEqual(raw.payload.pull_request.deletions);
+        expect(payload.changed_files).toEqual(raw.payload.pull_request.changed_files);
+      });
     });
   });
 });
