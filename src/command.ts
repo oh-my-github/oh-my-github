@@ -10,20 +10,20 @@ import {GithubUtil} from "./github";
 let pretty = require("prettyjson");
 
 export class Option {
-  @deserializeAs("flags") public flags: string;
-  @deserializeAs("required") public required: number;
-  @deserializeAs("optional") public optional: number;
-  @deserializeAs("bool") public bool: boolean;
-  @deserializeAs("short") public short: string;
-  @deserializeAs("long") public long: string;
-  @deserializeAs("description") public description: string;
+  @deserialize public flags: string;
+  @deserialize public required: number;
+  @deserialize public optional: number;
+  @deserialize public bool: boolean;
+  @deserialize public short: string;
+  @deserialize public long: string;
+  @deserialize public description: string;
 }
 
 export class Command extends Deserializable {
-  @deserializeAs(Command, "commands") public commands: Array<Command>;
-  @deserializeAs(Option) public options: Array<Option>;
   @deserializeAs("_name") public name: string;
   @deserializeAs("_description") public description: string;
+  @deserializeAs(Command) public commands: Array<Command>;
+  @deserializeAs(Option) public options: Array<Option>;
 }
 
 export class CommandFactory {
@@ -91,6 +91,7 @@ export class CommandFactory {
     let serialized = CircularJSON.stringify(parser.parse(argv));
     let unserialized = CircularJSON.parse(serialized);
 
-    return Command.deserialize(Command, unserialized);
+    let deserialized = Command.deserialize(Command, unserialized);
+    return deserialized;
   }
 }

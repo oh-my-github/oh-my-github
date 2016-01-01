@@ -7,7 +7,7 @@ const cerialize = require('cerialize');
 
 export const serialize = cerialize.serialize;
 export const serializeAs = cerialize.serializeAs;
-export const deserialize = cerialize.serialize;
+export const deserialize = cerialize.deserialize;
 export const deserializeAs = cerialize.deserializeAs;
 export const inheritSerialization = cerialize.inheritSerialization;
 
@@ -24,3 +24,5 @@ export abstract class Deserializable {
     return cerialize.Deserialize(json, ctor);
   }
 }
+
+
