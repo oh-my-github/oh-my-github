@@ -5,6 +5,20 @@ import BasicCalculator from "./BasicCalculator"
 import ScientificCalculator from "./ScientificCalculator"
 
 describe("Release Note Spec", () => {
+  describe("Collection", () => {
+    describe("Array", () => {
+      it("should return an empty array after filtering all elems", () => {
+        let arr1 = new Array<string>();
+        let arr2 = new Array<string>();
+        arr2.push("elem1");
+        arr2.push("elem2");
+        
+        expect(arr1.filter(e => e === null).length).toEqual(0);
+        expect(arr2.filter(e => !e.startsWith("elem")).length).toEqual(0);
+      });
+    });
+  });
+  
   describe("1.7", () => {
     it("`this`", () => {
       let c1 = new BasicCalculator(2)

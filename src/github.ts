@@ -427,7 +427,10 @@ export class GithubUtil {
   public static async getGithubResponsesBody(token: string, uri: string): Promise<Array<any>> {
     let rs = await GithubUtil.getGithubReponses(token, uri);
     let bodies = rs.map(r => r.body); /* each body is an array */
-    let flattened = bodies.reduce((acc, body) => acc.concat(body));
+    let flattened = bodies.reduce((acc, body) => {
+      if (Array.isArray(body) && body.length > 0) return acc.concat(body);
+      else return acc;
+    });
 
     return flattened;
   }
