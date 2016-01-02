@@ -6,25 +6,27 @@
 import {deserialize, deserializeAs, Deserializable, inheritSerialization} from "./serialize";
 import * as _ from "lodash";
 
-export class Language {
-  constructor(
-    public name: string,
-    public line: number) {}
+export class Language extends Deserializable {
+  @deserialize public name: string;
+  @deserialize public line: number;
 
   public static create(body: Object): Array<Language> {
     let langs = new Array<Language>();
 
-    try {
-      _.forOwn(body, (value, key) => { langs.push(new Language(key, value)); });
-    } catch (err) {
-      console.log(`Can't create Array<Langauge> due to ${err} (raw: ${body})`);
-    }
+    if (_.isEmpty(body)) return langs;
+
+    _.forOwn(body, (value, key) => {
+      let l = new Language();
+      l.name = key;
+      l.line = value;
+      langs.push(l);
+    });
 
     return langs;
   }
 }
 
-export class GithubUserProfile extends Deserializable {
+export class GithubUser extends Deserializable {
   @deserializeAs("login") public login: string;
   @deserializeAs("following") public following: number;
   @deserializeAs("followers") public followers: number;

@@ -2,7 +2,7 @@
 /// <reference path="../../typings/node/node.d.ts" />
 
 import {
-  GithubUserProfile,
+  GithubUser,
   Repository,
   Language,
   GithubEvent,
@@ -29,10 +29,10 @@ let pretty = require("prettyjson");
 describe("github.ts", () => {
 
   describe("GithubUtil", () => {
-    describe("getUserProfile", () => {
-      it("should return a GithubUserProfile instance", callback => {
-        GithubUtil.getUserProfile(GITHUB_TOKEN, user1).then(profile => {
-          expect(profile instanceof GithubUserProfile).toBeTruthy();
+    describe("getGithubUser", () => {
+      it("should return a GithubUser instance", callback => {
+        GithubUtil.getGithubUser(GITHUB_TOKEN, user1).then(profile => {
+          expect(profile instanceof GithubUser).toBeTruthy();
           expect(profile.login).toBeDefined();
           expect(profile.followers).toBeDefined();
           expect(profile.following).toBeDefined();
@@ -87,7 +87,7 @@ describe("github.ts", () => {
     });
   });
 
-  describe("Language", () => {
+  describe("LanguageField", () => {
     describe("create", () => {
       it("should return an array of Languages given github response", () => {
         let lang1 = { "Scala": 611551, "HTML": 6229 };
@@ -103,11 +103,16 @@ describe("github.ts", () => {
         expect(parsed1.length).toEqual(2);
         expect(parsed1.map(r => r.name)).toContain("Scala");
         expect(parsed1.map(r => r.name)).toContain("HTML");
-        expect(parsed1_scala).toEqual(new Language("Scala", 611551));
-        expect(parsed1_html).toEqual(new Language("HTML", 6229));
+
+        let l1 = new Language(); l1.name = "Scala"; l1.line = lang1.Scala;
+        let l2 = new Language(); l2.name = "HTML"; l2.line = lang1.HTML;
+
+        expect(parsed1_scala).toEqual(l1);
+        expect(parsed1_html).toEqual(l2);
 
         expect(parsed2.length).toEqual(7);
-        expect(parsed2_java).toEqual(new Language("Java", 1495691));
+        let l3 = new Language(); l3.name = "Java"; l3.line = lang2.Java;
+        expect(parsed2_java).toEqual(l3);
       });
 
       it("should return an empty array given response is empty or invalid", () => {

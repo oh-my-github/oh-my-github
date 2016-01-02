@@ -1,6 +1,8 @@
 build/
 dist/
 
+oh-my-github.json
+
 # jspm
 jspm_packages
 

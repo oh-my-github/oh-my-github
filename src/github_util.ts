@@ -2,7 +2,7 @@
 /// <reference path="../typings/lodash/lodash.d.ts" />
 
 import {
-  GithubUserProfile,
+  GithubUser,
   Repository, RepositorySummary,
   Language, LanguageSummary,
 
@@ -142,36 +142,35 @@ export class GithubUtil {
     return repos;
   }
 
+  public static deserializeGithubEvent(events: Array<any>): Array<GithubEvent> {
+    return events.map(e => {
+      switch (e.type) {
+        case GithubPushEvent.EVENT_TYPE:
+          return GithubPushEvent.deserialize(GithubPushEvent, e);
+        case GithubPullRequestEvent.EVENT_TYPE:
+          return GithubPullRequestEvent.deserialize(GithubPullRequestEvent, e);
+        case GithubIssuesEvent.EVENT_TYPE:
+          return GithubIssuesEvent.deserialize(GithubIssuesEvent, e);
+        case GithubIssueCommentEvent.EVENT_TYPE:
+          return GithubIssueCommentEvent.deserialize(GithubIssueCommentEvent, e);
+        case GithubWatchEvent.EVENT_TYPE:
+          return GithubWatchEvent.deserialize(GithubWatchEvent, e);
+        case GithubForkEvent.EVENT_TYPE:
+          return GithubForkEvent.deserialize(GithubForkEvent, e);
+        case GithubReleaseEvent.EVENT_TYPE:
+          return GithubReleaseEvent.deserialize(GithubReleaseEvent, e);
+        case GithubCreateEvent.EVENT_TYPE:
+          return GithubCreateEvent.deserialize(GithubCreateEvent, e);
+        default: return null;
+      }
+    });
+  }
+
   public static async getUserActivities(token: string, user: string): Promise<Array<GithubEvent>> {
-  let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`);
-
-  console.log(`raw count: ` + raw.length);
-
-  let events = raw.map(e => {
-    switch (e.type) {
-      case GithubPushEvent.EVENT_TYPE:
-        return GithubPushEvent.deserialize(GithubPushEvent, e);
-      case GithubPullRequestEvent.EVENT_TYPE:
-        return GithubPullRequestEvent.deserialize(GithubPullRequestEvent, e);
-      case GithubIssuesEvent.EVENT_TYPE:
-        return GithubIssuesEvent.deserialize(GithubIssuesEvent, e);
-      case GithubIssueCommentEvent.EVENT_TYPE:
-        return GithubIssueCommentEvent.deserialize(GithubIssueCommentEvent, e);
-      case GithubWatchEvent.EVENT_TYPE:
-        return GithubWatchEvent.deserialize(GithubWatchEvent, e);
-      case GithubForkEvent.EVENT_TYPE:
-        return GithubForkEvent.deserialize(GithubForkEvent, e);
-      case GithubReleaseEvent.EVENT_TYPE:
-        return GithubReleaseEvent.deserialize(GithubReleaseEvent, e);
-      case GithubCreateEvent.EVENT_TYPE:
-        return GithubCreateEvent.deserialize(GithubCreateEvent, e);
-      default: return null;
-    }
-  });
-
-  // TODO: deserialize event by event.type. See GithubAPI event
-  return <Array<GithubEvent>> events.filter(e => e !== null);
-}
+    let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`);
+    let events = GithubUtil.deserializeGithubEvent(raw);
+    return <Array<GithubEvent>> events.filter(e => e !== null);
+  }
 
   public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
   let langs = new Array<Language>();
@@ -201,9 +200,9 @@ export class GithubUtil {
   return lss.reduce((ls1, ls2) => ls1.concat(ls2));
 }
 
-  public static async getUserProfile(token: string, user: string): Promise<GithubUserProfile> {
+  public static async getGithubUser(token: string, user: string): Promise<GithubUser> {
   let raw = await GithubUtil.getGithubResponseBody(token, `/users/${user}`);
-  return GithubUserProfile.deserialize(GithubUserProfile, raw);
+  return GithubUser.deserialize(GithubUser, raw);
 }
 
   public static async getRepositorySummary(token: string, user: string): Promise<RepositorySummary> {

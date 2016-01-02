@@ -1,17 +1,24 @@
 {
-  "user": {
-
+  "_$meta": {
+    "agent": "cli-generator",
+    "publish_repository": null
   },
 
-  "language": [
+  "user": {
+    "login": null,
+    "following": null,
+    "follower": null
+  },
+
+  "languages": [
 
   ],
 
-  "repository": [
+  "repositories": [
 
   ],
 
-  "activity": [
+  "activities": [
 
   ]
 }
