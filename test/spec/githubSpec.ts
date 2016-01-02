@@ -2,9 +2,7 @@
 /// <reference path="../../typings/node/node.d.ts" />
 
 import {
-  GithubUtil,
   GithubUserProfile,
-  GithubResponse,
   Repository,
   Language,
   GithubEvent,
@@ -16,8 +14,9 @@ import {
   GithubForkEvent, GithubForkEventPayload,
   GithubReleaseEvent, GithubReleaseEventPayload,
   GithubCreateEvent, GithubCreateEventPayload
-} from "../../src/github";
+} from "../../src/github_model";
 
+import {GithubUtil, GithubResponse } from "../../src/github_util"
 import {SampleResources} from "./sampleResource"
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;

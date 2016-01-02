@@ -6,8 +6,36 @@
 
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
 import * as CircularJSON from "circular-json";
-import {GithubUtil} from "./github";
+import {GithubUtil} from "./github_util";
 let pretty = require("prettyjson");
+
+async function createProfile(token: string,
+                             user: string,
+                             options: any): Promise<any> {
+  let profile = await GithubUtil.getUserProfile(token, user);
+  console.log("\n[USER PROFILE]");
+  console.log(pretty.render(profile));
+
+  if (options.repository) {
+    console.log("\n[REPOSITORY]");
+    let repoSummary = await GithubUtil.getRepositorySummary(token, user);
+    console.log(pretty.render(repoSummary));
+  }
+
+  if (options.language) {
+    console.log("\n[LANGUAGE]");
+    let langSummary = await GithubUtil.getLanguageSummary(token, user);
+    console.log(`language count: ${langSummary.getLangaugeCount()}`);
+    console.log(pretty.render(langSummary.getLanguageObject()));
+  }
+
+  if (options.activity) {
+    console.log("\n[ACTIVITY]");
+    let activitySummary = await GithubUtil.getUserActivities(token, user);
+    console.log(pretty.render(activitySummary));
+    console.log(`activity count: ${activitySummary.length}`);
+  }
+}
 
 export class Option {
   @deserialize public flags: string;
@@ -44,34 +72,7 @@ export class CommandFactory {
       .option("-a, --activity", "display activity summary")
       // TODO event
       .action(function(token, user, options) {
-
-        async function createProfile(): Promise<any> {
-          let profile = await GithubUtil.getUserProfile(token, user);
-          console.log("\n[USER PROFILE]");
-          console.log(pretty.render(profile));
-
-          if (options.repository) {
-            console.log("\n[REPOSITORY]");
-            let repoSummary = await GithubUtil.getRepositorySummary(token, user);
-            console.log(pretty.render(repoSummary));
-          }
-
-          if (options.language) {
-            console.log("\n[LANGUAGE]");
-            let langSummary = await GithubUtil.getLanguageSummary(token, user);
-            console.log(`language count: ${langSummary.getLangaugeCount()}`);
-            console.log(pretty.render(langSummary.getLanguageObject()));
-          }
-
-          if (options.activity) {
-            console.log("\n[ACTIVITY]");
-            let activitySummary = await GithubUtil.getUserActivities(token, user);
-            console.log(pretty.render(activitySummary));
-            console.log(`activity count: ${activitySummary.length}`);
-          }
-        }
-
-        createProfile()
+        createProfile(token, user, options)
         .then(result => {
             console.log(pretty.render(result));
           })
