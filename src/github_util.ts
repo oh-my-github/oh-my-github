@@ -41,6 +41,9 @@ export class GithubError extends Deserializable {
 export class GithubResponse {
   constructor(public headers: any, public body: any) {}
 
+  /**
+   * return null if failed to parse github pagination response
+   */
   public static parseLastLinkCount(link: string): number {
     if (typeof link === "undefined" ||
       typeof link === null ||
@@ -67,7 +70,7 @@ export class GithubResponse {
           break;
         }
       }
-    } catch (err) { console.error(`Can't parse link: ${link} due to ${err}`); }
+    } catch (err) { return null; }
 
     return lastLinkCount;
   }
@@ -173,69 +176,35 @@ export class GithubUtil {
   }
 
   public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
-  let langs = new Array<Language>();
-  let repos = await GithubUtil.getUserRepositories(token, user);
+    let langs = new Array<Language>();
+    let repos = await GithubUtil.getUserRepositories(token, user);
 
-  let repoNames = repos.map(r => r.name);
+    let repoNames = repos.map(r => r.name);
 
-  if (repos.length === 0) return langs;
+    if (repos.length === 0) return langs;
 
-  let ps = repoNames.map(name => {
-    return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`);
-  });
+    let ps = repoNames.map(name => {
+      return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`);
+    });
 
-  let langObjects = await Promise.all(ps);
+    let langObjects = await Promise.all(ps);
 
-  if (_.isEmpty(langObjects)) return langs; /* return empty set */
+    if (_.isEmpty(langObjects)) return langs; /* return empty set */
 
-  let lss = langObjects.map(langObject => {
-    let ls = Language.create(langObject);
-    return ls;
-  });
+    let lss = langObjects.map(langObject => {
+      let ls = Language.create(langObject);
+      return ls;
+    });
 
-  lss = lss.filter(ls => ls.length > 0);
+    lss = lss.filter(ls => ls.length > 0);
 
-  if (lss.length === 0) return langs;
+    if (lss.length === 0) return langs;
 
-  return lss.reduce((ls1, ls2) => ls1.concat(ls2));
-}
+    return lss.reduce((ls1, ls2) => ls1.concat(ls2));
+  }
 
   public static async getGithubUser(token: string, user: string): Promise<GithubUser> {
-  let raw = await GithubUtil.getGithubResponseBody(token, `/users/${user}`);
-  return GithubUser.deserialize(GithubUser, raw);
-}
-
-  public static async getRepositorySummary(token: string, user: string): Promise<RepositorySummary> {
-  let repos = await GithubUtil.getUserRepositories(token, user);
-
-  let summary = new RepositorySummary;
-  summary.owner = user;
-  return repos.reduce((sum, repo) => {
-    sum.repository_names.push(repo.name);
-    sum.repository_count += 1;
-    sum.watchers_count += repo.watchers_count;
-    sum.stargazers_count += repo.stargazers_count;
-    sum.forks_count += repo.forks_count;
-
-    return sum;
-  }, summary);
-}
-
-  public static async getLanguageSummary(token: string, user: string): Promise<LanguageSummary> {
-  let langs = await GithubUtil.getUserLanguages(token, user);
-
-  if (_.isEmpty(langs)) return null;
-
-  let langNames = langs.map(lang => lang.name);
-  let langMap = new Map<string, number>();
-
-  langs.forEach(lang => {
-    if (!langMap.has(lang.name)) langMap.set(lang.name, 0);
-
-    let currentLine = langMap.get(lang.name);
-    langMap.set(lang.name, lang.line + currentLine);
-  });
-
-  return new LanguageSummary(user, langMap);
-}
+    let raw = await GithubUtil.getGithubResponseBody(token, `/users/${user}`);
+    return GithubUser.deserialize(GithubUser, raw);
+  }
 }

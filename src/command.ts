@@ -9,13 +9,19 @@
 
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
 import {GithubUtil} from "./github_util";
-import {Language, Repository, GithubEvent} from "./github_model";
+import {
+  GithubUser, Language, Repository, GithubEvent,
+  RepositorySummary, LanguageSummary
+} from "./github_model";
 import {Profile} from "./profile";
 
 import * as _ from "lodash";
 import * as CircularJSON from "circular-json";
 import * as fse from "fs-extra";
-import {red as chalkRed, bold as chalkBold} from "chalk";
+import {
+  red as chalkRed, blue as chalkBlue, green as chalkGreen,
+  yellow as chalkYellow, magenta as chalkMagenta, bold as chalkBold
+} from "chalk";
 
 let path = require("path");
 let pretty = require("prettyjson");
@@ -73,6 +79,7 @@ export class CommandSetting {
       createProfile(token, user, options)
         .then(currentProf => {
 
+          /** concat and remove duplicated activities by filtering out using event_id */
           let allActs = currentProf.activities.concat(prevProf.activities).filter(a => !_.isEmpty(a));
           let uniqEventIds = new Set();
           let uniqActs = new Array<GithubEvent>();
@@ -124,36 +131,81 @@ async function createProfile(token: string,
                              user: string,
                              options: ProfileOptions): Promise<Profile> {
   let githubUser = await GithubUtil.getGithubUser(token, user);
-  console.log("\n[USER]");
-  console.log(pretty.render(githubUser));
 
   let langs = new Array<Language>();
   let repos = new Array<Repository>();
   let acts = new Array<GithubEvent>();
 
   if (options.repository) {
-    console.log("\n[REPOSITORY]");
     repos = await GithubUtil.getUserRepositories(token, user);
   }
 
   if (options.language) {
-    console.log("\n[LANGUAGE]");
     langs = await GithubUtil.getUserLanguages(token, user);
   }
 
   if (options.activity) {
-    console.log("\n[ACTIVITY]");
     acts = await GithubUtil.getUserActivities(token, user);
   }
 
-  let profile = new Profile();
+  // TODO: add repo name to language
+  // TODO: add top language to repo
 
+  printProfile(githubUser, langs, repos, acts);
+
+  let profile = new Profile();
   profile.user = githubUser;
   profile.languages = langs;
   profile.repositories = repos;
   profile.activities = acts;
 
   return profile;
+}
+
+function printProfile(user: GithubUser,
+                      langs: Array<Language>,
+                      repos: Array<Repository>,
+                      acts: Array<GithubEvent>): void {
+
+  /** debug info */
+  console.log(`\n[USER]`);
+  console.log(pretty.render(user));
+
+  console.log(`\n${chalkBlue("[LANGUAGE]")}`);
+
+  if (!_.isEmpty(langs)) {
+    let langMap = new Map<string, number>();
+
+    langs.forEach(lang => {
+      if (!langMap.has(lang.name)) langMap.set(lang.name, 0);
+
+      let currentLine = langMap.get(lang.name);
+      langMap.set(lang.name, lang.line + currentLine);
+    });
+    let langSummary = new LanguageSummary(user.login, langMap);
+    console.log(pretty.render(langSummary));
+  }
+
+  console.log(`\n${chalkBlue("[REPOSITORY]")}`);
+  if (!_.isEmpty(repos)) {
+    let repoSummary = new RepositorySummary();
+    repos.reduce((sum, repo) => {
+      sum.repository_names.push(repo.name);
+      sum.repository_count += 1;
+      sum.watchers_count += repo.watchers_count;
+      sum.stargazers_count += repo.stargazers_count;
+      sum.forks_count += repo.forks_count;
+
+      return sum;
+    }, repoSummary);
+    console.log(pretty.render(repoSummary));
+  }
+
+  console.log(`\n${chalkBlue("[ACTIVITY]")}`);
+
+  if (!_.isEmpty(acts)) {
+    console.log(`Activity Count: ${acts.length}`);
+  }
 }
 
 /**
