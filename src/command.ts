@@ -27,6 +27,12 @@ export class ProfileOptions {
   public static PROFILE_OPTION_ACTIVITY   =
     new OptionSetting(ProfileOptions.PROFILE_OPTION_SPECIFIER_ACTIVITY, "show activity summary");
 
+  public static ALL_PROFILE_OPTIONS = [
+    ProfileOptions.PROFILE_OPTION_LANGUAGE,
+    ProfileOptions.PROFILE_OPTION_REPOSITORY,
+    ProfileOptions.PROFILE_OPTION_ACTIVITY
+  ];
+
   language: boolean;
   repository: boolean;
   activity: boolean;
@@ -38,8 +44,9 @@ export class CommandSetting {
               public action: (token, user, options) => void,
               public alias?: string) {}
 
+  public static COMMAND_NAME_PROFILE = "profile";
   public static PROFILE_COMMAND = new CommandSetting(
-    "profile <token> <user>",
+    `${CommandSetting.COMMAND_NAME_PROFILE} <token> <user>`,
     "get github profile using the provided token",
     function(token: string, user: string, options: ProfileOptions) {
       createProfile(token, user, options)
@@ -51,6 +58,10 @@ export class CommandSetting {
         });
     }
   );
+
+  public static ALL_COMMAND_SETTINGS = [
+    CommandSetting.PROFILE_COMMAND
+  ];
 }
 
 async function createProfile(token: string,
@@ -81,7 +92,7 @@ async function createProfile(token: string,
   }
 }
 
-export class Option {
+export class ParsedOption {
   @deserialize public flags: string;
   @deserialize public required: number;
   @deserialize public optional: number;
@@ -91,15 +102,15 @@ export class Option {
   @deserialize public description: string;
 }
 
-export class Command extends Deserializable {
+export class ParsedCommand extends Deserializable {
   @deserializeAs("_name") public name: string;
   @deserializeAs("_description") public description: string;
-  @deserializeAs(Command) public commands: Array<Command>;
-  @deserializeAs(Option) public options: Array<Option>;
+  @deserializeAs(ParsedCommand) public commands: Array<ParsedCommand>;
+  @deserializeAs(ParsedOption) public options: Array<ParsedOption>;
 }
 
 export class CommandFactory {
-  public static create(argv: string[]): Command {
+  public static create(argv: string[]): ParsedCommand{
     let parser = require("commander");
 
     parser
@@ -116,7 +127,7 @@ export class CommandFactory {
     /** use circular-json to avoid cyclic references */
     let serialized = CircularJSON.stringify(parser.parse(argv));
     let circularDeserialized = CircularJSON.parse(serialized);
-    let deserialized = Command.deserialize(Command, circularDeserialized);
+    let deserialized = ParsedCommand.deserialize(ParsedCommand, circularDeserialized);
     return deserialized;
   }
 }
