@@ -1,5 +1,6 @@
 /// <reference path="../typings/node/node.d.ts" />
 /// <reference path="../typings/chalk/chalk.d.ts" />
+/// <reference path="../typings/lodash/lodash.d.ts" />
 /// <reference path="../typings/fs-extra/fs-extra.d.ts" />
 /// <reference path="../typings/commander/commander.d.ts" />
 /// <reference path="../typings/circular-json/circular-json.d.ts" />
@@ -7,8 +8,12 @@
 "use strict";
 
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
-import * as CircularJSON from "circular-json";
 import {GithubUtil} from "./github_util";
+import {Language, Repository, GithubEvent} from "./github_model";
+import {Profile} from "./profile";
+
+import * as _ from "lodash";
+import * as CircularJSON from "circular-json";
 import * as fse from "fs-extra";
 import {red as chalkRed, bold as chalkBold} from "chalk";
 
@@ -62,12 +67,31 @@ export class CommandSetting {
     `${CommandSetting.COMMAND_NAME_PROFILE} <token> <user>`,
     "Create Github profile using the provided token for the user",
     function(token: string, user: string, options: ProfileOptions) {
+      let confPath = getProfilePath();
+      let prevProf = Profile.deserialize(Profile, readFileIfExist(confPath));
+
       createProfile(token, user, options)
-        .then(result => {
-          console.log(pretty.render(result));
+        .then(currentProf => {
+
+          let allActs = currentProf.activities.concat(prevProf.activities).filter(a => !_.isEmpty(a));
+          let uniqEventIds = new Set();
+          let uniqActs = new Array<GithubEvent>();
+
+          for (let i = 0; i < allActs.length; i++) {
+            let act = allActs[i];
+
+            if (!uniqEventIds.has(act.event_id)) {
+              uniqEventIds.add(act.event_id);
+              uniqActs.push(act);
+            }
+          }
+
+          currentProf.activities = uniqActs;
+          overwriteFile(confPath, currentProf);
         })
         .catch(err => {
-          console.log(err);
+          console.log(`${chalkRed("Cannot create profile\n")} ${chalkBold(path)}`);
+          console.error(`\n${err.stack}`);
         });
     }
   );
@@ -77,11 +101,16 @@ export class CommandSetting {
     `${CommandSetting.COMMAND_NAME_INIT} <repo>`,
     "Initialize `oh-my-github.json` database file",
     function(repo: string) {
-      let confPath = path.join(process.cwd(), FILE_NAME_PROFILE_JSON);
+      let confPath = getProfilePath();
       let template = JSON.parse(JSON.stringify(PROFILE_TEMPLATE_JSON));
       template._$meta.repository = repo;
 
-      createFileIfNotExist(confPath, template);
+      try {
+        writeFileIfNotExist(confPath, template);
+      } catch (err) {
+        console.log(`${chalkRed("Cannot create file: ")} ${chalkBold(path)}`);
+        console.error(`\n${err.stack}`);
+      }
     }
   );
 
@@ -93,46 +122,67 @@ export class CommandSetting {
 
 async function createProfile(token: string,
                              user: string,
-                             options: ProfileOptions): Promise<any> {
-  let profile = await GithubUtil.getGithubUser(token, user);
-  console.log("\n[USER PROFILE]");
-  console.log(pretty.render(profile));
+                             options: ProfileOptions): Promise<Profile> {
+  let githubUser = await GithubUtil.getGithubUser(token, user);
+  console.log("\n[USER]");
+  console.log(pretty.render(githubUser));
+
+  let langs = new Array<Language>();
+  let repos = new Array<Repository>();
+  let acts = new Array<GithubEvent>();
 
   if (options.repository) {
     console.log("\n[REPOSITORY]");
-    let repoSummary = await GithubUtil.getRepositorySummary(token, user);
-    console.log(pretty.render(repoSummary));
+    repos = await GithubUtil.getUserRepositories(token, user);
   }
 
   if (options.language) {
     console.log("\n[LANGUAGE]");
-    let langSummary = await GithubUtil.getLanguageSummary(token, user);
-    console.log(`language count: ${langSummary.getLangaugeCount()}`);
-    console.log(pretty.render(langSummary.getLanguageObject()));
+    langs = await GithubUtil.getUserLanguages(token, user);
   }
 
   if (options.activity) {
     console.log("\n[ACTIVITY]");
-    let activitySummary = await GithubUtil.getUserActivities(token, user);
-    console.log(pretty.render(activitySummary));
-    console.log(`activity count: ${activitySummary.length}`);
+    acts = await GithubUtil.getUserActivities(token, user);
   }
+
+  let profile = new Profile();
+
+  profile.user = githubUser;
+  profile.languages = langs;
+  profile.repositories = repos;
+  profile.activities = acts;
+
+  return profile;
 }
 
 /**
- * create and write content iff the file does not exist
+ * write file iff the file does not exist otherwise throw an error
  */
-function createFileIfNotExist(path: string, json: Object): void {
-  try {
-    fse.writeJsonSync(path, json, {flag: "wx"});
-  } catch (err) {
-    console.log(`${chalkRed("Cannot create file: ")} ${chalkBold(path)}`);
-    console.error(`\n${err.stack}`);
-  }
+function writeFileIfNotExist(path: string, json: Object): void {
+  fse.writeJsonSync(path, json, {flag: "wx"});
 }
 
-function readFileIfExist(path: string): any {
+/**
+ * overwrite file
+ */
+function overwriteFile(path: string, json: Object): void {
+  fse.writeJsonSync(path, json, {flag: "w+"});
+}
 
+/**
+ * read file iff the file exists otherwise throw an error
+ */
+function readFileIfExist(path: string): any {
+  return fse.readJsonSync(path, {flag: "r"})
+}
+
+function getProfilePath(): string {
+  return combinePathWithCwd(FILE_NAME_PROFILE_JSON);
+}
+
+function combinePathWithCwd(filePath: string) {
+  return path.join(process.cwd(), filePath);
 }
 
 export class ParsedOption {

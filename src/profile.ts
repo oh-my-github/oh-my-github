@@ -21,12 +21,12 @@ import {
 
 import * as _ from "lodash";
 
-class MetaField extends Deserializable {
+export class MetaField extends Deserializable {
   @deserialize public agent: string;
   @deserialize public publish_repository: string;
 }
 
-class Profile extends Deserializable {
+export class Profile extends Deserializable {
   @deserializeAs(MetaField) public _$meta: MetaField;
   @deserializeAs(GithubUser) public user: GithubUser;
   @deserializeAs(Language) public languages: Array<Language>;
