@@ -17,6 +17,15 @@ import sourcemaps     from "gulp-sourcemaps";
 import runSequence    from "run-sequence";
 import jasmineBrowser from "gulp-jasmine-browser";
 
+/** constants for TASK name */
+const TASK_NAME_TEST    = "test";
+const TASK_NAME_COMPILE = "compile";
+const TASK_NAME_TSLINT  = "tslint";
+const TASK_NAME_DIST    = "dist";
+const TASK_NAME_CLEAN   = "clean";
+const TASK_NAME_BUILD   = "build";
+
+/** constants for FILEs */
 const WATCH_TARGET = [env.FILE.SOURCE_TS, env.FILE.TEST_TS, env.FILE.IGNORED_ALL_D_TS];
 const CLEAN_TARGET = [
   env.DIR.BUILD,
@@ -28,38 +37,27 @@ const CLEAN_TARGET = [
   `${env.DIR.BASE_TEST}/${env.FILE.ALL_D_TS}`
 ];
 
-gulp.task("build", () => {
-  runSequence("tslint", "clean", "compile-src", "compile-test", "test-console");
+gulp.task(TASK_NAME_BUILD, () => {
+  runSequence(
+    TASK_NAME_TSLINT,
+    TASK_NAME_CLEAN,
+    TASK_NAME_COMPILE,
+    TASK_NAME_TEST,
+    TASK_NAME_DIST);
 });
 
-gulp.task("clean", () => {
+gulp.task(TASK_NAME_CLEAN, () => {
   return gulp.src(CLEAN_TARGET, {read: false})
     .pipe(clean());
 });
 
-gulp.task("con-test", () => {
-  gulp.watch(WATCH_TARGET, () => {
-    runSequence(
-      "clean",
-      "compile"
-      , "test-console"
-    );
-  });
-});
-
-gulp.task("con-compile", ()=> {
-  gulp.watch(WATCH_TARGET, () => {
-    runSequence("clean", "compile");
-  });
-});
-
-gulp.task("tslint", () => {
+gulp.task(TASK_NAME_TSLINT, () => {
   return gulp.src(["src/**/*.ts", "test/spec/**/*.ts", "!test/spec/sampleResource.ts"])
     .pipe(tslint())
     .pipe(tslint.report("full"));
 });
 
-gulp.task("test-console", () => {
+gulp.task(TASK_NAME_TEST, () => {
 
   /** pre-task: assert env vars */
   env.ASSERTED_ENV.forEach(envVar => {
@@ -93,7 +91,7 @@ gulp.task("test-browser", () => {
     .pipe(jasmineBrowser.server({port: 8888}));
 });
 
-gulp.task("compile", () => {
+gulp.task(TASK_NAME_COMPILE, () => {
   const tsProject = ts.createProject("tsconfig.json", {
     declaration: true
   });
@@ -113,7 +111,19 @@ gulp.task("compile", () => {
       .pipe(babel())
       .pipe(sourcemaps.write("."))
       .pipe(gulp.dest(env.DIR.BUILD))
-  ])
+  ]);
+});
+
+gulp.task(TASK_NAME_DIST, () => {
+  const tsProject = ts.createProject("tsconfig.json");
+
+  return gulp.src([env.FILE.SOURCE_TS])
+    .pipe(ts(tsProject))
+    .js
+    .pipe(sourcemaps.init())
+    .pipe(babel())
+    .pipe(sourcemaps.write("."))
+    .pipe(gulp.dest(env.DIR.DIST));
 });
 
 function assertEnv(envVar) {
