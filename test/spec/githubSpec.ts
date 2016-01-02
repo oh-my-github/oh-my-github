@@ -14,6 +14,7 @@ import {
   GithubIssueCommentEvent, GithubIssueCommentEventPayload,
   GithubWatchEvent, GithubWatchEventPayload,
   GithubForkEvent, GithubForkEventPayload,
+  GithubReleaseEvent, GithubReleaseEventPayload,
   GithubCreateEvent, GithubCreateEventPayload
 } from "../../src/github";
 
@@ -209,14 +210,14 @@ describe("github.ts", () => {
 
         expect(payload.action).toEqual(raw.payload.action);
         expect(payload.number).toEqual(raw.payload.number);
-        expect(payload.merged).toEqual(raw.payload.pull_request.merged);
         expect(payload.pull_request_id).toEqual(raw.payload.pull_request.id);
-        expect(payload.title).toEqual(raw.payload.pull_request.title);
-        expect(payload.url).toEqual(raw.payload.pull_request.url);
-        expect(payload.commits).toEqual(raw.payload.pull_request.commits);
-        expect(payload.additions).toEqual(raw.payload.pull_request.additions);
-        expect(payload.deletions).toEqual(raw.payload.pull_request.deletions);
-        expect(payload.changed_files).toEqual(raw.payload.pull_request.changed_files);
+        expect(payload.pull_request_merged).toEqual(raw.payload.pull_request.merged);
+        expect(payload.pull_request_title).toEqual(raw.payload.pull_request.title);
+        expect(payload.pull_request_url).toEqual(raw.payload.pull_request.url);
+        expect(payload.pull_request_commits).toEqual(raw.payload.pull_request.commits);
+        expect(payload.pull_request_additions).toEqual(raw.payload.pull_request.additions);
+        expect(payload.pull_request_deletions).toEqual(raw.payload.pull_request.deletions);
+        expect(payload.pull_request_changed_files).toEqual(raw.payload.pull_request.changed_files);
       });
     });
 
@@ -236,9 +237,9 @@ describe("github.ts", () => {
 
         expect(payload.action).toEqual(raw.payload.action);
         expect(payload.issue_id).toEqual(raw.payload.issue.id);
-        expect(payload.number).toEqual(raw.payload.issue.number);
-        expect(payload.title).toEqual(raw.payload.issue.title);
-        expect(payload.url).toEqual(raw.payload.issue.html_url);
+        expect(payload.issue_number).toEqual(raw.payload.issue.number);
+        expect(payload.issue_title).toEqual(raw.payload.issue.title);
+        expect(payload.issue_url).toEqual(raw.payload.issue.html_url);
       });
     });
 
@@ -258,9 +259,9 @@ describe("github.ts", () => {
 
         expect(payload.action).toEqual(raw.payload.action);
         expect(payload.issue_id).toEqual(raw.payload.issue.id);
-        expect(payload.number).toEqual(raw.payload.issue.number);
-        expect(payload.title).toEqual(raw.payload.issue.title);
-        expect(payload.url).toEqual(raw.payload.comment.html_url);
+        expect(payload.issue_number).toEqual(raw.payload.issue.number);
+        expect(payload.issue_title).toEqual(raw.payload.issue.title);
+        expect(payload.comment_url).toEqual(raw.payload.comment.html_url);
       });
     });
 
@@ -304,7 +305,31 @@ describe("github.ts", () => {
       });
     });
 
-    describe("TODO: CreateEvent", () => {
+    describe("ReleaseEvent", () => {
+      it("should be deserialize", () => {
+        let raw = SampleResources.releaseEvent1;
+
+        let releaseEvent = GithubReleaseEvent.deserialize(GithubReleaseEvent, raw);
+
+        expect(releaseEvent.event_id).toEqual(raw.id);
+        expect(releaseEvent.event_type).toEqual(raw.type);
+        expect(releaseEvent.event_type).toEqual(GithubReleaseEvent.EVENT_TYPE);
+        expect(releaseEvent.actor).toEqual(raw.actor.login);
+        expect(releaseEvent.repo).toEqual(raw.repo.name);
+        expect(releaseEvent.created_at).toEqual(raw.created_at);
+
+        let payload = releaseEvent.payload;
+
+        expect(payload.release_prerelease).toEqual(raw.payload.release.prerelease);
+        expect(payload.release_id).toEqual(raw.payload.release.id);
+        expect(payload.release_url).toEqual(raw.payload.release.html_url);
+        expect(payload.release_tag_name).toEqual(raw.payload.release.tag_name);
+        expect(payload.release_name).toEqual(raw.payload.release.name);
+        expect(payload.release_target_commitish).toEqual(raw.payload.release.target_commitish);
+      });
+    });
+
+    describe("CreateEvent", () => {
       it("should be deserialized the given event contains the ref_type as branch", () => {
         let raw = SampleResources.createEventBranch1;
         let createEvent = GithubCreateEvent.deserialize(GithubCreateEvent, raw);

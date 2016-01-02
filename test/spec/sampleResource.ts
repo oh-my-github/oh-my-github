@@ -3,6 +3,105 @@
 
 
 export class SampleResources {
+  static releaseEvent1 = {
+    "id": "3487658096",
+    "type": "ReleaseEvent",
+    "actor": {
+      "id": 4968473,
+      "login": "1ambda",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/1ambda",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4968473?"
+    },
+    "repo": {
+      "id": 41334579,
+      "name": "oh-my-github/datacow",
+      "url": "https://api.github.com/repos/oh-my-github/datacow"
+    },
+    "payload": {
+      "action": "published",
+      "release": {
+        "url": "https://api.github.com/repos/oh-my-github/datacow/releases/2362432",
+        "assets_url": "https://api.github.com/repos/oh-my-github/datacow/releases/2362432/assets",
+        "upload_url": "https://uploads.github.com/repos/oh-my-github/datacow/releases/2362432/assets{?name,label}",
+        "html_url": "https://github.com/oh-my-github/datacow/releases/tag/0.0.1",
+        "id": 2362432,
+        "tag_name": "0.0.1",
+        "target_commitish": "master",
+        "name": "example release",
+        "draft": false,
+        "author": {
+          "login": "1ambda",
+          "id": 4968473,
+          "avatar_url": "https://avatars.githubusercontent.com/u/4968473?v=3",
+          "gravatar_id": "",
+          "url": "https://api.github.com/users/1ambda",
+          "html_url": "https://github.com/1ambda",
+          "followers_url": "https://api.github.com/users/1ambda/followers",
+          "following_url": "https://api.github.com/users/1ambda/following{/other_user}",
+          "gists_url": "https://api.github.com/users/1ambda/gists{/gist_id}",
+          "starred_url": "https://api.github.com/users/1ambda/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/1ambda/subscriptions",
+          "organizations_url": "https://api.github.com/users/1ambda/orgs",
+          "repos_url": "https://api.github.com/users/1ambda/repos",
+          "events_url": "https://api.github.com/users/1ambda/events{/privacy}",
+          "received_events_url": "https://api.github.com/users/1ambda/received_events",
+          "type": "User",
+          "site_admin": false
+        },
+        "prerelease": true,
+        "created_at": "2015-09-25T14:38:23Z",
+        "published_at": "2016-01-02T04:39:46Z",
+        "assets": [],
+        "tarball_url": "https://api.github.com/repos/oh-my-github/datacow/tarball/0.0.1",
+        "zipball_url": "https://api.github.com/repos/oh-my-github/datacow/zipball/0.0.1",
+        "body": ""
+      }
+    },
+    "public": true,
+    "created_at": "2016-01-02T04:39:46Z",
+    "org": {
+      "id": 13924389,
+      "login": "oh-my-github",
+      "gravatar_id": "",
+      "url": "https://api.github.com/orgs/oh-my-github",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13924389?"
+    }
+  };
+
+  static createEventTag1 = {
+    "id": "3487658099",
+    "type": "CreateEvent",
+    "actor": {
+      "id": 4968473,
+      "login": "1ambda",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/1ambda",
+      "avatar_url": "https://avatars.githubusercontent.com/u/4968473?"
+    },
+    "repo": {
+      "id": 41334579,
+      "name": "oh-my-github/datacow",
+      "url": "https://api.github.com/repos/oh-my-github/datacow"
+    },
+    "payload": {
+      "ref": "0.0.1",
+      "ref_type": "tag",
+      "master_branch": "master",
+      "description": "",
+      "pusher_type": "user"
+    },
+    "public": true,
+    "created_at": "2016-01-02T04:39:46Z",
+    "org": {
+      "id": 13924389,
+      "login": "oh-my-github",
+      "gravatar_id": "",
+      "url": "https://api.github.com/orgs/oh-my-github",
+      "avatar_url": "https://avatars.githubusercontent.com/u/13924389?"
+    }
+  };
+
   static createEventRepository1 = {
     "id": "3475024447",
     "type": "CreateEvent",

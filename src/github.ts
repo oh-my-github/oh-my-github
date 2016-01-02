@@ -174,13 +174,13 @@ export class GithubPullRequestEventPayload {
   @deserializeAs("action") public action: string;
   @deserializeAs("number") public number: string;
   public pull_request_id: string;
-  public title: string;
-  public url: string;
-  public merged: boolean;
-  public commits: number;
-  public additions: number;
-  public deletions: number;
-  public changed_files: number;
+  public pull_request_title: string;
+  public pull_request_url: string;
+  public pull_request_merged: boolean;
+  public pull_request_commits: number;
+  public pull_request_additions: number;
+  public pull_request_deletions: number;
+  public pull_request_changed_files: number;
 
   public static OnDeserialized(instance: GithubPullRequestEventPayload, payload: any): void {
     if (_.isEmpty(payload)) return;
@@ -188,13 +188,13 @@ export class GithubPullRequestEventPayload {
     if (!_.isEmpty(payload.pull_request)) {
       let pr = payload.pull_request;
       instance.pull_request_id = pr.id;
-      instance.title = pr.title;
-      instance.url = pr.url;
-      instance.merged = pr.merged;
-      instance.commits = pr.commits;
-      instance.additions= pr.additions;
-      instance.deletions = pr.deletions;
-      instance.changed_files = pr.changed_files;
+      instance.pull_request_title = pr.title;
+      instance.pull_request_url = pr.url;
+      instance.pull_request_merged = pr.merged;
+      instance.pull_request_commits = pr.commits;
+      instance.pull_request_additions= pr.additions;
+      instance.pull_request_deletions = pr.deletions;
+      instance.pull_request_changed_files = pr.changed_files;
     }
   }
 }
@@ -216,10 +216,10 @@ export class GithubIssuesEventPayload {
   public static ACTION_VALUE_REOPENED = "reopened";
 
   @deserializeAs("action") public action: string;
-  public issue_id: number; /* issue.id */
-  public number: string;   /* issue.number */
-  public title: string;    /* issue.title */
-  public url: string;      /* issue.html_url */
+  public issue_id: number;     /* issue.id */
+  public issue_number: string; /* issue.number */
+  public issue_title: string;  /* issue.title */
+  public issue_url: string;    /* issue.html_url */
 
   public static OnDeserialized(instance: GithubIssuesEventPayload, payload: any): void {
     if (_.isEmpty(payload)) return;
@@ -228,9 +228,9 @@ export class GithubIssuesEventPayload {
       let issue = payload.issue;
 
       instance.issue_id = issue.id;
-      instance.number = issue.number;
-      instance.title = issue.title;
-      instance.url = issue.html_url;
+      instance.issue_number = issue.number;
+      instance.issue_title = issue.title;
+      instance.issue_url = issue.html_url;
     }
   }
 }
@@ -245,10 +245,10 @@ export class GithubIssueCommentEventPayload {
   public static ACTION_TYPE_CREATED: string = "created";
 
   @deserializeAs("action") public action: string;
-  public issue_id: number; /* issue.id */
-  public number: string;   /* issue.number */
-  public title: string;    /* issue.title */
-  public url: string;      /* comment.html_url */
+  public issue_id: number;     /* issue.id */
+  public issue_number: string; /* issue.number */
+  public issue_title: string;  /* issue.title */
+  public comment_url: string;  /* comment.html_url */
 
   public static OnDeserialized(instance: GithubIssueCommentEventPayload, payload: any): void {
     if (_.isEmpty(payload)) return;
@@ -257,13 +257,13 @@ export class GithubIssueCommentEventPayload {
       let issue = payload.issue;
 
       instance.issue_id = issue.id;
-      instance.number = issue.number;
-      instance.title = issue.title;
+      instance.issue_number = issue.number;
+      instance.issue_title = issue.title;
     }
 
     if (!_.isEmpty(payload.comment)) {
       let comment = payload.comment;
-      instance.url = comment.html_url;
+      instance.comment_url = comment.html_url;
     }
   }
 }
@@ -278,10 +278,13 @@ export class GithubReleaseEventPayload {
   public static ACTION_TYPE_PUBLISHED = "published";
 
   @deserializeAs("action") public action: string;
-  public release_id: number;       /* release.id */
-  public url: string;              /* release.html_url */
-  public tag_name: string;         /* release.tag_name */
-  public target_commitish: string; /* release.target_commitish */
+
+  public release_id: number;               /* release.id */
+  public release_url: string;              /* release.html_url */
+  public release_tag_name: string;         /* release.tag_name */
+  public release_name: string;             /* release.name */
+  public release_target_commitish: string; /* release.target_commitish */
+  public release_prerelease: string;       /* release.prerelease */
 
   public static OnDeserialized(instance: GithubReleaseEventPayload, payload: any): void {
     if (_.isEmpty(payload)) return;
@@ -290,9 +293,11 @@ export class GithubReleaseEventPayload {
       let release = payload.release;
 
       instance.release_id = release.id;
-      instance.url = release.html_url;
-      instance.tag_name = release.tag_name;
-      instance.target_commitish = release.target_commitish;
+      instance.release_url = release.html_url;
+      instance.release_tag_name = release.tag_name;
+      instance.release_target_commitish = release.target_commitish;
+      instance.release_name = release.name;
+      instance.release_prerelease = release.prerelease;
     }
   }
 }
