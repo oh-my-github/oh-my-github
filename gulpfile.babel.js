@@ -10,8 +10,10 @@ import watch from "gulp-watch";
 import clean from "gulp-clean";
 import merge from "merge2";
 
+
 import tslint         from "gulp-tslint";
 import jasmine        from "gulp-jasmine";
+import jsonlint       from "gulp-jsonlint";
 import reporters      from "jasmine-reporters";
 import sourcemaps     from "gulp-sourcemaps";
 import runSequence    from "run-sequence";
@@ -21,6 +23,7 @@ import jasmineBrowser from "gulp-jasmine-browser";
 const TASK_NAME_TEST    = "test";
 const TASK_NAME_COMPILE = "compile";
 const TASK_NAME_TSLINT  = "tslint";
+const TASK_NAME_JSLINT  = "jslint";
 const TASK_NAME_DIST    = "dist";
 const TASK_NAME_CLEAN   = "clean";
 const TASK_NAME_BUILD   = "build";
@@ -40,6 +43,7 @@ const CLEAN_TARGET = [
 gulp.task(TASK_NAME_BUILD, () => {
   runSequence(
     TASK_NAME_TSLINT,
+    TASK_NAME_JSLINT,
     TASK_NAME_CLEAN,
     TASK_NAME_COMPILE,
     TASK_NAME_TEST);
@@ -54,6 +58,12 @@ gulp.task(TASK_NAME_TSLINT, () => {
   return gulp.src(["src/**/*.ts", "test/spec/**/*.ts", "!test/spec/sampleResource.ts"])
     .pipe(tslint())
     .pipe(tslint.report("full"));
+});
+
+gulp.task(TASK_NAME_JSLINT, () => {
+  return gulp.src([env.FILE.DATABASE_TEMPLATE_JSON])
+    .pipe(jsonlint())
+    .pipe(jsonlint.reporter());
 });
 
 gulp.task(TASK_NAME_TEST, () => {

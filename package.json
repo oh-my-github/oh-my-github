@@ -33,6 +33,7 @@
     "gulp-env": "^0.2.0",
     "gulp-jasmine": "^2.2.1",
     "gulp-jasmine-browser": "^0.2.3",
+    "gulp-jsonlint": "^1.1.1",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-tsd": "0.0.4",
     "gulp-tslint": "^4.2.2",
@@ -45,8 +46,10 @@
   },
   "dependencies": {
     "cerialize": "^0.1.2",
+    "chalk": "^1.1.1",
     "circular-json": "^0.3.0",
     "commander": "^2.9.0",
+    "fs-extra": "^0.26.3",
     "lodash": "^3.10.1",
     "octonode": "^0.7.4",
     "prettyjson": "^1.1.3"
