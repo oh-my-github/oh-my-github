@@ -9,7 +9,7 @@
       "commit": "40c60850ad6c8175a62d5ab48c4e016ea5b3dffe"
     },
     "node/node.d.ts": {
-      "commit": "1da639a106527e0c4010b354a1efe52a3059a291"
+      "commit": "fe563dff3428bac1260d1794e2c2ecf8f097535a"
     },
     "commander/commander.d.ts": {
       "commit": "1da639a106527e0c4010b354a1efe52a3059a291"
@@ -19,6 +19,9 @@
     },
     "lodash/lodash.d.ts": {
       "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+    },
+    "fs-extra/fs-extra.d.ts": {
+      "commit": "fe563dff3428bac1260d1794e2c2ecf8f097535a"
     }
   }
 }

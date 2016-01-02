@@ -1,4 +1,5 @@
 /// <reference path="../typings/node/node.d.ts" />
+/// <reference path="../typings/fs-extra/fs-extra.d.ts" />
 /// <reference path="../typings/commander/commander.d.ts" />
 /// <reference path="../typings/circular-json/circular-json.d.ts" />
 
@@ -7,10 +8,17 @@
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
 import * as CircularJSON from "circular-json";
 import {GithubUtil} from "./github_util";
+import * as fse from "fs-extra";
+
+let path = require("path");
 let pretty = require("prettyjson");
 
-/** Since the compiled generator.js is in `build/src/` */
-const GENERATOR_VERSION = require("../../package").version;
+/** generator.js exists in build/src */
+const PROJECT_DIR = path.join(path.dirname(require.main.filename), "../../");
+const PACKAGE_JSON = path.join(PROJECT_DIR, "package.json");
+const GENERATOR_VERSION = require(PACKAGE_JSON).version;
+
+const FILE_NAME_PROFILE = ".oh-my-github";
 
 export class OptionSetting {
   constructor(public specifiers: string, public description: string) {}
@@ -42,13 +50,13 @@ export class ProfileOptions {
 export class CommandSetting {
   constructor(public specifiers: string,
               public description: string,
-              public action: (token, user, options) => void,
+              public action: (...args: any[]) => void,
               public alias?: string) {}
 
   public static COMMAND_NAME_PROFILE = "profile";
-  public static PROFILE_COMMAND = new CommandSetting(
+  public static COMMAND_PROFILE = new CommandSetting(
     `${CommandSetting.COMMAND_NAME_PROFILE} <token> <user>`,
-    "get github profile using the provided token",
+    "Create Github profile using the provided token for the user",
     function(token: string, user: string, options: ProfileOptions) {
       createProfile(token, user, options)
         .then(result => {
@@ -60,11 +68,18 @@ export class CommandSetting {
     }
   );
 
+  public static COMMAND_NAME_INIT = "init";
+  public static COMMAND_INIT = new CommandSetting(
+    `${CommandSetting.COMMAND_NAME_INIT} <repo>`,
+    "Initialize `.oh-my-github` configuration file",
+    function(repo: string) {
+    }
+  );
+
   public static ALL_COMMAND_SETTINGS = [
-    CommandSetting.PROFILE_COMMAND
+    CommandSetting.COMMAND_PROFILE
   ];
 }
-
 async function createProfile(token: string,
                              user: string,
                              options: ProfileOptions): Promise<any> {
@@ -118,12 +133,12 @@ export class CommandFactory {
       .version(GENERATOR_VERSION);
 
     parser
-      .command(CommandSetting.PROFILE_COMMAND.specifiers)
-      .description(CommandSetting.PROFILE_COMMAND.description)
+      .command(CommandSetting.COMMAND_PROFILE.specifiers)
+      .description(CommandSetting.COMMAND_PROFILE.description)
       .option(ProfileOptions.PROFILE_OPTION_LANGUAGE.specifiers, ProfileOptions.PROFILE_OPTION_LANGUAGE.description)
       .option(ProfileOptions.PROFILE_OPTION_REPOSITORY.specifiers, ProfileOptions.PROFILE_OPTION_REPOSITORY.description)
       .option(ProfileOptions.PROFILE_OPTION_ACTIVITY.specifiers, ProfileOptions.PROFILE_OPTION_ACTIVITY.description)
-      .action(CommandSetting.PROFILE_COMMAND.action);
+      .action(CommandSetting.COMMAND_PROFILE.action);
 
     /** use circular-json to avoid cyclic references */
     let serialized = CircularJSON.stringify(parser.parse(argv));
