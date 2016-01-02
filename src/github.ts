@@ -162,7 +162,6 @@ export class GithubPushEvent extends GithubEvent {
   @deserializeAs(GithubPushEventPayload, "payload") public payload: GithubPushEventPayload;
 }
 
-
 export class GithubPullRequestEventPayload {
   public static ACTION_VALUE_ASSIGNED = "assigned";
   public static ACTION_VALUE_UNASSIGNED = "unassigned";
@@ -301,7 +300,78 @@ export class GithubReleaseEventPayload {
 @inheritSerialization(GithubEvent)
 export class GithubReleaseEvent extends GithubEvent {
   public static EVENT_TYPE: string = "ReleaseEvent";
+
   @deserializeAs(GithubReleaseEventPayload, "payload") public payload: GithubReleaseEventPayload;
+}
+
+export class GithubWatchEventPayload {
+  public static ACTION_TYPE_STARTED = "started";
+
+  @deserializeAs("action") public action: string;
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubWatchEvent extends GithubEvent {
+  public static EVENT_TYPE: string = "WatchEvent";
+
+  @deserializeAs(GithubWatchEventPayload, "payload") public payload: GithubWatchEventPayload;
+}
+
+export class GithubRepositoryEventPayload {
+  public static ACTION_TYPE: string = "created";
+
+  @deserializeAs("action") public action: string;
+  public repository_id: string; /* repository.id */
+  public url: string;           /* repository.html_url */
+  public full_name: string;     /* repository.full_name */
+
+  public static OnDeserialized(instance: GithubRepositoryEventPayload, payload: any): void {
+    if (_.isEmpty(payload)) return;
+
+    if (!_.isEmpty(payload.repository)) {
+      let repository = payload.repository;
+      instance.repository_id = repository.id;
+      instance.url = repository.html_url;
+      instance.full_name = repository.full_name;
+    }
+  }
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubRepositoryEvent extends GithubEvent {
+  public static EVENT_TYPE = "RepositoryEvent";
+}
+
+export class GithubForkEventPayload {
+  /** even if ForkEventPayload doesn't need to have action field,
+   *  we need it otherwise `OnDeserialized` is not called (cerialize bug)
+   */
+  @deserializeAs("action") public action: string;
+  public forkee_id: string;
+  public forkee_name: string;
+  public forkee_full_name: string;
+  public forkee_url: string;
+  public forkee_language: string;
+
+  public static OnDeserialized(instance: GithubForkEventPayload, payload: any): void {
+    if (_.isEmpty(payload)) return;
+
+    if (!_.isEmpty(payload.forkee)) {
+      let forkee = payload.forkee;
+      instance.forkee_id = forkee.id;
+      instance.forkee_name = forkee.name;
+      instance.forkee_full_name = forkee.full_name;
+      instance.forkee_url = forkee.html_url;
+      instance.forkee_language = forkee.language;
+    }
+  }
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubForkEvent extends GithubEvent {
+  public static EVENT_TYPE = "ForkEvent";
+
+  @deserializeAs(GithubForkEventPayload, "payload") public payload: GithubForkEventPayload;
 }
 
 export class GithubUtil {

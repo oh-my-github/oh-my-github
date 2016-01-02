@@ -12,7 +12,9 @@ import {
   GithubPullRequestEvent, GithubPullRequestEventPayload,
   GithubIssuesEvent, GithubIssuesEventPayload,
   GithubIssueCommentEvent, GithubIssueCommentEventPayload,
-  GithubReleaseEvent, GithubReleaseEventPayload
+  GithubReleaseEvent, GithubReleaseEventPayload,
+  GithubWatchEvent, GithubWatchEventPayload,
+  GithubForkEvent, GithubForkEventPayload
 } from "../../src/github";
 
 import {SampleResources} from "./sampleResource"
@@ -283,20 +285,52 @@ describe("github.ts", () => {
       });
     });
 
-    describe("TODO: WatchEvent", () => {
+    describe("WatchEvent", () => {
       it("should be deserialized", () => {
+        let raw = SampleResources.watchEvent1;
+        let watchEvent = GithubWatchEvent.deserialize(GithubWatchEvent, raw);
 
+        expect(watchEvent.event_id).toEqual(raw.id);
+        expect(watchEvent.event_type).toEqual(raw.type);
+        expect(watchEvent.event_type).toEqual(GithubWatchEvent.EVENT_TYPE);
+        expect(watchEvent.actor).toEqual(raw.actor.login);
+        expect(watchEvent.repo).toEqual(raw.repo.name);
+        expect(watchEvent.created_at).toEqual(raw.created_at);
+
+        let payload = watchEvent.payload;
+
+        expect(payload.action).toEqual(raw.payload.action);
       });
     });
 
-    describe("TODO: RepositoryEvent", () => {
+    describe("ForkEvent", () => {
       it("should be deserialized", () => {
+        let raw = SampleResources.forkEvent1;
+        let forkEvent = GithubForkEvent.deserialize(GithubForkEvent, raw);
 
+        expect(forkEvent.event_id).toEqual(raw.id);
+        expect(forkEvent.event_type).toEqual(raw.type);
+        expect(forkEvent.event_type).toEqual(GithubForkEvent.EVENT_TYPE);
+        expect(forkEvent.actor).toEqual(raw.actor.login);
+        expect(forkEvent.repo).toEqual(raw.repo.name);
+        expect(forkEvent.created_at).toEqual(raw.created_at);
+
+        let payload = forkEvent.payload;
+
+        expect(payload.forkee_id).toEqual(raw.payload.forkee.id);
+        expect(payload.forkee_name).toEqual(raw.payload.forkee.name);
+        expect(payload.forkee_full_name).toEqual(raw.payload.forkee.full_name);
+        expect(payload.forkee_url).toEqual(raw.payload.forkee.html_url);
+        expect(payload.forkee_language).toEqual(raw.payload.forkee.language);
       });
     });
 
-    describe("TODO: ForkEvent", () => {
-      it("should be deserialized", () => {
+    describe("TODO: CreateEvent", () => {
+      it("should be deserialized the given event contains the ref_type as branch", () => {
+
+      });
+
+      it("should be deserialized the given event contains the ref_type as repository", () => {
 
       });
     });
