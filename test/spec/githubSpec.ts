@@ -372,6 +372,27 @@ describe("github.ts", () => {
         expect(payload.pusher_type).toEqual(raw.payload.pusher_type);
       });
     });
+
+    it("should be deserialized the given event contains the ref_type as tag", () => {
+      let raw = SampleResources.createEventTag1;
+      let createEvent = GithubCreateEvent.deserialize(GithubCreateEvent, raw);
+
+      expect(createEvent.event_id).toEqual(raw.id);
+      expect(createEvent.event_type).toEqual(raw.type);
+      expect(createEvent.event_type).toEqual(GithubCreateEvent.EVENT_TYPE);
+      expect(createEvent.actor).toEqual(raw.actor.login);
+      expect(createEvent.repo).toEqual(raw.repo.name);
+      expect(createEvent.created_at).toEqual(raw.created_at);
+
+      let payload = createEvent.payload;
+
+      expect(payload.ref).toEqual(raw.payload.ref);
+      expect(payload.ref_type).toEqual(raw.payload.ref_type);
+      expect(payload.ref_type).toEqual(GithubCreateEventPayload.REF_TYPE_TAG);
+      expect(payload.master_branch).toEqual(raw.payload.master_branch);
+      expect(payload.description).toEqual(raw.payload.description);
+      expect(payload.pusher_type).toEqual(raw.payload.pusher_type);
+    });
   });
 });
 
