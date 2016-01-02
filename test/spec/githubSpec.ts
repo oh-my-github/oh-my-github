@@ -12,9 +12,9 @@ import {
   GithubPullRequestEvent, GithubPullRequestEventPayload,
   GithubIssuesEvent, GithubIssuesEventPayload,
   GithubIssueCommentEvent, GithubIssueCommentEventPayload,
-  GithubReleaseEvent, GithubReleaseEventPayload,
   GithubWatchEvent, GithubWatchEventPayload,
-  GithubForkEvent, GithubForkEventPayload
+  GithubForkEvent, GithubForkEventPayload,
+  GithubCreateEvent, GithubCreateEventPayload
 } from "../../src/github";
 
 import {SampleResources} from "./sampleResource"
@@ -264,27 +264,6 @@ describe("github.ts", () => {
       });
     });
 
-    describe("ReleaseEvent", () => {
-      it("should be deserialized", () => {
-        let raw = SampleResources.releaseEvent1;
-        let releaseEvent = GithubReleaseEvent.deserialize(GithubReleaseEvent, raw);
-
-        expect(releaseEvent.event_id).toEqual(raw.id);
-        expect(releaseEvent.event_type).toEqual(raw.type);
-        expect(releaseEvent.event_type).toEqual(GithubReleaseEvent.EVENT_TYPE);
-        expect(releaseEvent.actor).toEqual(raw.actor.login);
-        expect(releaseEvent.repo).toEqual(raw.repo.name);
-        expect(releaseEvent.created_at).toEqual(raw.created_at);
-
-        let payload = releaseEvent.payload;
-
-        expect(payload.release_id).toEqual(raw.payload.release.id);
-        expect(payload.url).toEqual(raw.payload.release.html_url);
-        expect(payload.tag_name).toEqual(raw.payload.release.tag_name);
-        expect(payload.target_commitish).toEqual(raw.payload.release.target_commitish);
-      });
-    });
-
     describe("WatchEvent", () => {
       it("should be deserialized", () => {
         let raw = SampleResources.watchEvent1;
@@ -327,11 +306,45 @@ describe("github.ts", () => {
 
     describe("TODO: CreateEvent", () => {
       it("should be deserialized the given event contains the ref_type as branch", () => {
+        let raw = SampleResources.createEventBranch1;
+        let createEvent = GithubCreateEvent.deserialize(GithubCreateEvent, raw);
 
+        expect(createEvent.event_id).toEqual(raw.id);
+        expect(createEvent.event_type).toEqual(raw.type);
+        expect(createEvent.event_type).toEqual(GithubCreateEvent.EVENT_TYPE);
+        expect(createEvent.actor).toEqual(raw.actor.login);
+        expect(createEvent.repo).toEqual(raw.repo.name);
+        expect(createEvent.created_at).toEqual(raw.created_at);
+
+        let payload = createEvent.payload;
+
+        expect(payload.ref).toEqual(raw.payload.ref);
+        expect(payload.ref_type).toEqual(raw.payload.ref_type);
+        expect(payload.ref_type).toEqual(GithubCreateEventPayload.REF_TYPE_BRANCH);
+        expect(payload.master_branch).toEqual(raw.payload.master_branch);
+        expect(payload.description).toEqual(raw.payload.description);
+        expect(payload.pusher_type).toEqual(raw.payload.pusher_type);
       });
 
       it("should be deserialized the given event contains the ref_type as repository", () => {
+        let raw = SampleResources.createEventRepository1;
+        let createEvent = GithubCreateEvent.deserialize(GithubCreateEvent, raw);
 
+        expect(createEvent.event_id).toEqual(raw.id);
+        expect(createEvent.event_type).toEqual(raw.type);
+        expect(createEvent.event_type).toEqual(GithubCreateEvent.EVENT_TYPE);
+        expect(createEvent.actor).toEqual(raw.actor.login);
+        expect(createEvent.repo).toEqual(raw.repo.name);
+        expect(createEvent.created_at).toEqual(raw.created_at);
+
+        let payload = createEvent.payload;
+
+        expect(payload.ref).toEqual(raw.payload.ref);
+        expect(payload.ref_type).toEqual(raw.payload.ref_type);
+        expect(payload.ref_type).toEqual(GithubCreateEventPayload.REF_TYPE_REPOSITORY);
+        expect(payload.master_branch).toEqual(raw.payload.master_branch);
+        expect(payload.description).toEqual(raw.payload.description);
+        expect(payload.pusher_type).toEqual(raw.payload.pusher_type);
       });
     });
   });

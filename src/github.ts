@@ -317,34 +317,9 @@ export class GithubWatchEvent extends GithubEvent {
   @deserializeAs(GithubWatchEventPayload, "payload") public payload: GithubWatchEventPayload;
 }
 
-export class GithubRepositoryEventPayload {
-  public static ACTION_TYPE: string = "created";
-
-  @deserializeAs("action") public action: string;
-  public repository_id: string; /* repository.id */
-  public url: string;           /* repository.html_url */
-  public full_name: string;     /* repository.full_name */
-
-  public static OnDeserialized(instance: GithubRepositoryEventPayload, payload: any): void {
-    if (_.isEmpty(payload)) return;
-
-    if (!_.isEmpty(payload.repository)) {
-      let repository = payload.repository;
-      instance.repository_id = repository.id;
-      instance.url = repository.html_url;
-      instance.full_name = repository.full_name;
-    }
-  }
-}
-
-@inheritSerialization(GithubEvent)
-export class GithubRepositoryEvent extends GithubEvent {
-  public static EVENT_TYPE = "RepositoryEvent";
-}
-
 export class GithubForkEventPayload {
   /** even if ForkEventPayload doesn't need to have action field,
-   *  we need it otherwise `OnDeserialized` is not called (cerialize bug)
+   *  we need it otherwise `OnDeserialized` is not called (See, https://github.com/weichx/cerialize/issues/16)
    */
   @deserializeAs("action") public action: string;
   public forkee_id: string;
@@ -372,6 +347,25 @@ export class GithubForkEvent extends GithubEvent {
   public static EVENT_TYPE = "ForkEvent";
 
   @deserializeAs(GithubForkEventPayload, "payload") public payload: GithubForkEventPayload;
+}
+
+export class GithubCreateEventPayload {
+  public static REF_TYPE_REPOSITORY = "repository";
+  public static REF_TYPE_BRANCH = "branch";
+  public static REF_TYPE_TAG = "tag";
+
+  @deserialize public ref: string; /* might be null, if repository is just created */
+  @deserialize public ref_type: string;
+  @deserialize public master_branch: string;
+  @deserialize public description: string;
+  @deserialize public pusher_type: string;
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubCreateEvent extends GithubEvent {
+  public static EVENT_TYPE = "CreateEvent";
+
+  @deserializeAs(GithubCreateEventPayload, "payload") public payload: GithubCreateEventPayload;
 }
 
 export class GithubUtil {
