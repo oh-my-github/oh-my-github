@@ -110,7 +110,7 @@ export class ParsedCommand extends Deserializable {
 }
 
 export class CommandFactory {
-  public static create(argv: string[]): ParsedCommand{
+  public static create(argv: string[]): ParsedCommand {
     let parser = require("commander");
 
     parser

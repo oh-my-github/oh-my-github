@@ -15,7 +15,7 @@ export class Language {
     let langs = new Array<Language>();
 
     try {
-      _.forOwn(body, (value, key) => { langs.push(new Language(key, value)); })
+      _.forOwn(body, (value, key) => { langs.push(new Language(key, value)); });
     } catch (err) {
       console.log(`Can't create Array<Langauge> due to ${err} (raw: ${body})`);
     }
@@ -75,7 +75,7 @@ export class GithubEvent extends Deserializable {
   public actor: string; /** actor.login */
   public repo: string; /** owner/repo_name */
 
-  public static OnDeserialized(instance : GithubEvent, json : any) : void {
+  public static OnDeserialized(instance: GithubEvent, json: any): void {
     if (!_.isEmpty(json) && !_.isEmpty(json.actor))
       instance.actor = json.actor.login;
 
@@ -100,7 +100,7 @@ export class GithubPushEventPayload {
 
     if (!_.isEmpty(payload.commits) && Array.isArray(payload.commits))
       instance.commit_urls = payload.commits.map(c => {
-        return `${GithubPushEventPayload.COMMIT_URI_PREFIX}${c.sha}`
+        return `${GithubPushEventPayload.COMMIT_URI_PREFIX}${c.sha}`;
       });
   }
 }
@@ -141,7 +141,7 @@ export class GithubPullRequestEventPayload {
       instance.pull_request_url = pr.url;
       instance.pull_request_merged = pr.merged;
       instance.pull_request_commits = pr.commits;
-      instance.pull_request_additions= pr.additions;
+      instance.pull_request_additions = pr.additions;
       instance.pull_request_deletions = pr.deletions;
       instance.pull_request_changed_files = pr.changed_files;
     }

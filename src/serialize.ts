@@ -1,9 +1,9 @@
 /// <reference path="../typings/node/node.d.ts" />
 /// <reference path="../node_modules/cerialize/dist/serialize.d.ts" />
 
-'use strict';
+"use strict";
 
-const cerialize = require('cerialize');
+const cerialize = require("cerialize");
 
 export const serialize = cerialize.serialize;
 export const serializeAs = cerialize.serializeAs;
@@ -12,7 +12,7 @@ export const deserializeAs = cerialize.deserializeAs;
 export const inheritSerialization = cerialize.inheritSerialization;
 
 export interface NoParamConstructor<T> {
-  new (): T
+  new (): T;
 }
 
 export abstract class Deserializable {

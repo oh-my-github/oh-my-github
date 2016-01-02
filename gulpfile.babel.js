@@ -29,7 +29,7 @@ const CLEAN_TARGET = [
 ];
 
 gulp.task("build", () => {
-  runSequence("lint", "clean", "compile-src", "compile-test", "test-console");
+  runSequence("tslint", "clean", "compile-src", "compile-test", "test-console");
 });
 
 gulp.task("clean", () => {
@@ -54,7 +54,7 @@ gulp.task("con-compile", ()=> {
 });
 
 gulp.task("tslint", () => {
-  return gulp.src("src/command.ts")
+  return gulp.src(["src/**/*.ts", "test/spec/**/*.ts", "!test/spec/sampleResource.ts"])
     .pipe(tslint())
     .pipe(tslint.report("full"));
 });

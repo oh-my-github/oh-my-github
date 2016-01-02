@@ -16,8 +16,8 @@ import {
   GithubCreateEvent, GithubCreateEventPayload
 } from "../../src/github_model";
 
-import {GithubUtil, GithubResponse } from "../../src/github_util"
-import {SampleResources} from "./sampleResource"
+import {GithubUtil, GithubResponse } from "../../src/github_util";
+import {SampleResources} from "./sampleResource";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const user1 = "1ambda";
@@ -37,7 +37,7 @@ describe("github.ts", () => {
           expect(profile.followers).toBeDefined();
           expect(profile.following).toBeDefined();
           callback();
-        })
+        });
       });
     });
 
@@ -52,7 +52,7 @@ describe("github.ts", () => {
             let repoNames = repos.map(repo => repo.name);
             expect(repoNames).toContain(`${user1}.github.io`);
             callback();
-          })
+          });
       });
     });
 
@@ -68,7 +68,7 @@ describe("github.ts", () => {
             expect(err.message).toEqual("Bad credentials");
             expect(err.statusCode).toEqual(401);
             callback();
-          })
+          });
       });
 
       it("should reject promise with the `Not Found` message given invalid uri", callback => {
@@ -82,7 +82,7 @@ describe("github.ts", () => {
             expect(err.message).toEqual("Not Found");
             expect(err.statusCode).toEqual(404);
             callback();
-          })
+          });
       });
     });
   });
@@ -127,10 +127,10 @@ describe("github.ts", () => {
   describe("GithubResponse", () => {
     describe("parseLink", () => {
       it("should return nextLink given `Link` header contains `rel:\"next\"`", () => {
-        let json1 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=2>; rel="next", <https://api.github.com/user/1ambda/repos?access_token=1&page=2>; rel="last"';
-        let json2 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=1>; rel="first", <https://api.github.com/user/1ambda/repos?access_token=1&page=3>; rel="last"';
-        let json3 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=4>; rel="last"';
-        let json4 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=45000>; rel="last"';
+        let json1 = "<https://api.github.com/user/1ambda/repos?access_token=1&page=2>; rel=\"next\", <https://api.github.com/user/1ambda/repos?access_token=1&page=2>; rel=\"last\"";
+        let json2 = "<https://api.github.com/user/1ambda/repos?access_token=1&page=1>; rel=\"first\", <https://api.github.com/user/1ambda/repos?access_token=1&page=3>; rel=\"last\"";
+        let json3 = "<https://api.github.com/user/1ambda/repos?access_token=1&page=4>; rel=\"last\"";
+        let json4 = "<https://api.github.com/user/1ambda/repos?access_token=1&page=45000>; rel=\"last\"";
 
         expect(GithubResponse.parseLastLinkCount(json1)).toEqual(2);
         expect(GithubResponse.parseLastLinkCount(json2)).toEqual(3);
@@ -139,10 +139,10 @@ describe("github.ts", () => {
       });
 
       it("should return null when cannot parse the `Link`", () => {
-        let json1 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=>; rel="last"';
-        let json2 = '<https://api.github.com/user/1ambda/repos?access_token=1&=45000>; rel="last"';
-        let json3 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=46000AA>; rel="last"';
-        let json4 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=AA47000>; rel="last"';
+        let json1 = "<https://api.github.com/user/1ambda/repos?access_token=1&page=>; rel=\"last\"";
+        let json2 = "<https://api.github.com/user/1ambda/repos?access_token=1&=45000>; rel=\"last\"";
+        let json3 = "<https://api.github.com/user/1ambda/repos?access_token=1&page=46000AA>; rel=\"last\"";
+        let json4 = "<https://api.github.com/user/1ambda/repos?access_token=1&page=AA47000>; rel=\"last\"";
 
         expect(GithubResponse.parseLastLinkCount(json1)).toEqual(null);
         expect(GithubResponse.parseLastLinkCount(json2)).toEqual(null);
@@ -151,20 +151,20 @@ describe("github.ts", () => {
       });
 
       it("should return null given `Link` header contains no `rel:\"next\"`", () => {
-        let json1 = '<https://api.github.com/user/1ambda/repos?access_token=1&page=2>;';
-        let json2 = 'rel="last"';
+        let json1 = "<https://api.github.com/user/1ambda/repos?access_token=1&page=2>;";
+        let json2 = "rel=\"last\"";
 
         expect(GithubResponse.parseLastLinkCount(json1)).toEqual(null);
         expect(GithubResponse.parseLastLinkCount(json2)).toEqual(null);
       });
-      
+
       it("should return null the given arg is not typeof string", () => {
         expect(GithubResponse.parseLastLinkCount(null)).toEqual(null);
         expect(GithubResponse.parseLastLinkCount(undefined)).toEqual(null);
       });
     });
   });
-  
+
   describe("GithubEvent", () => {
     describe("GithubPushEvent", () => {
       it("should be deserialized", () => {

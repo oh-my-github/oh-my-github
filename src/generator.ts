@@ -1,9 +1,9 @@
 /// <reference path="../typings/node/node.d.ts" />
 /// <reference path="../typings/commander/commander.d.ts" />
 
-'use strict';
+"use strict";
 
-let pretty = require('prettyjson');
+let pretty = require("prettyjson");
 
 import {CommandFactory} from "./command";
 

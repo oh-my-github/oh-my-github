@@ -15,7 +15,7 @@ import {
   GithubForkEvent, GithubForkEventPayload,
   GithubReleaseEvent, GithubReleaseEventPayload,
   GithubCreateEvent, GithubCreateEventPayload
-} from "./github_model"
+} from "./github_model";
 
 import {deserialize, deserializeAs, Deserializable, inheritSerialization} from "./serialize";
 
@@ -86,7 +86,7 @@ export class GithubUtil {
     client.get(uri, {}, (err, status, body, headers) => {
       if (err) return reject(GithubError.deserialize(GithubError, err));
       else return resolve(new GithubResponse(headers, body));
-    })
+    });
   });
 
   return r;
@@ -126,24 +126,24 @@ export class GithubUtil {
    * 3. return flattened
    */
   public static async getGithubResponsesBody(token: string, uri: string): Promise<Array<any>> {
-  let rs = await GithubUtil.getGithubReponses(token, uri);
-  let bodies = rs.map(r => r.body); /* each body is an array */
-  let flattened = bodies.reduce((acc, body) => {
-    if (Array.isArray(body) && body.length > 0) return acc.concat(body);
-    else return acc;
-  });
+    let rs = await GithubUtil.getGithubReponses(token, uri);
+    let bodies = rs.map(r => r.body); /* each body is an array */
+    let flattened = bodies.reduce((acc, body) => {
+      if (Array.isArray(body) && body.length > 0) return acc.concat(body);
+      else return acc;
+    });
 
-  return flattened;
-}
+    return flattened;
+  }
 
   public static async getUserRepositories(token: string, user: string): Promise<Array<Repository>> {
-  let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/repos`);
-  let repos = Repository.deserializeArray(Repository, raw);
-  return repos;
-}
+    let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/repos`);
+    let repos = Repository.deserializeArray(Repository, raw);
+    return repos;
+  }
 
   public static async getUserActivities(token: string, user: string): Promise<Array<GithubEvent>> {
-  let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`)
+  let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`);
 
   console.log(`raw count: ` + raw.length);
 
@@ -181,7 +181,7 @@ export class GithubUtil {
 
   if (repos.length === 0) return langs;
 
-  let ps = repoNames.map(name=> {
+  let ps = repoNames.map(name => {
     return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`);
   });
 
@@ -191,7 +191,7 @@ export class GithubUtil {
 
   let lss = langObjects.map(langObject => {
     let ls = Language.create(langObject);
-    return ls
+    return ls;
   });
 
   lss = lss.filter(ls => ls.length > 0);
