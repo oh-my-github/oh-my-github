@@ -444,17 +444,25 @@ export class GithubUtil {
     console.log(`raw count: ` + raw.length);
 
     let events = raw.map(e => {
-      if (GithubPushEvent.EVENT_TYPE === e.type)
-        return GithubPushEvent.deserialize(GithubPushEvent, e);
-      else if (GithubPullRequestEvent.EVENT_TYPE === e.type)
-        return GithubPullRequestEvent.deserialize(GithubPullRequestEvent, e);
-      else if (GithubIssuesEvent.EVENT_TYPE === e.type)
-        return GithubIssuesEvent.deserialize(GithubIssuesEvent, e);
-      else if (GithubIssueCommentEvent.EVENT_TYPE === e.type)
-        return GithubIssueCommentEvent.deserialize(GithubIssueCommentEvent, e);
-      else if (GithubReleaseEvent.EVENT_TYPE === e.type)
-        return GithubReleaseEvent.deserialize(GithubReleaseEvent, e);
-      else return null;
+      switch (e.type) {
+        case GithubPushEvent.EVENT_TYPE:
+          return GithubPushEvent.deserialize(GithubPushEvent, e);
+        case GithubPullRequestEvent.EVENT_TYPE:
+          return GithubPullRequestEvent.deserialize(GithubPullRequestEvent, e);
+        case GithubIssuesEvent.EVENT_TYPE:
+          return GithubIssuesEvent.deserialize(GithubIssuesEvent, e);
+        case GithubIssueCommentEvent.EVENT_TYPE:
+          return GithubIssueCommentEvent.deserialize(GithubIssueCommentEvent, e);
+        case GithubWatchEvent.EVENT_TYPE:
+          return GithubWatchEvent.deserialize(GithubWatchEvent, e);
+        case GithubForkEvent.EVENT_TYPE:
+          return GithubForkEvent.deserialize(GithubForkEvent, e);
+        case GithubReleaseEvent.EVENT_TYPE:
+          return GithubReleaseEvent.deserialize(GithubReleaseEvent, e);
+        case GithubCreateEvent.EVENT_TYPE:
+          return GithubCreateEvent.deserialize(GithubCreateEvent, e);
+        default: return null;
+      }
     });
 
     // TODO: deserialize event by event.type. See GithubAPI event
