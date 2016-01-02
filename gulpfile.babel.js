@@ -42,8 +42,7 @@ gulp.task(TASK_NAME_BUILD, () => {
     TASK_NAME_TSLINT,
     TASK_NAME_CLEAN,
     TASK_NAME_COMPILE,
-    TASK_NAME_TEST,
-    TASK_NAME_DIST);
+    TASK_NAME_TEST);
 });
 
 gulp.task(TASK_NAME_CLEAN, () => {
@@ -112,18 +111,6 @@ gulp.task(TASK_NAME_COMPILE, () => {
       .pipe(sourcemaps.write("."))
       .pipe(gulp.dest(env.DIR.BUILD))
   ]);
-});
-
-gulp.task(TASK_NAME_DIST, () => {
-  const tsProject = ts.createProject("tsconfig.json");
-
-  return gulp.src([env.FILE.SOURCE_TS])
-    .pipe(ts(tsProject))
-    .js
-    .pipe(sourcemaps.init())
-    .pipe(babel())
-    .pipe(sourcemaps.write("."))
-    .pipe(gulp.dest(env.DIR.DIST));
 });
 
 function assertEnv(envVar) {

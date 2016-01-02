@@ -9,7 +9,8 @@ import * as CircularJSON from "circular-json";
 import {GithubUtil} from "./github_util";
 let pretty = require("prettyjson");
 
-const GENERATOR_VERSION = "0.0.1";
+/** Since the compiled generator.js is in `build/src/` */
+const GENERATOR_VERSION = require("../../package").version;
 
 export class OptionSetting {
   constructor(public specifiers: string, public description: string) {}
