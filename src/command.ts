@@ -9,9 +9,53 @@ import * as CircularJSON from "circular-json";
 import {GithubUtil} from "./github_util";
 let pretty = require("prettyjson");
 
+const GENERATOR_VERSION = "0.0.1";
+
+export class OptionSetting {
+  constructor(public specifiers: string, public description: string) {}
+}
+
+export class ProfileOptions {
+  public static PROFILE_OPTION_SPECIFIER_LANGUAGE   = "-l, --language";
+  public static PROFILE_OPTION_SPECIFIER_REPOSITORY = "-r, --repository";
+  public static PROFILE_OPTION_SPECIFIER_ACTIVITY   = "-a, --activity";
+
+  public static PROFILE_OPTION_LANGUAGE   =
+    new OptionSetting(ProfileOptions.PROFILE_OPTION_SPECIFIER_LANGUAGE, "show language summary");
+  public static PROFILE_OPTION_REPOSITORY =
+    new OptionSetting(ProfileOptions.PROFILE_OPTION_SPECIFIER_REPOSITORY, "show repository summary");
+  public static PROFILE_OPTION_ACTIVITY   =
+    new OptionSetting(ProfileOptions.PROFILE_OPTION_SPECIFIER_ACTIVITY, "show activity summary");
+
+  language: boolean;
+  repository: boolean;
+  activity: boolean;
+}
+
+export class CommandSetting {
+  constructor(public specifiers: string,
+              public description: string,
+              public action: (token, user, options) => void,
+              public alias?: string) {}
+
+  public static PROFILE_COMMAND = new CommandSetting(
+    "profile <token> <user>",
+    "get github profile using the provided token",
+    function(token: string, user: string, options: ProfileOptions) {
+      createProfile(token, user, options)
+        .then(result => {
+          console.log(pretty.render(result));
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  );
+}
+
 async function createProfile(token: string,
                              user: string,
-                             options: any): Promise<any> {
+                             options: ProfileOptions): Promise<any> {
   let profile = await GithubUtil.getUserProfile(token, user);
   console.log("\n[USER PROFILE]");
   console.log(pretty.render(profile));
@@ -59,42 +103,15 @@ export class CommandFactory {
     let parser = require("commander");
 
     parser
-      .version("0.0.1")
-      .option("-C, --chdir <path>", "change the working directory")
-      .option("-c, --config <path>", "set config path. defaults to ./deploy.conf")
-      .option("-T, --no-tests", "ignore test hook");
+      .version(GENERATOR_VERSION);
 
     parser
-      .command("profile <token> <user>")
-      .description("get github profile using the provided token")
-      .option("-r, --repository", "display repository summary")
-      .option("-l, --language", "display language summary")
-      .option("-a, --activity", "display activity summary")
-      // TODO event
-      .action(function(token, user, options) {
-        createProfile(token, user, options)
-        .then(result => {
-            console.log(pretty.render(result));
-          })
-        .catch(err => {
-            console.log(err);
-          });
-      });
-
-    parser
-      .command("exec <cmd>")
-      .alias("ex")
-      .description("execute the given remote cmd")
-      .option("-e, --exec_mode <mode>", "Which exec mode to use")
-      .action(function(cmd, options){
-        console.log(`exec ${cmd} using ${options.exec_mode} mode"`);
-      }).on("--help", function() {
-        console.log("  Examples:");
-        console.log();
-        console.log("    $ deploy exec sequential");
-        console.log("    $ deploy exec async");
-        console.log();
-      });
+      .command(CommandSetting.PROFILE_COMMAND.specifiers)
+      .description(CommandSetting.PROFILE_COMMAND.description)
+      .option(ProfileOptions.PROFILE_OPTION_LANGUAGE.specifiers, ProfileOptions.PROFILE_OPTION_LANGUAGE.description)
+      .option(ProfileOptions.PROFILE_OPTION_REPOSITORY.specifiers, ProfileOptions.PROFILE_OPTION_REPOSITORY.description)
+      .option(ProfileOptions.PROFILE_OPTION_ACTIVITY.specifiers, ProfileOptions.PROFILE_OPTION_ACTIVITY.description)
+      .action(CommandSetting.PROFILE_COMMAND.action);
 
     /** use circular-json to avoid cyclic references */
     let serialized = CircularJSON.stringify(parser.parse(argv));
