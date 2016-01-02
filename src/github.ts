@@ -156,6 +156,13 @@ export class GithubPushEventPayload {
   }
 }
 
+@inheritSerialization(GithubEvent)
+export class GithubPushEvent extends GithubEvent {
+  public static EVENT_TYPE: string = "PushEvent";
+  @deserializeAs(GithubPushEventPayload, "payload") public payload: GithubPushEventPayload;
+}
+
+
 export class GithubPullRequestEventPayload {
   public static ACTION_VALUE_ASSIGNED = "assigned";
   public static ACTION_VALUE_UNASSIGNED = "unassigned";
@@ -193,6 +200,13 @@ export class GithubPullRequestEventPayload {
   }
 }
 
+@inheritSerialization(GithubEvent)
+export class GithubPullRequestEvent extends GithubEvent {
+  public static EVENT_TYPE: string = "PullRequestEvent";
+  @deserializeAs(GithubPullRequestEventPayload, "payload") public payload: GithubPullRequestEventPayload;
+}
+
+
 export class GithubIssuesEventPayload {
   public static ACTION_VALUE_ASSIGNED = "assigned";
   public static ACTION_VALUE_UNASSIGNED = "unassigned";
@@ -220,6 +234,12 @@ export class GithubIssuesEventPayload {
       instance.url = issue.html_url;
     }
   }
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubIssuesEvent extends GithubEvent {
+  public static EVENT_TYPE: string = "IssuesEvent";
+  @deserializeAs(GithubIssuesEventPayload, "payload") public payload: GithubIssuesEventPayload;
 }
 
 export class GithubIssueCommentEventPayload {
@@ -250,29 +270,39 @@ export class GithubIssueCommentEventPayload {
 }
 
 @inheritSerialization(GithubEvent)
-export class GithubPushEvent extends GithubEvent {
-  public static EVENT_TYPE: string = "PushEvent";
-  @deserializeAs(GithubPushEventPayload, "payload") public payload: GithubPushEventPayload;
-}
-
-@inheritSerialization(GithubEvent)
-export class GithubPullRequestEvent extends GithubEvent {
-  public static EVENT_TYPE: string = "PullRequestEvent";
-  @deserializeAs(GithubPullRequestEventPayload, "payload") public payload: GithubPullRequestEventPayload;
-}
-
-@inheritSerialization(GithubEvent)
-export class GithubIssuesEvent extends GithubEvent {
-  public static EVENT_TYPE: string = "IssuesEvent";
-  @deserializeAs(GithubIssuesEventPayload, "payload") public payload: GithubIssuesEventPayload;
-}
-
-@inheritSerialization(GithubEvent)
 export class GithubIssueCommentEvent extends GithubEvent {
   public static EVENT_TYPE: string = "IssueCommentEvent";
   @deserializeAs(GithubIssueCommentEventPayload, "payload") public payload: GithubIssueCommentEventPayload;
 }
 
+export class GithubReleaseEventPayload {
+  public static ACTION_TYPE_PUBLISHED = "published";
+
+  @deserializeAs("action") public action: string;
+  public release_id: number;       /* release.id */
+  public url: string;              /* release.html_url */
+  public tag_name: string;         /* release.tag_name */
+  public target_commitish: string; /* release.target_commitish */
+
+  public static OnDeserialized(instance: GithubReleaseEventPayload, payload: any): void {
+    if (_.isEmpty(payload)) return;
+
+    if (!_.isEmpty(payload.release)) {
+      let release = payload.release;
+
+      instance.release_id = release.id;
+      instance.url = release.html_url;
+      instance.tag_name = release.tag_name;
+      instance.target_commitish = release.target_commitish;
+    }
+  }
+}
+
+@inheritSerialization(GithubEvent)
+export class GithubReleaseEvent extends GithubEvent {
+  public static EVENT_TYPE: string = "ReleaseEvent";
+  @deserializeAs(GithubReleaseEventPayload, "payload") public payload: GithubReleaseEventPayload;
+}
 
 export class GithubUtil {
 
@@ -353,6 +383,8 @@ export class GithubUtil {
         return GithubIssuesEvent.deserialize(GithubIssuesEvent, e);
       else if (GithubIssueCommentEvent.EVENT_TYPE === e.type)
         return GithubIssueCommentEvent.deserialize(GithubIssueCommentEvent, e);
+      else if (GithubReleaseEvent.EVENT_TYPE === e.type)
+        return GithubReleaseEvent.deserialize(GithubReleaseEvent, e);
       else return null;
     });
 
