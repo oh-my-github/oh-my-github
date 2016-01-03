@@ -169,7 +169,7 @@ export class GithubUtil {
     if (_.isEmpty(rawLangInfos)) return new Array<LanguageInformation>();
 
     let langInfos = rawLangInfos.map(rawLangInfo => {
-      return LanguageInformation.deserialize(LanguageInformation, rawLangInfo)
+      return LanguageInformation.deserialize(LanguageInformation, rawLangInfo);
     });
 
     // TODO try-catch
@@ -184,7 +184,8 @@ export class GithubUtil {
   }
 
   public static deserializeGithubEvent(events: Array<any>): Array<GithubEvent> {
-    return events.map(e => {
+
+    let deserializedEvents = events.map(e => {
       switch (e.type) {
         case GithubPushEvent.EVENT_TYPE:
           return GithubPushEvent.deserialize(GithubPushEvent, e);
@@ -205,6 +206,8 @@ export class GithubUtil {
         default: return null;
       }
     });
+
+    return deserializedEvents.filter(e => e !== null);
   }
 
   public static async getUserActivities(token: string, user: string): Promise<Array<GithubEvent>> {

@@ -7,15 +7,6 @@
 
 "use strict";
 
-import {deserialize, deserializeAs, Deserializable} from "./serialize";
-import {GithubUtil} from "./github_util";
-import {
-  GithubUser, GithubEvent,
-  Language, LanguageInformation, LanguageSummary,
-  Repository, RepositorySummary
-} from "./github_model";
-import {Profile} from "./profile";
-
 import * as _ from "lodash";
 import * as CircularJSON from "circular-json";
 import * as fse from "fs-extra";
@@ -27,14 +18,15 @@ import {
 let path = require("path");
 let pretty = require("prettyjson");
 
-/** generator.js exists in build/src */
-const PROJECT_DIR = path.join(path.dirname(__dirname), "../");
-const ENV_JSON = require(path.join(PROJECT_DIR, "env.json"));
-
-const GENERATOR_VERSION = require(path.join(PROJECT_DIR, ENV_JSON.FILE.PACKAGE_JSON)).version;
-
-const PROFILE_TEMPLATE_JSON = require(path.join(PROJECT_DIR, ENV_JSON.FILE.PROFILE_TEMPLATE_JSON));
-const FILE_NAME_PROFILE_JSON = ENV_JSON.FILE.PROFILE_JSON;
+import { FileUtil, GENERATOR_VERSION, FILE_PATH_PROFILE_TEMPLATE_JSON } from "./file_util";
+import {
+  GithubUser, GithubEvent,
+  LanguageInformation, LanguageSummary,
+  Repository, RepositorySummary
+} from "./github_model";
+import {GithubUtil} from "./github_util";
+import {deserialize, deserializeAs, Deserializable} from "./serialize";
+import {Profile} from "./profile";
 
 export class OptionSetting {
   constructor(public specifiers: string, public description: string) {}
@@ -74,8 +66,8 @@ export class CommandSetting {
     `${CommandSetting.COMMAND_NAME_PROFILE} <token> <user>`,
     "Create Github profile using the provided token for the user",
     function(token: string, user: string, options: ProfileOptions) {
-      let confPath = getProfilePath();
-      let prevProf = Profile.deserialize(Profile, readFileIfExist(confPath));
+      let profPath = FileUtil.getProfilePath();
+      let prevProf = Profile.deserialize(Profile, FileUtil.readFileIfExist(profPath));
 
       createProfile(token, user, options)
         .then(currentProf => {
@@ -94,8 +86,10 @@ export class CommandSetting {
             }
           }
 
-          currentProf.activities = uniqActs;
-          overwriteFile(confPath, currentProf);
+          // TODO extract to updateProfile function
+          currentProf.updateMeta(prevProf._$meta);
+          currentProf.activities = uniqActs;    /* ㄱset unique activities */
+          FileUtil.overwriteFile(profPath, currentProf);
         })
         .catch(err => {
           console.log(`${chalkRed("Cannot create profile\n")} ${chalkBold(path)}`);
@@ -109,12 +103,12 @@ export class CommandSetting {
     `${CommandSetting.COMMAND_NAME_INIT} <repo>`,
     "Initialize `oh-my-github.json` profile",
     function(repo: string) {
-      let confPath = getProfilePath();
-      let template = JSON.parse(JSON.stringify(PROFILE_TEMPLATE_JSON));
-      template._$meta.repository = repo;
+      let profPath = FileUtil.getProfilePath();
+      let prof = Profile.deserialize(Profile, FileUtil.readFileIfExist(FILE_PATH_PROFILE_TEMPLATE_JSON));
+      prof._$meta.publish_repository = repo;
 
       try {
-        writeFileIfNotExist(confPath, template);
+        FileUtil.writeFileIfNotExist(profPath, prof);
       } catch (err) {
         console.log(`${chalkRed("Cannot create file: ")} ${chalkBold(path)}`);
         console.error(`\n${err.stack}`);
@@ -126,105 +120,6 @@ export class CommandSetting {
     CommandSetting.COMMAND_PROFILE,
     CommandSetting.COMMAND_INIT
   ];
-}
-
-async function createProfile(token: string,
-                             user: string,
-                             options: ProfileOptions): Promise<Profile> {
-  let githubUser = await GithubUtil.getGithubUser(token, user);
-
-  let langs = new Array<LanguageInformation>();
-  let repos = new Array<Repository>();
-  let acts = new Array<GithubEvent>();
-
-  if (options.repository) {
-    repos = await GithubUtil.getUserRepositories(token, user);
-  }
-
-  if (options.language) {
-    langs = await GithubUtil.getUserLanguages(token, user);
-  }
-
-  if (options.activity) {
-    acts = await GithubUtil.getUserActivities(token, user);
-  }
-
-  // TODO: add repo name to language
-  printProfile(githubUser, langs, repos, acts);
-
-  let profile = new Profile();
-  profile.user = githubUser;
-  profile.languages = langs;
-  profile.repositories = repos;
-  profile.activities = acts;
-
-  return profile;
-}
-
-function printProfile(user: GithubUser,
-                      langInfos: Array<LanguageInformation>,
-                      repos: Array<Repository>,
-                      acts: Array<GithubEvent>): void {
-
-  /** debug info */
-  console.log(`\n[USER]`);
-  console.log(pretty.render(user));
-
-  console.log(`\n${chalkBlue("[LANGUAGE]")}`);
-
-  if (!_.isEmpty(langInfos)) {
-    // TODO
-  }
-
-  console.log(`\n${chalkBlue("[REPOSITORY]")}`);
-  if (!_.isEmpty(repos)) {
-    let repoSummary = new RepositorySummary();
-    repos.reduce((sum, repo) => {
-      sum.repository_names.push(repo.name);
-      sum.repository_count += 1;
-      sum.watchers_count += repo.watchers_count;
-      sum.stargazers_count += repo.stargazers_count;
-      sum.forks_count += repo.forks_count;
-
-      return sum;
-    }, repoSummary);
-    console.log(pretty.render(repoSummary));
-  }
-
-  console.log(`\n${chalkBlue("[ACTIVITY]")}`);
-
-  if (!_.isEmpty(acts)) {
-    console.log(`Activity Count: ${acts.length}`);
-  }
-}
-
-/**
- * write file iff the file does not exist otherwise throw an error
- */
-function writeFileIfNotExist(path: string, json: Object): void {
-  fse.writeJsonSync(path, json, {flag: "wx"});
-}
-
-/**
- * overwrite file
- */
-function overwriteFile(path: string, json: Object): void {
-  fse.writeJsonSync(path, json, {flag: "w+"});
-}
-
-/**
- * read file iff the file exists otherwise throw an error
- */
-function readFileIfExist(path: string): any {
-  return fse.readJsonSync(path, {flag: "r"})
-}
-
-function getProfilePath(): string {
-  return combinePathWithCwd(FILE_NAME_PROFILE_JSON);
-}
-
-function combinePathWithCwd(filePath: string) {
-  return path.join(process.cwd(), filePath);
 }
 
 export class ParsedOption {
@@ -271,3 +166,74 @@ export class CommandFactory {
     return deserialized;
   }
 }
+
+function printProfile(user: GithubUser,
+                      langInfos: Array<LanguageInformation>,
+                      repos: Array<Repository>,
+                      acts: Array<GithubEvent>): void {
+
+  /** debug info */
+  console.log(`\n[USER]`);
+  console.log(pretty.render(user));
+
+  console.log(`\n${chalkBlue("[LANGUAGE]")}`);
+
+  if (!_.isEmpty(langInfos)) {
+    // TODO
+  }
+
+  console.log(`\n${chalkBlue("[REPOSITORY]")}`);
+  if (!_.isEmpty(repos)) {
+    let repoSummary = new RepositorySummary();
+    repos.reduce((sum, repo) => {
+      sum.repository_names.push(repo.name);
+      sum.repository_count += 1;
+      sum.watchers_count += repo.watchers_count;
+      sum.stargazers_count += repo.stargazers_count;
+      sum.forks_count += repo.forks_count;
+
+      return sum;
+    }, repoSummary);
+    console.log(pretty.render(repoSummary));
+  }
+
+  console.log(`\n${chalkBlue("[ACTIVITY]")}`);
+
+  if (!_.isEmpty(acts)) {
+    console.log(`Activity Count: ${acts.length}`);
+  }
+}
+
+async function createProfile(token: string,
+                             user: string,
+                             options: ProfileOptions): Promise<Profile> {
+  let githubUser = await GithubUtil.getGithubUser(token, user);
+
+  let langs = new Array<LanguageInformation>();
+  let repos = new Array<Repository>();
+  let acts = new Array<GithubEvent>();
+
+  if (options.repository) {
+    repos = await GithubUtil.getUserRepositories(token, user);
+  }
+
+  if (options.language) {
+    langs = await GithubUtil.getUserLanguages(token, user);
+  }
+
+  if (options.activity) {
+    acts = await GithubUtil.getUserActivities(token, user);
+  }
+
+  // TODO: add repo name to language
+  printProfile(githubUser, langs, repos, acts);
+
+  let profile = new Profile();
+  profile.user = githubUser;
+  profile.languages = langs;
+  profile.repositories = repos;
+  profile.activities = acts;
+
+  return profile;
+}
+
