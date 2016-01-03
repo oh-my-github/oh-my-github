@@ -139,6 +139,40 @@ export class GithubUtil {
     return flattened;
   }
 
+  public static async getGithubUser(token: string, user: string): Promise<GithubUser> {
+    let raw = await GithubUtil.getGithubResponseBody(token, `/users/${user}`);
+    return GithubUser.deserialize(GithubUser, raw);
+  }
+
+  public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
+    let langs = new Array<Language>();
+    let repos = await GithubUtil.getUserRepositories(token, user);
+
+    let repoNames = repos.map(r => r.name);
+
+    if (repos.length === 0) return langs;
+
+    let ps = repoNames.map(name => {
+      // TODO then chain. return {user: "", repo: "", langObj: ""}
+      return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`);
+    });
+
+    let langObjects = await Promise.all(ps);
+
+    if (_.isEmpty(langObjects)) return langs; /* return empty set */
+
+    let lss = langObjects.map(langObject => {
+      let ls = Language.create(langObject);
+      return ls;
+    });
+
+    lss = lss.filter(ls => ls.length > 0);
+
+    if (lss.length === 0) return langs;
+
+    return lss.reduce((ls1, ls2) => ls1.concat(ls2));
+  }
+
   public static async getUserRepositories(token: string, user: string): Promise<Array<Repository>> {
     let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/repos`);
     let repos = Repository.deserializeArray(Repository, raw);
@@ -173,39 +207,5 @@ export class GithubUtil {
     let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`);
     let events = GithubUtil.deserializeGithubEvent(raw);
     return <Array<GithubEvent>> events.filter(e => e !== null);
-  }
-
-  public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
-    let langs = new Array<Language>();
-    let repos = await GithubUtil.getUserRepositories(token, user);
-
-    let repoNames = repos.map(r => r.name);
-
-    if (repos.length === 0) return langs;
-
-    let ps = repoNames.map(name => {
-      // TODO then chain. return {user: "", repo: "", langObj: ""}
-      return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`);
-    });
-
-    let langObjects = await Promise.all(ps);
-
-    if (_.isEmpty(langObjects)) return langs; /* return empty set */
-
-    let lss = langObjects.map(langObject => {
-      let ls = Language.create(langObject);
-      return ls;
-    });
-
-    lss = lss.filter(ls => ls.length > 0);
-
-    if (lss.length === 0) return langs;
-
-    return lss.reduce((ls1, ls2) => ls1.concat(ls2));
-  }
-
-  public static async getGithubUser(token: string, user: string): Promise<GithubUser> {
-    let raw = await GithubUtil.getGithubResponseBody(token, `/users/${user}`);
-    return GithubUser.deserialize(GithubUser, raw);
   }
 }
