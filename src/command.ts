@@ -106,7 +106,7 @@ export class CommandSetting {
   public static COMMAND_NAME_INIT = "init";
   public static COMMAND_INIT = new CommandSetting(
     `${CommandSetting.COMMAND_NAME_INIT} <repo>`,
-    "Initialize `oh-my-github.json` database file",
+    "Initialize `oh-my-github.json` profile",
     function(repo: string) {
       let confPath = getProfilePath();
       let template = JSON.parse(JSON.stringify(PROFILE_TEMPLATE_JSON));
@@ -149,8 +149,6 @@ async function createProfile(token: string,
   }
 
   // TODO: add repo name to language
-  // TODO: add top language to repo
-
   printProfile(githubUser, langs, repos, acts);
 
   let profile = new Profile();

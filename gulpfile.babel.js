@@ -115,9 +115,9 @@ gulp.task(TASK_NAME_COMPILE, () => {
       .dts
       .pipe(gulp.dest("./", {overwrite: true})),
     tsResult /** create `js`, `js.map` */
-      .js
+      .js /** ES6 */
       .pipe(sourcemaps.init())
-      .pipe(babel())
+      .pipe(babel()) /** ES5 */
       .pipe(sourcemaps.write("."))
       .pipe(gulp.dest(env.DIR.BUILD))
   ]);
