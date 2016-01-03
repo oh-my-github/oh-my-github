@@ -17,7 +17,7 @@ import {
 } from "../../src/github_model";
 
 import {GithubUtil, GithubResponse } from "../../src/github_util";
-import {SampleResources} from "./sampleResource";
+import {SampleResources} from "./sampleResponse";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const user1 = "1ambda";

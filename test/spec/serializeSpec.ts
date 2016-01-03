@@ -4,7 +4,7 @@
 
 import {deserialize, Deserializable} from "../../src/serialize";
 import {ParsedOption, ParsedCommand} from "../../src/command";
-import {SampleResources} from "./sampleResource";
+import {SampleResources} from "./sampleResponse";
 
 class Car extends Deserializable {
   @deserialize public engine: string;

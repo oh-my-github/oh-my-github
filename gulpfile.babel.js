@@ -55,7 +55,7 @@ gulp.task(TASK_NAME_CLEAN, () => {
 });
 
 gulp.task(TASK_NAME_TSLINT, () => {
-  return gulp.src(["src/**/*.ts", "test/spec/**/*.ts", "!test/spec/sampleResource.ts"])
+  return gulp.src(["src/**/*.ts", "test/spec/**/*.ts", "!test/spec/sampleResponse.ts"])
     .pipe(tslint())
     .pipe(tslint.report("full"));
 });
