@@ -6,10 +6,30 @@
 import {deserialize, deserializeAs, Deserializable, inheritSerialization} from "./serialize";
 import * as _ from "lodash";
 
+export class GithubUser extends Deserializable {
+  @deserialize public login: string = null;
+  @deserialize public type: string = null;
+  @deserialize public name: string = null;
+  @deserialize public company: string = null;
+  @deserialize public blog: string = null;
+  @deserialize public location: string = null;
+  @deserialize public email: string = null;
+  @deserialize public hireable: boolean = null;
+  @deserialize public following: number = null;
+  @deserialize public followers: number = null;
+  @deserialize public public_repos: number = null;
+  @deserialize public public_gists: number = null;
+  @deserialize public created_at: string = null;
+  @deserialize public updated_at: string = null;
+
+  @deserializeAs("html_url") public url: string = null;
+}
+
 export class Language extends Deserializable {
   @deserialize public name: string;
   @deserialize public line: number;
 
+  /** since Github API returns languages as object, we need a factory method */
   public static create(body: Object): Array<Language> {
     let langs = new Array<Language>();
 
@@ -26,18 +46,17 @@ export class Language extends Deserializable {
   }
 }
 
-export class GithubUser extends Deserializable {
-  @deserializeAs("login") public login: string;
-  @deserializeAs("following") public following: number;
-  @deserializeAs("followers") public followers: number;
-}
-
 export class Repository extends Deserializable {
-  @deserializeAs("name") public name: string;
-  @deserializeAs("full_name") public full_name: string;
-  @deserializeAs("forks_count") public forks_count: number;
-  @deserializeAs("stargazers_count") public stargazers_count: number;
-  @deserializeAs("watchers_count") public watchers_count: number;
+  @deserialize public name: string;
+  @deserialize public full_name: string;
+  @deserialize public forks_count: number;
+  @deserialize public stargazers_count: number;
+  @deserialize public watchers_count: number;
+  @deserialize public language: string;
+  @deserialize public fork: boolean;
+  @deserialize public open_issues_count: number;
+
+  @deserializeAs("html_url") public url: string;
 }
 
 export class RepositorySummary {

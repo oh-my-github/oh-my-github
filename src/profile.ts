@@ -22,6 +22,7 @@ import {
 import * as _ from "lodash";
 
 export class MetaField extends Deserializable {
+  // TODO created_at
   @deserialize public agent: string;
   @deserialize public publish_repository: string;
 }

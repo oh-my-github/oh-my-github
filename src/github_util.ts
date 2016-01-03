@@ -84,44 +84,44 @@ export class GithubUtil {
   }
 
   public static async getGithubResponse(token: string, uri: string): Promise<GithubResponse> {
-  let r: any = new Promise((resolve, reject) => {
-    let client = GithubUtil.createGithubClient(token);
-    client.get(uri, {}, (err, status, body, headers) => {
-      if (err) return reject(GithubError.deserialize(GithubError, err));
-      else return resolve(new GithubResponse(headers, body));
+    let r: any = new Promise((resolve, reject) => {
+      let client = GithubUtil.createGithubClient(token);
+      client.get(uri, {}, (err, status, body, headers) => {
+        if (err) return reject(GithubError.deserialize(GithubError, err));
+        else return resolve(new GithubResponse(headers, body));
+      });
     });
-  });
 
-  return r;
-}
+    return r;
+  }
 
   /** collect all API using pagination */
   public static async getGithubReponses(token: string, uri: string): Promise<Array<GithubResponse>> {
-  let responses = new Array<GithubResponse>();
+    let responses = new Array<GithubResponse>();
 
-  let r: any = await GithubUtil.getGithubResponse(token, uri);
-  responses.push(r);
+    let r: any = await GithubUtil.getGithubResponse(token, uri);
+    responses.push(r);
 
-  let lastCount = GithubResponse.parseLastLinkCount(r.headers.link);
-  if (lastCount === null) return responses;
+    let lastCount = GithubResponse.parseLastLinkCount(r.headers.link);
+    if (lastCount === null) return responses;
 
-  let ps = new Array<Promise<GithubResponse>>();
+    let ps = new Array<Promise<GithubResponse>>();
 
-  for (let i = 2; i <= lastCount; i++) {
-    let uriWithPage = uri + "?page=" + i;
-    ps.push(GithubUtil.getGithubResponse(token, uriWithPage));
+    for (let i = 2; i <= lastCount; i++) {
+      let uriWithPage = uri + "?page=" + i;
+      ps.push(GithubUtil.getGithubResponse(token, uriWithPage));
+    }
+
+    let rs = await Promise.all(ps);
+
+    return responses.concat(rs);
   }
 
-  let rs = await Promise.all(ps);
-
-  return responses.concat(rs);
-}
-
   public static async getGithubResponseBody(token: string, uri: string): Promise<any> {
-  let r = await GithubUtil.getGithubResponse(token, uri);
+    let r = await GithubUtil.getGithubResponse(token, uri);
 
-  return r.body;
-}
+    return r.body;
+  }
 
   /**
    * 1. retrieve page header
@@ -184,6 +184,7 @@ export class GithubUtil {
     if (repos.length === 0) return langs;
 
     let ps = repoNames.map(name => {
+      // TODO then chain. return {user: "", repo: "", langObj: ""}
       return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`);
     });
 

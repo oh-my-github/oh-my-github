@@ -31,13 +31,79 @@ describe("github.ts", () => {
   describe("GithubUtil", () => {
     describe("getGithubUser", () => {
       it("should return a GithubUser instance", callback => {
-        GithubUtil.getGithubUser(GITHUB_TOKEN, user1).then(profile => {
-          expect(profile instanceof GithubUser).toBeTruthy();
-          expect(profile.login).toBeDefined();
-          expect(profile.followers).toBeDefined();
-          expect(profile.following).toBeDefined();
+        GithubUtil.getGithubUser(GITHUB_TOKEN, user1).then(githubUser => {
+
+          let u1 = new GithubUser();
+          let githubUserProps = Object.keys(u1).filter(p => u1.hasOwnProperty(p));
+
+          expect(githubUser instanceof GithubUser).toBeTruthy();
+
+          expect(githubUserProps.length).toBeGreaterThan(0);
+          for (let i = 0; i < githubUserProps.length; i++) {
+            let prop = githubUserProps[i];
+            expect(githubUser[prop]).toBeDefined();
+          }
+
           callback();
         });
+      });
+    });
+
+    describe("GithubUser", () => {
+      it("should be deserialized", () => {
+        let raw = SampleResources.githubUser1;
+
+        let githubUser = GithubUser.deserialize(GithubUser, raw);
+
+        expect(githubUser.login).toEqual(raw.login);
+        expect(githubUser.type).toEqual(raw.type);
+        expect(githubUser.name).toEqual(raw.name);
+        expect(githubUser.company).toEqual(raw.company);
+        expect(githubUser.blog).toEqual(raw.blog);
+        expect(githubUser.location).toEqual(raw.location);
+        expect(githubUser.email).toEqual(raw.email);
+        expect(githubUser.hireable).toEqual(raw.hireable);
+        expect(githubUser.following).toEqual(raw.following);
+        expect(githubUser.followers).toEqual(raw.followers);
+        expect(githubUser.public_repos).toEqual(raw.public_repos);
+        expect(githubUser.public_gists).toEqual(raw.public_gists);
+        expect(githubUser.created_at).toEqual(raw.created_at);
+        expect(githubUser.updated_at).toEqual(raw.updated_at);
+
+        expect(githubUser.url).toEqual(raw.html_url);
+      });
+    });
+
+    describe("Language", () => {
+      it("should be deserialized from a language object returned from API", () => {
+        let raw = SampleResources.languageObject1;
+        let langs = Language.create(raw);
+        let expectedLength =  Object.keys(raw).filter(p => raw.hasOwnProperty(p)).length;
+
+        expect(langs.length).toEqual(expectedLength); /* should be 10 */
+        expect(langs.length).toBeGreaterThan(0);
+
+        for (let i = 0; i < langs.length; i++) {
+          let l = langs[i];
+          expect(raw[l.name]).toEqual(l.line);
+        }
+      });
+    });
+
+    describe("Repository", () => {
+      it("should be deserialized", () => {
+        let raw = SampleResources.repository1;
+        let lang = Repository.deserialize(Repository, raw);
+
+        expect(lang.name).toEqual(raw.name);
+        expect(lang.full_name).toEqual(raw.full_name);
+        expect(lang.forks_count).toEqual(raw.forks_count);
+        expect(lang.stargazers_count).toEqual(raw.stargazers_count);
+        expect(lang.watchers_count).toEqual(raw.watchers_count);
+        expect(lang.language).toEqual(raw.language);
+        expect(lang.fork).toEqual(raw.fork);
+        expect(lang.open_issues_count).toEqual(raw.open_issues_count);
+        expect(lang.url).toEqual(raw.html_url);
       });
     });
 
