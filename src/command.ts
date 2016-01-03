@@ -10,8 +10,9 @@
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
 import {GithubUtil} from "./github_util";
 import {
-  GithubUser, Language, Repository, GithubEvent,
-  RepositorySummary, LanguageSummary
+  GithubUser, GithubEvent,
+  Language, LanguageInformation, LanguageSummary,
+  Repository, RepositorySummary
 } from "./github_model";
 import {Profile} from "./profile";
 
@@ -132,7 +133,7 @@ async function createProfile(token: string,
                              options: ProfileOptions): Promise<Profile> {
   let githubUser = await GithubUtil.getGithubUser(token, user);
 
-  let langs = new Array<Language>();
+  let langs = new Array<LanguageInformation>();
   let repos = new Array<Repository>();
   let acts = new Array<GithubEvent>();
 
@@ -161,7 +162,7 @@ async function createProfile(token: string,
 }
 
 function printProfile(user: GithubUser,
-                      langs: Array<Language>,
+                      langInfos: Array<LanguageInformation>,
                       repos: Array<Repository>,
                       acts: Array<GithubEvent>): void {
 
@@ -171,17 +172,8 @@ function printProfile(user: GithubUser,
 
   console.log(`\n${chalkBlue("[LANGUAGE]")}`);
 
-  if (!_.isEmpty(langs)) {
-    let langMap = new Map<string, number>();
-
-    langs.forEach(lang => {
-      if (!langMap.has(lang.name)) langMap.set(lang.name, 0);
-
-      let currentLine = langMap.get(lang.name);
-      langMap.set(lang.name, lang.line + currentLine);
-    });
-    let langSummary = new LanguageSummary(user.login, langMap);
-    console.log(pretty.render(langSummary));
+  if (!_.isEmpty(langInfos)) {
+    // TODO
   }
 
   console.log(`\n${chalkBlue("[REPOSITORY]")}`);

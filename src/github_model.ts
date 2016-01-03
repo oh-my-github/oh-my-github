@@ -26,11 +26,28 @@ export class GithubUser extends Deserializable {
 }
 
 export class Language extends Deserializable {
-  @deserialize public name: string;
-  @deserialize public line: number;
+  @deserialize public name: string = null;
+  @deserialize public line: number = null;
 
-  /** since Github API returns languages as object, we need a factory method */
-  public static create(body: Object): Array<Language> {
+}
+
+export class LanguageInformation extends Deserializable {
+  @deserialize public owner: string;
+  @deserialize public repo_name: string;
+  @deserialize public url: string;
+
+  /** @deserializedAs used to deserialized language info object from `oh-my-github.json` */
+  @deserializeAs(Language) public languages: Array<Language>;
+
+  /** used to deserialize Github API response */
+  public static OnDeserialized(instance: LanguageInformation, json: any): void {
+    if (!_.isEmpty(json.langObject)) {
+      instance.languages = LanguageInformation.createLanguages(json.langObject);
+    }
+  }
+
+  /** since Github API returns languages as object not array, we need a factory method */
+  public static createLanguages(body: Object): Array<Language> {
     let langs = new Array<Language>();
 
     if (_.isEmpty(body)) return langs;
@@ -45,6 +62,7 @@ export class Language extends Deserializable {
     return langs;
   }
 }
+
 
 export class Repository extends Deserializable {
   @deserialize public name: string;

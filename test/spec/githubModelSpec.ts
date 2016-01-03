@@ -3,8 +3,8 @@
 
 import {
   GithubUser,
+  Language, LanguageInformation,
   Repository,
-  Language,
   GithubEvent,
   GithubPushEvent, GithubPushEventPayload,
   GithubPullRequestEvent, GithubPullRequestEventPayload,
@@ -56,7 +56,7 @@ describe("githu_model.ts", () => {
   describe("Language", () => {
     it("should be deserialized from a language object returned from API", () => {
       let raw = SampleResources.languageObject1;
-      let langs = Language.create(raw);
+      let langs = LanguageInformation.createLanguages(raw);
       let expectedLength =  Object.keys(raw).filter(p => raw.hasOwnProperty(p)).length;
 
       expect(langs.length).toEqual(expectedLength); /* should be 10 */
@@ -92,11 +92,11 @@ describe("githu_model.ts", () => {
         let lang1 = { "Scala": 611551, "HTML": 6229 };
         let lang2 = { "Scala": 5695455, "Java": 1495691, "HTML": 141830, "Shell": 30597, "JavaScript": 27425, "Protocol Buffer": 19875, "Batchfile": 287 };
 
-        let parsed1 = Language.create(lang1);
+        let parsed1 = LanguageInformation.createLanguages(lang1);
         let parsed1_scala = parsed1.filter(r => r.name === "Scala")[0];
         let parsed1_html = parsed1.filter(r => r.name === "HTML")[0];
 
-        let parsed2 = Language.create(lang2);
+        let parsed2 = LanguageInformation.createLanguages(lang2);
         let parsed2_java = parsed2.filter(r => r.name === "Java")[0];
 
         expect(parsed1.length).toEqual(2);
@@ -121,9 +121,9 @@ describe("githu_model.ts", () => {
 
         let empty = new Array<Language>();
 
-        expect(Language.create(lang1)).toEqual(empty);
-        expect(Language.create(lang2)).toEqual(empty);
-        expect(Language.create(lang3)).toEqual(empty);
+        expect(LanguageInformation.createLanguages(lang1)).toEqual(empty);
+        expect(LanguageInformation.createLanguages(lang2)).toEqual(empty);
+        expect(LanguageInformation.createLanguages(lang3)).toEqual(empty);
       });
     });
   });

@@ -6,7 +6,7 @@ import {GithubUtil} from "./github_util"
 import {
   GithubUser,
   Repository,
-  Language,
+  Language, LanguageInformation,
 
   GithubEvent,
   GithubPushEvent,
@@ -30,7 +30,7 @@ export class MetaField extends Deserializable {
 export class Profile extends Deserializable {
   @deserializeAs(MetaField) public _$meta: MetaField;
   @deserializeAs(GithubUser) public user: GithubUser;
-  @deserializeAs(Language) public languages: Array<Language>;
+  @deserializeAs(LanguageInformation) public languages: Array<LanguageInformation>;
   @deserializeAs(Repository) public repositories: Array<Repository>;
 
   /**

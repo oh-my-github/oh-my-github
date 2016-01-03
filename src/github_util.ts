@@ -4,7 +4,7 @@
 import {
   GithubUser,
   Repository, RepositorySummary,
-  Language, LanguageSummary,
+  Language, LanguageInformation, LanguageSummary,
 
   GithubEvent,
   GithubPushEvent, GithubPushEventPayload,
@@ -144,33 +144,37 @@ export class GithubUtil {
     return GithubUser.deserialize(GithubUser, raw);
   }
 
-  public static async getUserLanguages(token: string, user: string): Promise<Array<Language>> {
-    let langs = new Array<Language>();
+  public static async getUserLanguages(token: string, user: string): Promise<Array<LanguageInformation>> {
     let repos = await GithubUtil.getUserRepositories(token, user);
 
     let repoNames = repos.map(r => r.name);
 
-    if (repos.length === 0) return langs;
+    if (repos.length === 0) return new Array<LanguageInformation>();
 
     let ps = repoNames.map(name => {
-      // TODO then chain. return {user: "", repo: "", langObj: ""}
-      return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`);
+      return GithubUtil.getGithubResponseBody(token, `/repos/${user}/${name}/languages`)
+        .then(langObject => {
+
+          return {
+            owner: user,
+            repo_name: name,
+            url: `http://github.com/${user}/${name}`,
+            langObject: langObject
+          };
+        });
     });
 
-    let langObjects = await Promise.all(ps);
+    let rawLangInfos = await Promise.all(ps);
 
-    if (_.isEmpty(langObjects)) return langs; /* return empty set */
+    if (_.isEmpty(rawLangInfos)) return new Array<LanguageInformation>();
 
-    let lss = langObjects.map(langObject => {
-      let ls = Language.create(langObject);
-      return ls;
+    let langInfos = rawLangInfos.map(rawLangInfo => {
+      return LanguageInformation.deserialize(LanguageInformation, rawLangInfo)
     });
 
-    lss = lss.filter(ls => ls.length > 0);
-
-    if (lss.length === 0) return langs;
-
-    return lss.reduce((ls1, ls2) => ls1.concat(ls2));
+    // TODO try-catch
+    // TODO filter empty array in languages
+    return langInfos;
   }
 
   public static async getUserRepositories(token: string, user: string): Promise<Array<Repository>> {
