@@ -2,7 +2,7 @@
   "name": "generator",
   "version": "0.0.1",
   "description": "",
-  "main": "build/src/generator.js",
+  "main": "build/generator/src/generator.js",
   "scripts": {
     "test": "gulp clean && gulp compile && gulp test"
   },

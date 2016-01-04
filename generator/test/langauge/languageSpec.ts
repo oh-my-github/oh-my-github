@@ -1,4 +1,4 @@
-/// <reference path="../../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../../../typings/jasmine/jasmine.d.ts" />
 
 describe("A suite", () => {
   it("contains spec with an expectation", () => {

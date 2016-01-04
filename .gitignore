@@ -10,12 +10,12 @@ jspm_packages
 typings
 
 # typescript
-src/**/*.map
-src/**/*.js
-src/**/*.d.ts
-test/**/*.map
-test/**/*.js
-test/**/*.d.ts
+generator/**/*.map
+generator/**/*.js
+generator/**/*.d.ts
+viewer/**/*.map
+viewer/**/*.js
+viewer/**/*.d.ts
 
 # IDEA
 .idea

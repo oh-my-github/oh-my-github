@@ -29,15 +29,19 @@ const TASK_NAME_CLEAN   = "clean";
 const TASK_NAME_BUILD   = "build";
 
 /** constants for FILEs */
-const WATCH_TARGET = [env.FILE.SOURCE_TS, env.FILE.TEST_TS, env.FILE.IGNORED_ALL_D_TS];
-const CLEAN_TARGET = [
+const WATCH_TARGET = [
+  env.FILE.GENERATOR.SOURCE_TS,
+  env.FILE.GENERATOR.TEST_TS,
+  env.FILE.VIEWER.SOURCE_TS,
+  env.FILE.VIEWER.TEST_TS,
+  env.FILE.IGNORED_ALL_D_TS
+];
+const CLEAN_TARGET = [ /** clean `*.js`, `*.js.map`, `*.d.ts` */
   env.DIR.BUILD,
-  `${env.DIR.BASE_SOURCE}/${env.FILE.ALL_JS}`,
-  `${env.DIR.BASE_SOURCE}/${env.FILE.ALL_JS_MAP}`,
-  `${env.DIR.BASE_SOURCE}/${env.FILE.ALL_D_TS}`,
-  `${env.DIR.BASE_TEST}/${env.FILE.ALL_JS}`,
-  `${env.DIR.BASE_TEST}/${env.FILE.ALL_JS_MAP}`,
-  `${env.DIR.BASE_TEST}/${env.FILE.ALL_D_TS}`
+  `${env.FILE.GENERATOR.SRC_D_TS}`, `${env.FILE.GENERATOR.SRC_JS}`, `${env.FILE.GENERATOR.SRC_JS_MAP}`,
+  `${env.FILE.GENERATOR.TEST_D_TS}`, `${env.FILE.GENERATOR.TEST_JS}`, `${env.FILE.GENERATOR.TEST_JS_MAP}`,
+  `${env.FILE.VIEWER.SRC_D_TS}`, `${env.FILE.VIEWER.SRC_JS}`, `${env.FILE.VIEWER.SRC_JS_MAP}`,
+  `${env.FILE.VIEWER.TEST_D_TS}`, `${env.FILE.VIEWER.TEST_JS}`, `${env.FILE.VIEWER.TEST_JS_MAP}`
 ];
 
 gulp.task(TASK_NAME_BUILD, () => {
@@ -55,7 +59,7 @@ gulp.task(TASK_NAME_CLEAN, () => {
 });
 
 gulp.task(TASK_NAME_TSLINT, () => {
-  return gulp.src(["src/**/*.ts", "test/spec/**/*.ts", "!test/spec/sampleResponse.ts"])
+  return gulp.src(WATCH_TARGET.concat(["!generator/test/spec/sampleResponse.ts", "!generator/test/spec/sampleProfile.ts"]))
     .pipe(tslint())
     .pipe(tslint.report("full"));
 });
@@ -74,18 +78,17 @@ gulp.task(TASK_NAME_TEST, () => {
   });
 
   const jasmineConfig = {
-    "spec_dir": env.DIR.BUILD_TEST,
-    "spec_files": [
-      "**/*.js"
-    ],
+    //"spec_dir": env.DIR.BUILD_TEST,
+    //"spec_files": [
+    //  "**/*.js"
+    //],
     "helpers": [
     ],
     "stopSpecOnExpectationFailure": false,
     "random": false
   };
 
-  //return gulp.src([env.FILE.TEST_JS])
-  return gulp.src(["build/test/**/*.js"])
+  return gulp.src([env.FILE.VIEWER.BUILD_TEST_JS, env.FILE.GENERATOR.BUILD_TEST_JS])
     .pipe(jasmine({
       config: jasmineConfig,
       includeStackTrace: true,
@@ -94,7 +97,7 @@ gulp.task(TASK_NAME_TEST, () => {
 });
 
 gulp.task("test-browser", () => {
-  return gulp.src([env.FILE.TEST_JS])
+  return gulp.src([env.FILE.VIEWER.BUILD_TEST_JS, env.FILE.GENERATOR.BUILD_TEST_JS])
     .pipe(watch(WATCH_TARGET))
     .pipe(jasmineBrowser.specRunner())
     .pipe(jasmineBrowser.server({port: 8888}));

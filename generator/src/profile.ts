@@ -1,6 +1,6 @@
-/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/chalk/chalk.d.ts" />
-/// <reference path="../typings/lodash/lodash.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/chalk/chalk.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
 
 import * as _ from "lodash";
 import {

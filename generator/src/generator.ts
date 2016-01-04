@@ -1,5 +1,5 @@
-/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/commander/commander.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/commander/commander.d.ts" />
 
 "use strict";
 

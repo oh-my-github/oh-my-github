@@ -1,6 +1,6 @@
-/// <reference path="../../typings/jasmine/jasmine.d.ts" />
-/// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/lodash/lodash.d.ts" />
+/// <reference path="../../../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../../../typings/node/node.d.ts" />
+/// <reference path="../../../typings/lodash/lodash.d.ts" />
 
 "use strict";
 

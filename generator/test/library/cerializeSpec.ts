@@ -1,6 +1,6 @@
-/// <reference path="../../typings/jasmine/jasmine.d.ts" />
-/// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../node_modules/cerialize/dist/serialize.d.ts" />
+/// <reference path="../../../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../../../typings/node/node.d.ts" />
+/// <reference path="../../../node_modules/cerialize/dist/serialize.d.ts" />
 
 const cerialize = require('cerialize');
 

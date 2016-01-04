@@ -1,5 +1,5 @@
-/// <reference path="../../typings/jasmine/jasmine.d.ts" />
-/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../../../typings/node/node.d.ts" />
 
 interface BasicConstructor<T> {
   new (): T

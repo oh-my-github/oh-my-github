@@ -1,14 +1,14 @@
-/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/chalk/chalk.d.ts" />
-/// <reference path="../typings/lodash/lodash.d.ts" />
-/// <reference path="../typings/fs-extra/fs-extra.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/chalk/chalk.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
+/// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
 
 import * as fse from "fs-extra";
 
 let path = require("path");
 
 /** file_util.js exists in build/src */
-export const PROJECT_DIR = path.join(path.dirname(__dirname), "../");
+export const PROJECT_DIR = path.join(path.dirname(__dirname), "../../");
 export const ENV_JSON = require(path.join(PROJECT_DIR, "env.json"));
 
 export const GENERATOR_VERSION = require(path.join(PROJECT_DIR, ENV_JSON.FILE.PACKAGE_JSON)).version;

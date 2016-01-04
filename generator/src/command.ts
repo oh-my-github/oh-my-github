@@ -1,9 +1,9 @@
-/// <reference path="../typings/node/node.d.ts" />
-/// <reference path="../typings/chalk/chalk.d.ts" />
-/// <reference path="../typings/lodash/lodash.d.ts" />
-/// <reference path="../typings/fs-extra/fs-extra.d.ts" />
-/// <reference path="../typings/commander/commander.d.ts" />
-/// <reference path="../typings/circular-json/circular-json.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/chalk/chalk.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
+/// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
+/// <reference path="../../typings/commander/commander.d.ts" />
+/// <reference path="../../typings/circular-json/circular-json.d.ts" />
 
 "use strict";
 
