@@ -1,5 +1,7 @@
 build/
-dist/
+
+# bower
+bower_components/
 
 oh-my-github.json
 

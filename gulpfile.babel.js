@@ -5,6 +5,7 @@ import env   from "./env.json";
 import ts    from "gulp-typescript";
 import gulp  from "gulp";
 import path  from "path";
+import shim  from "browserify-shim";
 import babel from "gulp-babel";
 import watch from "gulp-watch";
 import clean from "gulp-clean";
@@ -15,13 +16,15 @@ import tslint         from "gulp-tslint";
 import rename         from "gulp-rename";
 import notify         from "gulp-notify";
 import uglify         from "gulp-uglify";
+import inject         from "gulp-inject";
 import buffer         from "vinyl-buffer";
 import jasmine        from "gulp-jasmine";
 import jsonlint       from "gulp-jsonlint";
-import reporters      from "jasmine-reporters";
-import streamify      from "gulp-streamify";
 import babelify       from "babelify";
 import watchify       from "watchify";
+import reporters      from "jasmine-reporters";
+import streamify      from "gulp-streamify";
+import bowerFiles     from "main-bower-files";
 import browserify     from "browserify";
 import sourcemaps     from "gulp-sourcemaps";
 import browserSync    from 'browser-sync';
@@ -38,11 +41,11 @@ const TASK_NAME_BUILD        = "build";
 const TASK_NAME_RELOAD       = "reload";
 const TASK_NAME_COMPILE_TS   = "compile-ts";
 const TASK_NAME_COMPILE_JSX  = "compile-jsx";
-const TASK_NAME_VIEWER_SERVE = "viewer-serve";
+const TASK_NAME_INJECT       = "inject";
+const TASK_NAME_PREVIEW      = "preview";
 
 /** constants for FILEs */
 
-const SLASH = "/";
 const GENERATOR_WATCH_TARGET = [
   env.FILE.GENERATOR.SOURCE_TS,
   env.FILE.GENERATOR.TEST_TS,
@@ -52,6 +55,9 @@ const CLEAN_TARGET = [ /** clean `*.js`, `*.js.map`, `*.d.ts` */
   env.DIR.BUILD,
   `${env.FILE.GENERATOR.SRC_D_TS}`, `${env.FILE.GENERATOR.SRC_JS}`, `${env.FILE.GENERATOR.SRC_JS_MAP}`,
   `${env.FILE.GENERATOR.TEST_D_TS}`, `${env.FILE.GENERATOR.TEST_JS}`, `${env.FILE.GENERATOR.TEST_JS_MAP}`
+];
+const INJECT_CSS_TARGET = [
+
 ];
 
 let bs = browserSync.create();
@@ -136,48 +142,66 @@ gulp.task(TASK_NAME_RELOAD, callback => {
 });
 
 gulp.task(TASK_NAME_COMPILE_JSX, () => {
-  return compileJsx(env.FILE.VIEWER.ENTRY_JSX, false);
+  let entryJSX = env.FILE.VIEWER.ENTRY_JSX;
+
+  return browserify({
+    entries: [entryJSX],
+    extensions: [".jsx"]
+    , debug: true
+  })
+    .transform(babelify, {
+      presets: ["es2015", "react"],
+      ignore: /bower_components/
+    })
+    .bundle()
+    .on('error', notify.onError({
+      title: "JSX Compile Error",
+      message: "<%= error.message %>"
+    }))
+    .pipe(source(entryJSX))
+    .pipe(rename((path) => { path.extname = ".js"; return path; }))
+    .pipe(gulp.dest(env.DIR.BUILD));
+  //.pipe(rename((path) => { path.extname = ".min.js"; return path; }))
+  //.pipe(buffer())
+  //.pipe(sourcemaps.init({ loadMaps: true }))
+  //.pipe(uglify())
+  //.pipe(sourcemaps.write("."))
+  //.pipe(gulp.dest(env.DIR.BUILD));
 });
 
-gulp.task(TASK_NAME_VIEWER_SERVE, () => {
-  bs.init({ server: { baseDir: env.DIR.BUILD_VIEWER_SRC } });
+gulp.task(TASK_NAME_INJECT, () => {
+  var target = gulp.src(env.FILE.VIEWER.ENTRY_HTML, {base: "."});
 
-  gulp.watch(env.FILE.VIEWER.ALL_FILES).on("change", () => {
+  return target
+    .pipe(inject(gulp.src(bowerFiles(), {read: false}), { name: "bower" }))
+    .pipe(inject(gulp.src([env.FILE.VIEWER.BUILD_ENTRY_JS], {read: false}), {
+      transform: (path) => {
+        arguments[0] = path.replace(`/${env.DIR.BUILD_VIEWER}`, "");
+        return inject.transform.apply(inject.transform, arguments);
+      }
+    }))
+    .pipe(gulp.dest(env.DIR.BUILD));
+});
+
+gulp.task(TASK_NAME_PREVIEW, () => {
+  bs.init({ server: {
+    baseDir: [ `${env.DIR.BOWER_COMPONENTS}/` , env.DIR.BUILD_VIEWER],
+    routes: { "/bower_components": `${env.DIR.BOWER_COMPONENTS}/` }
+  }});
+
+  gulp.watch(env.FILE.VIEWER.ALL_FILES_JSX).on("change", () => {
     runSequence(TASK_NAME_COMPILE_JSX, TASK_NAME_RELOAD);
   });
+
+  gulp.watch(env.FILE.VIEWER.ENTRY_HTML).on("change", () => {
+    runSequence(TASK_NAME_INJECT, TASK_NAME_RELOAD);
+  })
 });
 
 function assertEnv(envVar) {
   const envValue = process.env[envVar];
-  const EMPTY_STRING = "";
 
-  if (typeof envValue === "undefined" || EMPTY_STRING === envValue)
+  if ("undefined" === typeof envValue || "" === envValue)
     throw new Error(`Invalid ENV Variable: ${envVar}`)
-}
-
-function compileJsx(file) {
-  return merge(
-    browserify({
-      entries: [file],
-      extensions: [".jsx"],
-      debug: true
-    }).transform(babelify, {presets: ["es2015", "react"]})
-      .bundle()
-      .on('error', notify.onError({
-        title: "Compile Error",
-        message: "<%= error.message %>"
-      }))
-      .pipe(source(file))
-      .pipe(rename((path) => { path.extname = ".js"; return path; }))
-      .pipe(gulp.dest(env.DIR.BUILD))
-      .pipe(rename((path) => { path.extname = ".min.js"; return path; }))
-      .pipe(buffer())
-      .pipe(sourcemaps.init({ loadMaps: true }))
-      .pipe(uglify())
-      .pipe(sourcemaps.write("."))
-      .pipe(gulp.dest(env.DIR.BUILD)),
-    gulp.src(env.FILE.VIEWER.ENTRY_HTML, {base: "."})
-      .pipe(gulp.dest(env.DIR.BUILD))
-  );
 }
 
