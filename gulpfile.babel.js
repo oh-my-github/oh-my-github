@@ -38,7 +38,8 @@ const TASK_NAME_JSLINT       = "jslint";
 const TASK_NAME_DIST         = "dist";
 const TASK_NAME_CLEAN        = "clean";
 const TASK_NAME_BUILD        = "build";
-const TASK_NAME_RELOAD       = "reload";
+const TASK_NAME_BS_START     = "bs-start";
+const TASK_NAME_BS_RELOAD    = "bs-reload";
 const TASK_NAME_COMPILE_TS   = "compile-ts";
 const TASK_NAME_COMPILE_JSX  = "compile-jsx";
 const TASK_NAME_INJECT       = "inject";
@@ -136,7 +137,7 @@ gulp.task(TASK_NAME_COMPILE_TS, () => {
   ]);
 });
 
-gulp.task(TASK_NAME_RELOAD, callback => {
+gulp.task(TASK_NAME_BS_RELOAD, callback => {
   bs.reload();
   callback();
 });
@@ -183,19 +184,29 @@ gulp.task(TASK_NAME_INJECT, () => {
     .pipe(gulp.dest(env.DIR.BUILD));
 });
 
-gulp.task(TASK_NAME_PREVIEW, () => {
+gulp.task("BS_START", callback => {
   bs.init({ server: {
     baseDir: [ `${env.DIR.BOWER_COMPONENTS}/` , env.DIR.BUILD_VIEWER],
     routes: { "/bower_components": `${env.DIR.BOWER_COMPONENTS}/` }
   }});
 
+  callback();
+});
+
+gulp.task(TASK_NAME_PREVIEW, callback => {
   gulp.watch(env.FILE.VIEWER.ALL_FILES_JSX).on("change", () => {
-    runSequence(TASK_NAME_COMPILE_JSX, TASK_NAME_RELOAD);
+    runSequence(TASK_NAME_COMPILE_JSX, TASK_NAME_BS_RELOAD);
   });
 
   gulp.watch(env.FILE.VIEWER.ENTRY_HTML).on("change", () => {
-    runSequence(TASK_NAME_INJECT, TASK_NAME_RELOAD);
-  })
+    runSequence(TASK_NAME_INJECT, TASK_NAME_BS_RELOAD);
+  });
+
+  runSequence(
+    TASK_NAME_COMPILE_JSX,
+    TASK_NAME_INJECT,
+    "BS_START",
+    callback);
 });
 
 function assertEnv(envVar) {
