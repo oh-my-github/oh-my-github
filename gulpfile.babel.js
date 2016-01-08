@@ -186,8 +186,15 @@ gulp.task(TASK_NAME_INJECT, () => {
 
 gulp.task("BS_START", callback => {
   bs.init({ server: {
-    baseDir: [ `${env.DIR.BOWER_COMPONENTS}/` , env.DIR.BUILD_VIEWER],
-    routes: { "/bower_components": `${env.DIR.BOWER_COMPONENTS}/` }
+    baseDir: [
+      `${env.DIR.BOWER_COMPONENTS}/`,
+      env.DIR.BUILD_VIEWER,
+      env.DIR.RESOURCE
+    ],
+    routes: {
+      "/bower_components": `${env.DIR.BOWER_COMPONENTS}/`,
+      "/resource": env.DIR.RESOURCE
+    }
   }});
 
   callback();
