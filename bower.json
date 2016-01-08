@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "c3": "~0.4.10",
-    "pure": "~0.6.0"
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.6"
   }
 }

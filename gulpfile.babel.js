@@ -174,7 +174,9 @@ gulp.task(TASK_NAME_INJECT, () => {
   var target = gulp.src(env.FILE.VIEWER.ENTRY_HTML, {base: "."});
 
   return target
-    .pipe(inject(gulp.src(bowerFiles(), {read: false}), { name: "bower" }))
+    .pipe(inject(gulp.src(bowerFiles({ overrides: {
+        bootstrap: { main: [ './dist/js/bootstrap.js', './dist/css/*.min.*', './dist/fonts/*.*' ] }
+      }}), {read: false}), { name: "bower" }))
     .pipe(inject(gulp.src([env.FILE.VIEWER.BUILD_ENTRY_JS], {read: false}), {
       transform: (path) => {
         arguments[0] = path.replace(`/${env.DIR.BUILD_VIEWER}`, "");
