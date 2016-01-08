@@ -21,8 +21,6 @@ import buffer         from "vinyl-buffer";
 import jasmine        from "gulp-jasmine";
 import jsonlint       from "gulp-jsonlint";
 import babelify       from "babelify";
-import watchify       from "watchify";
-import reporters      from "jasmine-reporters";
 import streamify      from "gulp-streamify";
 import bowerFiles     from "main-bower-files";
 import browserify     from "browserify";
@@ -56,9 +54,6 @@ const CLEAN_TARGET = [ /** clean `*.js`, `*.js.map`, `*.d.ts` */
   env.DIR.BUILD,
   `${env.FILE.GENERATOR.SRC_D_TS}`, `${env.FILE.GENERATOR.SRC_JS}`, `${env.FILE.GENERATOR.SRC_JS_MAP}`,
   `${env.FILE.GENERATOR.TEST_D_TS}`, `${env.FILE.GENERATOR.TEST_JS}`, `${env.FILE.GENERATOR.TEST_JS_MAP}`
-];
-const INJECT_CSS_TARGET = [
-
 ];
 
 let bs = browserSync.create();
@@ -150,10 +145,15 @@ gulp.task(TASK_NAME_COMPILE_JSX, () => {
     extensions: [".jsx"]
     , debug: true
   })
-    .transform(babelify, {
-      presets: ["es2015", "react"],
-      ignore: /bower_components/
-    })
+    //.transform(sassify, {
+    //  'auto-inject': true, // Inject css directly in the code
+    //  base64Encode: false, // Use base64 to inject css
+    //  sourceMap: false // Add source map to the code
+    //})
+    //.transform(babelify, {
+    //  presets: ["es2015", "react"],
+    //  ignore: /bower_components/
+    //})
     .bundle()
     .on('error', notify.onError({
       title: "JSX Compile Error",
