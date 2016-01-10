@@ -18,6 +18,8 @@
   "dependencies": {
     "c3": "~0.4.10",
     "jquery": "~2.1.4",
-    "bootstrap": "~3.3.6"
+    "bootstrap": "~3.3.6",
+    "axios": "~0.8.1",
+    "font-awesome": "~4.5.0"
   }
 }

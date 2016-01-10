@@ -40,6 +40,7 @@ const TASK_NAME_BS_START     = "bs-start";
 const TASK_NAME_BS_RELOAD    = "bs-reload";
 const TASK_NAME_COMPILE_TS   = "compile-ts";
 const TASK_NAME_COMPILE_JSX  = "compile-jsx";
+const TASK_NAME_COMPILE_CSS  = "compile-css";
 const TASK_NAME_INJECT       = "inject";
 const TASK_NAME_PREVIEW      = "preview";
 
@@ -175,8 +176,15 @@ gulp.task(TASK_NAME_INJECT, () => {
 
   return target
     .pipe(inject(gulp.src(bowerFiles({ overrides: {
-        bootstrap: { main: [ './dist/js/bootstrap.js', './dist/css/*.min.*', './dist/fonts/*.*' ] }
-      }}), {read: false}), { name: "bower" }))
+      bootstrap: { main: [ './dist/js/bootstrap.js', './dist/css/*.min.*', './dist/fonts/*.*' ]},
+      "font-awesome": { main: [ './css/*.min.*', './fonts/*.*' ]}
+    }}), {read: false}), { name: "bower" }))
+    .pipe(inject(gulp.src([env.FILE.VIEWER.BUILD_ENTRY_CSS], {read: false}), {
+      transform: (path) => {
+        arguments[0] = path.replace(`/${env.DIR.BUILD_VIEWER}`, "");
+        return inject.transform.apply(inject.transform, arguments);
+      }
+    }))
     .pipe(inject(gulp.src([env.FILE.VIEWER.BUILD_ENTRY_JS], {read: false}), {
       transform: (path) => {
         arguments[0] = path.replace(`/${env.DIR.BUILD_VIEWER}`, "");
@@ -186,7 +194,7 @@ gulp.task(TASK_NAME_INJECT, () => {
     .pipe(gulp.dest(env.DIR.BUILD));
 });
 
-gulp.task("BS_START", callback => {
+gulp.task(TASK_NAME_BS_START, callback => {
   bs.init({ server: {
     baseDir: [
       `${env.DIR.BOWER_COMPONENTS}/`,
@@ -202,9 +210,18 @@ gulp.task("BS_START", callback => {
   callback();
 });
 
+gulp.task(TASK_NAME_COMPILE_CSS, () => {
+  gulp.src(env.FILE.VIEWER.ENTRY_CSS, {base: "."})
+    .pipe(gulp.dest(env.DIR.BUILD));
+});
+
 gulp.task(TASK_NAME_PREVIEW, callback => {
   gulp.watch(env.FILE.VIEWER.ALL_FILES_JSX).on("change", () => {
     runSequence(TASK_NAME_COMPILE_JSX, TASK_NAME_BS_RELOAD);
+  });
+
+  gulp.watch(env.FILE.VIEWER.ENTRY_CSS).on("change", () => {
+    runSequence(TASK_NAME_COMPILE_CSS, TASK_NAME_BS_RELOAD);
   });
 
   gulp.watch(env.FILE.VIEWER.ENTRY_HTML).on("change", () => {
@@ -213,8 +230,9 @@ gulp.task(TASK_NAME_PREVIEW, callback => {
 
   runSequence(
     TASK_NAME_COMPILE_JSX,
+    TASK_NAME_COMPILE_CSS,
     TASK_NAME_INJECT,
-    "BS_START",
+    TASK_NAME_BS_START,
     callback);
 });
 

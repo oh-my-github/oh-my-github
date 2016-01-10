@@ -65,14 +65,14 @@
     "commander": "^2.9.0",
     "fs-extra": "^0.26.3",
     "lodash": "^3.10.1",
-    "material-ui": "^0.14.1",
     "octonode": "^0.7.4",
     "prettyjson": "^1.1.3",
     "react": "^0.14.5",
     "react-dom": "^0.14.5"
   },
   "browser": {
-    "c3": "./bower_components/c3/c3.min.js"
+    "c3": "./bower_components/c3/c3.min.js",
+    "axios": "./bower_components/axios/dist/axios.min.js"
   },
   "browserify": {
     "transform": [
@@ -81,6 +81,7 @@
     ]
   },
   "browserify-shim": {
-    "c3": "c3"
+    "c3": "c3",
+    "axios": "axios"
   }
 }
