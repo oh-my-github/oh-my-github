@@ -29,18 +29,14 @@ export default class ActivityChart extends React.Component {
       chartConfiguration: {
         bindto: `#${DOM_ELEM_ACTIVITY_CHART}`,
         color: { pattern: [
-          "FFE66B",
-          "7A62C9",
-          "5CDD5C",
-          "FFAE6B",
-          "FF6B6B",
-          "FFFF6B",
-          "9F59C6",
-          "4EBABA",
-          "FFCE6B",
-          "C4F466",
-          "DD5CA5",
-          "5F7EC6"
+          "F10026",
+          "FF8500",
+          "0776A0",
+          "3BDA00",
+          "FFAA00",
+          "530FAD",
+          "5777C0",
+          "FFE800"
         ]},
         data :{
           x: 'created_at',
