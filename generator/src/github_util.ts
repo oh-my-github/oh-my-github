@@ -19,10 +19,9 @@ import {
 
 import {deserialize, deserializeAs, Deserializable, inheritSerialization} from "./serialize";
 
+let axios = require('axios');
+
 import * as _ from "lodash";
-
-
-let octonode = require("octonode");
 
 export interface GithubClient {
   get (uri: string,
@@ -79,24 +78,24 @@ export class GithubResponse {
 
 export class GithubUtil {
 
-  public static createGithubClient(token: string): GithubClient {
-    return octonode.client(token);
-  }
-
   public static async getGithubResponse(token: string, uri: string): Promise<GithubResponse> {
     let r: any = new Promise((resolve, reject) => {
-      let client = GithubUtil.createGithubClient(token);
-      client.get(uri, {}, (err, status, body, headers) => {
-        if (err) return reject(GithubError.deserialize(GithubError, err));
-        else return resolve(new GithubResponse(headers, body));
-      });
+
+      if (_.includes(uri, "?")) uri = `https://api.github.com${uri}&access_token=${token}`;
+      else uri = `https://api.github.com${uri}?access_token=${token}`;
+
+      axios.get(uri)
+      .then(response => {
+          // TODO error handling
+          return resolve(new GithubResponse(response.headers, response.data));
+        });
     });
 
     return r;
   }
 
   /** collect all API using pagination */
-  public static async getGithubReponses(token: string, uri: string): Promise<Array<GithubResponse>> {
+  public static async getGithubResponses(token: string, uri: string): Promise<Array<GithubResponse>> {
     let responses = new Array<GithubResponse>();
 
     let r: any = await GithubUtil.getGithubResponse(token, uri);
@@ -108,13 +107,13 @@ export class GithubUtil {
     let ps = new Array<Promise<GithubResponse>>();
 
     for (let i = 2; i <= lastCount; i++) {
-      let uriWithPage = uri + "?page=" + i;
-      ps.push(GithubUtil.getGithubResponse(token, uriWithPage));
+      ps.push(GithubUtil.getGithubResponse(token, `${uri}?page=${i}`));
     }
 
     let rs = await Promise.all(ps);
+    let merged = responses.concat(rs);
 
-    return responses.concat(rs);
+    return merged;
   }
 
   public static async getGithubResponseBody(token: string, uri: string): Promise<any> {
@@ -129,7 +128,7 @@ export class GithubUtil {
    * 3. return flattened
    */
   public static async getGithubResponsesBody(token: string, uri: string): Promise<Array<any>> {
-    let rs = await GithubUtil.getGithubReponses(token, uri);
+    let rs = await GithubUtil.getGithubResponses(token, uri);
     let bodies = rs.map(r => r.body); /* each body is an array */
     let flattened = bodies.reduce((acc, body) => {
       if (Array.isArray(body) && body.length > 0) return acc.concat(body);
@@ -183,10 +182,17 @@ export class GithubUtil {
     return repos;
   }
 
-  public static deserializeGithubEvent(events: Array<any>): Array<GithubEvent> {
+  public static deserializeGithubEventFromAPI(events: Array<any>): Array<GithubEvent> {
+    return GithubUtil.deserializeGithubEvent(events, "type");
+  }
 
+  public static deserializeGithubEventFromFile(events: Array<any>): Array<GithubEvent> {
+    return GithubUtil.deserializeGithubEvent(events, "event_type");
+  }
+
+  public static deserializeGithubEvent(events: Array<any>, typeField: string): Array<GithubEvent> {
     let deserializedEvents = events.map(e => {
-      switch (e.type) {
+      switch (e[typeField]) {
         case GithubPushEvent.EVENT_TYPE:
           return GithubPushEvent.deserialize(GithubPushEvent, e);
         case GithubPullRequestEvent.EVENT_TYPE:
@@ -212,7 +218,7 @@ export class GithubUtil {
 
   public static async getUserActivities(token: string, user: string): Promise<Array<GithubEvent>> {
     let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`);
-    let events = GithubUtil.deserializeGithubEvent(raw);
+    let events = GithubUtil.deserializeGithubEventFromAPI(raw);
     return <Array<GithubEvent>> events.filter(e => e !== null);
   }
 }

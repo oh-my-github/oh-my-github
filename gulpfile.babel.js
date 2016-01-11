@@ -34,7 +34,6 @@ const TASK_NAME_TEST         = "test";
 const TASK_NAME_TSLINT       = "tslint";
 const TASK_NAME_JSLINT       = "jslint";
 const TASK_NAME_DIST         = "dist";
-const TASK_NAME_CLEAN        = "clean";
 const TASK_NAME_BUILD        = "build";
 const TASK_NAME_BS_START     = "bs-start";
 const TASK_NAME_BS_RELOAD    = "bs-reload";
@@ -43,6 +42,8 @@ const TASK_NAME_COMPILE_JSX  = "compile-jsx";
 const TASK_NAME_COMPILE_CSS  = "compile-css";
 const TASK_NAME_INJECT       = "inject";
 const TASK_NAME_PREVIEW      = "preview";
+const TASK_NAME_CLEAN_GENERATOR = "clean-generator";
+const TASK_NAME_CLEAN_VIEWER    = "clean-viewer";
 
 /** constants for FILEs */
 
@@ -51,10 +52,14 @@ const GENERATOR_WATCH_TARGET = [
   env.FILE.GENERATOR.TEST_TS,
   env.FILE.IGNORED_ALL_D_TS
 ];
-const CLEAN_TARGET = [ /** clean `*.js`, `*.js.map`, `*.d.ts` */
-  env.DIR.BUILD,
+const CLEAN_TARGET_GENERATOR = [ /** clean `*.js`, `*.js.map`, `*.d.ts` */
+  env.DIR.BUILD_GENERATOR,
   `${env.FILE.GENERATOR.SRC_D_TS}`, `${env.FILE.GENERATOR.SRC_JS}`, `${env.FILE.GENERATOR.SRC_JS_MAP}`,
   `${env.FILE.GENERATOR.TEST_D_TS}`, `${env.FILE.GENERATOR.TEST_JS}`, `${env.FILE.GENERATOR.TEST_JS_MAP}`
+];
+
+const CLEAN_TARGET_VIEWER = [
+  env.DIR.BUILD_VIEWER
 ];
 
 let bs = browserSync.create();
@@ -65,14 +70,19 @@ gulp.task(TASK_NAME_BUILD, callback => {
   runSequence(
     TASK_NAME_TSLINT,
     TASK_NAME_JSLINT,
-    TASK_NAME_CLEAN,
+    TASK_NAME_CLEAN_GENERATOR,
     TASK_NAME_COMPILE_TS,
     TASK_NAME_TEST,
     callback);
 });
 
-gulp.task(TASK_NAME_CLEAN, () => {
-  return gulp.src(CLEAN_TARGET, {read: false})
+gulp.task(TASK_NAME_CLEAN_GENERATOR, () => {
+  return gulp.src(CLEAN_TARGET_GENERATOR, {read: false})
+    .pipe(clean());
+});
+
+gulp.task(TASK_NAME_CLEAN_VIEWER, () => {
+  return gulp.src(CLEAN_TARGET_VIEWER, {read: false})
     .pipe(clean());
 });
 
@@ -229,8 +239,8 @@ gulp.task(TASK_NAME_PREVIEW, callback => {
   });
 
   runSequence(
-    TASK_NAME_COMPILE_JSX,
     TASK_NAME_COMPILE_CSS,
+    TASK_NAME_COMPILE_JSX,
     TASK_NAME_INJECT,
     TASK_NAME_BS_START,
     callback);

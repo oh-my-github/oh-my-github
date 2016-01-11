@@ -67,9 +67,9 @@ export class Profile extends Deserializable {
     if (_.isEmpty(json)) return;
     if (_.isEmpty(json.activities)) return;
 
-    let activities = json.activities;
+    let activities = GithubUtil.deserializeGithubEventFromFile(json.activities);
 
-    instance.activities = GithubUtil.deserializeGithubEvent(activities);
+    instance.activities = activities;
   }
 
   public static updateMeta(profile: Profile, meta: MetaField): Profile {

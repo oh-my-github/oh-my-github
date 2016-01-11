@@ -10,6 +10,7 @@ export class GithubUser extends Deserializable {
   @deserialize public login: string = null;
   @deserialize public type: string = null;
   @deserialize public name: string = null;
+  @deserialize public avatar_url: string = null;
   @deserialize public company: string = null;
   @deserialize public blog: string = null;
   @deserialize public location: string = null;
