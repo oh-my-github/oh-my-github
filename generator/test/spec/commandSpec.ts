@@ -15,7 +15,7 @@ describe("command.ts", () => {
       //expect(commands.length).toEqual(CommandSetting.ALL_COMMAND_SETTINGS.length);
       //
       ///** command validation: profile */
-      //let profileCommands = commands.filter(c => c.name === CommandSetting.COMMAND_NAME_PROFILE);
+      //let profileCommands = commands.filter(c => c.name === CommandSetting.COMMAND_NAME_GENERATE);
       //expect(profileCommands.length).toEqual(1);
       //expect(profileCommands[0].options.length).toEqual(ProfileOptions.ALL_PROFILE_OPTIONS.length);
       //

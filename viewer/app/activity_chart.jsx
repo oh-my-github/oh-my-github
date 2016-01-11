@@ -41,7 +41,7 @@ export default class ActivityChart extends React.Component {
         data :{
           x: 'created_at',
           columns: [ ],
-          type: 'area-spline'
+          type: 'spline'
         },
         axis: {
           x: {

@@ -15,6 +15,14 @@ export const GENERATOR_VERSION = require(path.join(PROJECT_DIR, ENV_JSON.FILE.PA
 export const FILE_PATH_PROFILE_TEMPLATE_JSON = path.join(PROJECT_DIR, ENV_JSON.FILE.PROFILE_TEMPLATE_JSON);
 export const FILE_NAME_PROFILE_JSON = ENV_JSON.FILE.PROFILE_JSON;
 
+export const BS_OPTION = { server: {
+  baseDir: [ `${PROJECT_DIR}${ENV_JSON.DIR.BUILD_VIEWER}` ],
+  routes: {
+    "/bower_components": `${PROJECT_DIR}${ENV_JSON.DIR.BOWER_COMPONENTS}/`,
+    "/resource": process.cwd()
+  }
+}};
+
 export class FileUtil {
 
   /**
