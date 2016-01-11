@@ -170,7 +170,18 @@ function printProfile(user: GithubUser,
   console.log(`\n${chalkBlue("[LANGUAGE]")}`);
 
   if (!_.isEmpty(langInfos)) {
-    // TODO
+    let langSet = langInfos.reduce((acc, langInfo) => {
+      if (_.isEmpty(langInfo.languages) || langInfo.languages.length === 0) return acc;
+
+      langInfo.languages.map(lang => lang.name).forEach(name => {
+        acc.add(name);
+      });
+
+      return acc;
+    }, new Set<string>());
+
+    console.log(`Language Count: ${langSet.size}`);
+    console.log(`Supported Languages: ${Array.from(langSet).join(", ")}`);
   }
 
   console.log(`\n${chalkBlue("[REPOSITORY]")}`);
