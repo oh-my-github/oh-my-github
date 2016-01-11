@@ -67,7 +67,7 @@ export class CommandSetting {
     "Create Github profile using the provided token for the user",
     function(token: string, user: string, options: ProfileOptions) {
       let profPath = FileUtil.getProfilePath();
-      let prevProf = Profile.deserialize(Profile, FileUtil.readFileIfExist(profPath));
+      let prevProf: Profile = FileUtil.readFileIfExist(profPath);
 
       createProfile(token, user, options)
         .then(currentProf => {

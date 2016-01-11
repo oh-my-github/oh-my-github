@@ -19,7 +19,7 @@ export class SampleResources {
         "pusher_type": "user"
       },
       "event_id": "3513135974",
-      "event_type": "CreateEvent",
+      "type": "CreateEvent",
       "created_at": "2016-01-11T08:43:18Z",
       "actor": "1ambda",
       "repo": "skpdi/rake-android"
@@ -33,7 +33,7 @@ export class SampleResources {
         "pusher_type": "user"
       },
       "event_id": "3513135973",
-      "event_type": "CreateEvent",
+      "type": "CreateEvent",
       "created_at": "2016-01-11T08:43:18Z",
       "actor": "1ambda",
       "repo": "skpdi/rake-android"
@@ -52,7 +52,7 @@ export class SampleResources {
         ]
       },
       "event_id": "3513132265",
-      "event_type": "PushEvent",
+      "type": "PushEvent",
       "created_at": "2016-01-11T08:41:44Z",
       "actor": "1ambda",
       "repo": "skpdi/rake-android"
@@ -71,7 +71,7 @@ export class SampleResources {
         ]
       },
       "event_id": "3513095439",
-      "event_type": "PushEvent",
+      "type": "PushEvent",
       "created_at": "2016-01-11T08:24:40Z",
       "actor": "1ambda",
       "repo": "skpdi/rake-android"
@@ -93,7 +93,7 @@ export class SampleResources {
         ]
       },
       "event_id": "3513095439",
-      "event_type": "PushEvent",
+      "type": "PushEvent",
       "created_at": "2016-01-11T08:24:40Z",
       "actor": "1ambda",
       "repo": "skpdi/rake-android"
@@ -112,7 +112,7 @@ export class SampleResources {
         ]
       },
       "event_id": "3513094761",
-      "event_type": "PushEvent",
+      "type": "PushEvent",
       "created_at": "2016-01-11T08:24:21Z",
       "actor": "1ambda",
       "repo": "skpdi/rake-android"
@@ -130,7 +130,7 @@ export class SampleResources {
         ]
       },
       "event_id": "3512661098",
-      "event_type": "PushEvent",
+      "type": "PushEvent",
       "created_at": "2016-01-11T03:37:49Z",
       "actor": "1ambda",
       "repo": "oh-my-github/generator"
@@ -144,7 +144,7 @@ export class SampleResources {
         "issue_url": "https://github.com/oh-my-github/generator/issues/7"
       },
       "event_id": "3511830206",
-      "event_type": "IssuesEvent",
+      "type": "IssuesEvent",
       "created_at": "2016-01-10T15:59:35Z",
       "actor": "1ambda",
       "repo": "oh-my-github/generator"
@@ -166,7 +166,7 @@ export class SampleResources {
         ]
       },
       "event_id": "3513095430",
-      "event_type": "PushEvent",
+      "type": "PushEvent",
       "created_at": "2016-01-11T08:24:40Z",
       "actor": "1ambda",
       "repo": "skpdi/rake-android"
@@ -185,7 +185,7 @@ export class SampleResources {
         ]
       },
       "event_id": "3513094761",
-      "event_type": "PushEvent",
+      "type": "PushEvent",
       "created_at": "2016-01-11T08:24:21Z",
       "actor": "1ambda",
       "repo": "skpdi/rake-android"
@@ -203,7 +203,7 @@ export class SampleResources {
         ]
       },
       "event_id": "3512661098",
-      "event_type": "PushEvent",
+      "type": "PushEvent",
       "created_at": "2016-01-11T03:37:49Z",
       "actor": "1ambda",
       "repo": "oh-my-github/generator"
@@ -217,7 +217,7 @@ export class SampleResources {
         "issue_url": "https://github.com/oh-my-github/generator/issues/7"
       },
       "event_id": "3511830206",
-      "event_type": "IssuesEvent",
+      "type": "IssuesEvent",
       "created_at": "2016-01-10T15:59:35Z",
       "actor": "1ambda",
       "repo": "oh-my-github/generator"

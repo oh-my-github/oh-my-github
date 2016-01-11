@@ -110,7 +110,7 @@ export class LanguageSummary {
 
 export class GithubEvent extends Deserializable {
   @deserializeAs("id") public event_id: string;
-  @deserializeAs("type") public event_type: string;
+  @deserializeAs("type") public type: string;
   @deserializeAs("created_at") public created_at: string;
   public actor: string; /** actor.login */
   public repo: string; /** owner/repo_name */
@@ -137,9 +137,18 @@ export class GithubEvent extends Deserializable {
     allEvents.forEach(event => {
       if (uniqIds.has(event.event_id)) return;
 
+      if (!event.event_id) {
+        console.log(event);
+        return;
+      }
+
       uniqIds.add(event.event_id);
       uniqEvents.push(event);
     });
+
+    console.log(`es1: ${es1.length}`);
+    console.log(`es2: ${es2.length}`);
+    console.log(`uniq: ${uniqEvents.length}`);
 
     return uniqEvents;
   }

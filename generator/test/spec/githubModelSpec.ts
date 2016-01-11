@@ -216,8 +216,8 @@ describe("githu_model.ts", () => {
         let pushEvent1 = GithubPushEvent.deserialize(GithubPushEvent, raw);
 
         expect(pushEvent1.event_id).toEqual(raw.id);
-        expect(pushEvent1.event_type).toEqual(raw.type);
-        expect(pushEvent1.event_type).toEqual(GithubPushEvent.EVENT_TYPE);
+        expect(pushEvent1.type).toEqual(raw.type);
+        expect(pushEvent1.type).toEqual(GithubPushEvent.EVENT_TYPE);
         expect(pushEvent1.actor).toEqual(raw.actor.login);
         expect(pushEvent1.repo).toEqual(raw.repo.name);
         expect(pushEvent1.created_at).toEqual(raw.created_at);
@@ -243,8 +243,8 @@ describe("githu_model.ts", () => {
         let prEvent = GithubPullRequestEvent.deserialize(GithubPullRequestEvent, raw);
 
         expect(prEvent.event_id).toEqual(raw.id);
-        expect(prEvent.event_type).toEqual(raw.type);
-        expect(prEvent.event_type).toEqual(GithubPullRequestEvent.EVENT_TYPE);
+        expect(prEvent.type).toEqual(raw.type);
+        expect(prEvent.type).toEqual(GithubPullRequestEvent.EVENT_TYPE);
         expect(prEvent.actor).toEqual(raw.actor.login);
         expect(prEvent.repo).toEqual(raw.repo.name);
         expect(prEvent.created_at).toEqual(raw.created_at);
@@ -270,8 +270,8 @@ describe("githu_model.ts", () => {
         let issuesEvent = GithubIssuesEvent.deserialize(GithubIssuesEvent, raw);
 
         expect(issuesEvent.event_id).toEqual(raw.id);
-        expect(issuesEvent.event_type).toEqual(raw.type);
-        expect(issuesEvent.event_type).toEqual(GithubIssuesEvent.EVENT_TYPE);
+        expect(issuesEvent.type).toEqual(raw.type);
+        expect(issuesEvent.type).toEqual(GithubIssuesEvent.EVENT_TYPE);
         expect(issuesEvent.actor).toEqual(raw.actor.login);
         expect(issuesEvent.repo).toEqual(raw.repo.name);
         expect(issuesEvent.created_at).toEqual(raw.created_at);
@@ -292,8 +292,8 @@ describe("githu_model.ts", () => {
         let issueCommentEvent = GithubIssueCommentEvent.deserialize(GithubIssueCommentEvent, raw);
 
         expect(issueCommentEvent.event_id).toEqual(raw.id);
-        expect(issueCommentEvent.event_type).toEqual(raw.type);
-        expect(issueCommentEvent.event_type).toEqual(GithubIssueCommentEvent.EVENT_TYPE);
+        expect(issueCommentEvent.type).toEqual(raw.type);
+        expect(issueCommentEvent.type).toEqual(GithubIssueCommentEvent.EVENT_TYPE);
         expect(issueCommentEvent.actor).toEqual(raw.actor.login);
         expect(issueCommentEvent.repo).toEqual(raw.repo.name);
         expect(issueCommentEvent.created_at).toEqual(raw.created_at);
@@ -314,8 +314,8 @@ describe("githu_model.ts", () => {
         let watchEvent = GithubWatchEvent.deserialize(GithubWatchEvent, raw);
 
         expect(watchEvent.event_id).toEqual(raw.id);
-        expect(watchEvent.event_type).toEqual(raw.type);
-        expect(watchEvent.event_type).toEqual(GithubWatchEvent.EVENT_TYPE);
+        expect(watchEvent.type).toEqual(raw.type);
+        expect(watchEvent.type).toEqual(GithubWatchEvent.EVENT_TYPE);
         expect(watchEvent.actor).toEqual(raw.actor.login);
         expect(watchEvent.repo).toEqual(raw.repo.name);
         expect(watchEvent.created_at).toEqual(raw.created_at);
@@ -332,8 +332,8 @@ describe("githu_model.ts", () => {
         let forkEvent = GithubForkEvent.deserialize(GithubForkEvent, raw);
 
         expect(forkEvent.event_id).toEqual(raw.id);
-        expect(forkEvent.event_type).toEqual(raw.type);
-        expect(forkEvent.event_type).toEqual(GithubForkEvent.EVENT_TYPE);
+        expect(forkEvent.type).toEqual(raw.type);
+        expect(forkEvent.type).toEqual(GithubForkEvent.EVENT_TYPE);
         expect(forkEvent.actor).toEqual(raw.actor.login);
         expect(forkEvent.repo).toEqual(raw.repo.name);
         expect(forkEvent.created_at).toEqual(raw.created_at);
@@ -355,8 +355,8 @@ describe("githu_model.ts", () => {
         let releaseEvent = GithubReleaseEvent.deserialize(GithubReleaseEvent, raw);
 
         expect(releaseEvent.event_id).toEqual(raw.id);
-        expect(releaseEvent.event_type).toEqual(raw.type);
-        expect(releaseEvent.event_type).toEqual(GithubReleaseEvent.EVENT_TYPE);
+        expect(releaseEvent.type).toEqual(raw.type);
+        expect(releaseEvent.type).toEqual(GithubReleaseEvent.EVENT_TYPE);
         expect(releaseEvent.actor).toEqual(raw.actor.login);
         expect(releaseEvent.repo).toEqual(raw.repo.name);
         expect(releaseEvent.created_at).toEqual(raw.created_at);
@@ -378,8 +378,8 @@ describe("githu_model.ts", () => {
         let createEvent = GithubCreateEvent.deserialize(GithubCreateEvent, raw);
 
         expect(createEvent.event_id).toEqual(raw.id);
-        expect(createEvent.event_type).toEqual(raw.type);
-        expect(createEvent.event_type).toEqual(GithubCreateEvent.EVENT_TYPE);
+        expect(createEvent.type).toEqual(raw.type);
+        expect(createEvent.type).toEqual(GithubCreateEvent.EVENT_TYPE);
         expect(createEvent.actor).toEqual(raw.actor.login);
         expect(createEvent.repo).toEqual(raw.repo.name);
         expect(createEvent.created_at).toEqual(raw.created_at);
@@ -399,8 +399,8 @@ describe("githu_model.ts", () => {
         let createEvent = GithubCreateEvent.deserialize(GithubCreateEvent, raw);
 
         expect(createEvent.event_id).toEqual(raw.id);
-        expect(createEvent.event_type).toEqual(raw.type);
-        expect(createEvent.event_type).toEqual(GithubCreateEvent.EVENT_TYPE);
+        expect(createEvent.type).toEqual(raw.type);
+        expect(createEvent.type).toEqual(GithubCreateEvent.EVENT_TYPE);
         expect(createEvent.actor).toEqual(raw.actor.login);
         expect(createEvent.repo).toEqual(raw.repo.name);
         expect(createEvent.created_at).toEqual(raw.created_at);
@@ -421,8 +421,8 @@ describe("githu_model.ts", () => {
       let createEvent = GithubCreateEvent.deserialize(GithubCreateEvent, raw);
 
       expect(createEvent.event_id).toEqual(raw.id);
-      expect(createEvent.event_type).toEqual(raw.type);
-      expect(createEvent.event_type).toEqual(GithubCreateEvent.EVENT_TYPE);
+      expect(createEvent.type).toEqual(raw.type);
+      expect(createEvent.type).toEqual(GithubCreateEvent.EVENT_TYPE);
       expect(createEvent.actor).toEqual(raw.actor.login);
       expect(createEvent.repo).toEqual(raw.repo.name);
       expect(createEvent.created_at).toEqual(raw.created_at);

@@ -186,17 +186,15 @@ export class GithubUtil {
     return repos;
   }
 
-  public static deserializeGithubEventFromAPI(events: Array<any>): Array<GithubEvent> {
-    return GithubUtil.deserializeGithubEvent(events, "type");
-  }
+  public static deserializeGithubEvent(events: Array<any>): Array<GithubEvent> {
 
-  public static deserializeGithubEventFromFile(events: Array<any>): Array<GithubEvent> {
-    return GithubUtil.deserializeGithubEvent(events, "event_type");
-  }
+    /**
+     * TODO: GollumEvent, DeleteEvent, CommitCommentEvent
+     */
+    let droppedEvents = new Array<GithubEvent>();
 
-  public static deserializeGithubEvent(events: Array<any>, typeField: string): Array<GithubEvent> {
     let deserializedEvents = events.map(e => {
-      switch (e[typeField]) {
+      switch (e.type) {
         case GithubPushEvent.EVENT_TYPE:
           return GithubPushEvent.deserialize(GithubPushEvent, e);
         case GithubPullRequestEvent.EVENT_TYPE:
@@ -213,16 +211,23 @@ export class GithubUtil {
           return GithubReleaseEvent.deserialize(GithubReleaseEvent, e);
         case GithubCreateEvent.EVENT_TYPE:
           return GithubCreateEvent.deserialize(GithubCreateEvent, e);
-        default: return null;
+        default:
+          droppedEvents.push(e.type);
+          return null;
       }
     });
+
+    if (droppedEvents.length > 0) {
+      let uniq = Array.from(new Set(droppedEvents)).join(", ");
+      console.log(`dropped ${droppedEvents.length} events ${uniq}`);
+    }
 
     return deserializedEvents.filter(e => e !== null);
   }
 
   public static async getUserActivities(token: string, user: string): Promise<Array<GithubEvent>> {
     let raw = await GithubUtil.getGithubResponsesBody(token, `/users/${user}/events/public`);
-    let events = GithubUtil.deserializeGithubEventFromAPI(raw);
+    let events = GithubUtil.deserializeGithubEvent(raw);
     return <Array<GithubEvent>> events.filter(e => e !== null);
   }
 }
