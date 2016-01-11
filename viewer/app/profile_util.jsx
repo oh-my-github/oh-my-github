@@ -3,7 +3,7 @@
 import React from 'react';
 import axios from "axios";
 
-const SAMPLE_RESOURCE_URI = "/resource/oh-my-github.sample.json";
+const SAMPLE_RESOURCE_URI = "/resource/oh-my-github.json";
 export default class ProfileUtil extends React.Component {
   constructor(props) {
     super(props);

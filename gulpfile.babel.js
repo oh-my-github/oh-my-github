@@ -156,15 +156,6 @@ gulp.task(TASK_NAME_COMPILE_JSX, () => {
     extensions: [".jsx"]
     , debug: true
   })
-    //.transform(sassify, {
-    //  'auto-inject': true, // Inject css directly in the code
-    //  base64Encode: false, // Use base64 to inject css
-    //  sourceMap: false // Add source map to the code
-    //})
-    //.transform(babelify, {
-    //  presets: ["es2015", "react"],
-    //  ignore: /bower_components/
-    //})
     .bundle()
     .on('error', notify.onError({
       title: "JSX Compile Error",
@@ -173,12 +164,6 @@ gulp.task(TASK_NAME_COMPILE_JSX, () => {
     .pipe(source(entryJSX))
     .pipe(rename((path) => { path.extname = ".js"; return path; }))
     .pipe(gulp.dest(env.DIR.BUILD));
-  //.pipe(rename((path) => { path.extname = ".min.js"; return path; }))
-  //.pipe(buffer())
-  //.pipe(sourcemaps.init({ loadMaps: true }))
-  //.pipe(uglify())
-  //.pipe(sourcemaps.write("."))
-  //.pipe(gulp.dest(env.DIR.BUILD));
 });
 
 gulp.task(TASK_NAME_INJECT, () => {
@@ -213,7 +198,7 @@ gulp.task(TASK_NAME_BS_START, callback => {
     ],
     routes: {
       "/bower_components": `${env.DIR.BOWER_COMPONENTS}/`,
-      "/resource": env.DIR.RESOURCE
+      "/resource": process.cwd()
     }
   }});
 

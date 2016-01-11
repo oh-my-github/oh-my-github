@@ -41,7 +41,7 @@ export default class ActivityChart extends React.Component {
         data :{
           x: 'created_at',
           columns: [ ],
-          type: 'spline'
+          type: 'area-spline'
         },
         axis: {
           x: {
@@ -64,9 +64,9 @@ export default class ActivityChart extends React.Component {
           .map(act => { act.created_at = act.created_at.slice(0, 10); return act; })
           .forEach(act => {
           if (!merged[act.created_at]) merged[act.created_at] = {};
-          if (!merged[act.created_at][act.event_type]) merged[act.created_at][act.event_type] = 0;
+          if (!merged[act.created_at][act.type]) merged[act.created_at][act.type] = 0;
 
-          merged[act.created_at][act.event_type] += 1;
+          merged[act.created_at][act.type] += 1;
         });
 
         let createdAts = Object.keys(merged).sort();

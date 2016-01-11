@@ -18,7 +18,7 @@ ReactDOM.render(
     <div className="row" style={{margin: "20px", marginTop: "50px"}}>
       <LanguageChart />
     </div>
-    <div className="row" style={{margin: "20px"}}>
+    <div className="row" style={{margin: "20px", marginTop: "50px"}}>
 
       <div className="col-sm-2" />
       <div className="col-sm-8">
