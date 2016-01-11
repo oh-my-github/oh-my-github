@@ -67,7 +67,7 @@ export class Profile extends Deserializable {
     if (_.isEmpty(json)) return;
     if (_.isEmpty(json.activities)) return;
 
-    let activities = GithubUtil.deserializeGithubEvent(json.activities);
+    let activities = GithubEvent.deserializeGithubEvent(json.activities);
 
     instance.activities = activities;
   }
