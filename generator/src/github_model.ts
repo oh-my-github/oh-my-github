@@ -1,10 +1,15 @@
 /// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/chalk/chalk.d.ts" />
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 
 "use strict";
 
 import {deserialize, deserializeAs, Deserializable, inheritSerialization} from "./serialize";
 import * as _ from "lodash";
+import {
+  red as chalkRed, blue as chalkBlue, green as chalkGreen,
+  yellow as chalkYellow, magenta as chalkMagenta, bold as chalkBold
+} from "chalk";
 
 export class GithubUser extends Deserializable {
   @deserialize public login: string = null;
@@ -146,10 +151,6 @@ export class GithubEvent extends Deserializable {
       uniqEvents.push(event);
     });
 
-    console.log(`es1: ${es1.length}`);
-    console.log(`es2: ${es2.length}`);
-    console.log(`uniq: ${uniqEvents.length}`);
-
     return uniqEvents;
   }
 
@@ -186,7 +187,7 @@ export class GithubEvent extends Deserializable {
 
     if (droppedEvents.length > 0) {
       let uniq = Array.from(new Set(droppedEvents)).join(", ");
-      console.log(`dropped ${droppedEvents.length} events ${uniq}`);
+      console.log(`\n${chalkRed("dropped events")} (${droppedEvents.length}) ${uniq}`);
     }
 
     return deserializedEvents.filter(e => e !== null);

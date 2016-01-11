@@ -73,6 +73,11 @@ export class CommandSetting {
         .then(currentProf => {
 
           let uniqActs = GithubEvent.mergeByEventId(prevProf.activities, currentProf.activities);
+
+          console.log(`previous Profile Activity: ${prevProf.activities.length}`);
+          console.log(`current  Profile Activity: ${currentProf.activities.length}`);
+          console.log(`unique   Profile Activity: ${uniqActs.length}`);
+
           currentProf.updateMeta(prevProf._$meta);
           currentProf.activities = uniqActs;    /* ㄱset unique activities */
           FileUtil.overwriteFile(profPath, currentProf);
@@ -159,7 +164,7 @@ function printProfile(user: GithubUser,
                       acts: Array<GithubEvent>): void {
 
   /** debug info */
-  console.log(`\n[USER]`);
+  console.log(`\n${chalkBlue("[USER]")}`);
   console.log(pretty.render(user));
 
   console.log(`\n${chalkBlue("[LANGUAGE]")}`);
@@ -185,10 +190,6 @@ function printProfile(user: GithubUser,
   }
 
   console.log(`\n${chalkBlue("[ACTIVITY]")}`);
-
-  if (!_.isEmpty(acts)) {
-    console.log(`Activity Count: ${acts.length}`);
-  }
 }
 
 async function createProfile(token: string,
