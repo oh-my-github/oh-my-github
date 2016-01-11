@@ -72,21 +72,7 @@ export class CommandSetting {
       createProfile(token, user, options)
         .then(currentProf => {
 
-          /** concat and remove duplicated activities by filtering out using event_id */
-          let allActs = currentProf.activities.concat(prevProf.activities).filter(a => !_.isEmpty(a));
-          let uniqEventIds = new Set();
-          let uniqActs = new Array<GithubEvent>();
-
-          for (let i = 0; i < allActs.length; i++) {
-            let act = allActs[i];
-
-            if (!uniqEventIds.has(act.event_id)) {
-              uniqEventIds.add(act.event_id);
-              uniqActs.push(act);
-            }
-          }
-
-          // TODO extract to updateProfile function
+          let uniqActs = GithubEvent.mergeByEventId(prevProf.activities, currentProf.activities);
           currentProf.updateMeta(prevProf._$meta);
           currentProf.activities = uniqActs;    /* ㄱset unique activities */
           FileUtil.overwriteFile(profPath, currentProf);
@@ -194,7 +180,8 @@ function printProfile(user: GithubUser,
 
       return sum;
     }, repoSummary);
-    console.log(pretty.render(repoSummary));
+
+    console.log(`Repository Count: ${repoSummary.repository_count}`);
   }
 
   console.log(`\n${chalkBlue("[ACTIVITY]")}`);

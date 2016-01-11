@@ -122,6 +122,27 @@ export class GithubEvent extends Deserializable {
     if (!_.isEmpty(json) && !_.isEmpty(json.repo))
       instance.repo = json.repo.name;
   }
+
+  /** concat and remove duplicated activities by filtering out using event_id */
+  public static mergeByEventId(es1: Array<GithubEvent>, es2: Array<GithubEvent>): Array<GithubEvent> {
+    if (_.isEmpty(es1) && _.isEmpty(es2)) return new Array<GithubEvent>();
+
+    /** copy and concat */
+    let allEvents: Array<GithubEvent> =
+      JSON.parse(JSON.stringify(es1)).concat(JSON.parse(JSON.stringify(es2)));
+
+    let uniqIds = new Set<string>();
+    let uniqEvents = new Array<GithubEvent>();
+
+    allEvents.forEach(event => {
+      if (uniqIds.has(event.event_id)) return;
+
+      uniqIds.add(event.event_id);
+      uniqEvents.push(event);
+    });
+
+    return uniqEvents;
+  }
 }
 
 export class GithubPushEventPayload {
@@ -361,5 +382,3 @@ export class GithubCreateEvent extends GithubEvent {
 
   @deserializeAs(GithubCreateEventPayload, "payload") public payload: GithubCreateEventPayload;
 }
-
-
