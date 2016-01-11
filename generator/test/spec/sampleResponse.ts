@@ -5,7 +5,9 @@
 export class SampleResources {
 
   /**
-   * sampleActivities1 (4) + sampleActivities (4) = 7 (shared 1 activity)
+   * sampleActivities1 (4) + sampleActivities2 (4) = 7 (shared 1 activity)
+   * sampleActivities1 (4) + sampleActivities3 (4) = 8 (no shared activity)
+   * sampleActivities2 (4) + sampleActivities3 (4) = 5 (shared 3 shared activity)
    */
   static sampleActivities1 = [
     {
@@ -91,6 +93,79 @@ export class SampleResources {
         ]
       },
       "event_id": "3513095439",
+      "event_type": "PushEvent",
+      "created_at": "2016-01-11T08:24:40Z",
+      "actor": "1ambda",
+      "repo": "skpdi/rake-android"
+    },
+    {
+      "payload": {
+        "push_id": 929688466,
+        "size": 19,
+        "distinct_size": 3,
+        "ref": "refs/heads/develop",
+        "head": "c618ff3e225e1f72b6184aed73411f45ee306889",
+        "before": "0fd03010b31fbedc15897416427e8ad8145f8346",
+        "commit_urls": [
+          "https://github.com/oh-my-github/generator/commit/c6ec13ef5a713d40bd6cac957caa6b3ae5f159b6",
+          "https://github.com/oh-my-github/generator/commit/77c90d2c988713b26e793785bfee422c12d0a151"
+        ]
+      },
+      "event_id": "3513094761",
+      "event_type": "PushEvent",
+      "created_at": "2016-01-11T08:24:21Z",
+      "actor": "1ambda",
+      "repo": "skpdi/rake-android"
+    },
+    {
+      "payload": {
+        "push_id": 929514457,
+        "size": 1,
+        "distinct_size": 1,
+        "ref": "refs/heads/master",
+        "head": "d87c68e020eaca7f3f3a3d0562ccd365c70d9f14",
+        "before": "ad94fc39a7e4d26b653d1fa3d9be413178c075e1",
+        "commit_urls": [
+          "https://github.com/oh-my-github/generator/commit/d87c68e020eaca7f3f3a3d0562ccd365c70d9f14"
+        ]
+      },
+      "event_id": "3512661098",
+      "event_type": "PushEvent",
+      "created_at": "2016-01-11T03:37:49Z",
+      "actor": "1ambda",
+      "repo": "oh-my-github/generator"
+    },
+    {
+      "payload": {
+        "action": "opened",
+        "issue_id": 125827766,
+        "issue_number": 7,
+        "issue_title": "Add all_event_types to meta",
+        "issue_url": "https://github.com/oh-my-github/generator/issues/7"
+      },
+      "event_id": "3511830206",
+      "event_type": "IssuesEvent",
+      "created_at": "2016-01-10T15:59:35Z",
+      "actor": "1ambda",
+      "repo": "oh-my-github/generator"
+    }
+  ];
+
+  static sampleActivities3 = [
+    {
+      "payload": {
+        "push_id": 929688703,
+        "size": 34,
+        "distinct_size": 1,
+        "ref": "refs/heads/master",
+        "head": "13b66a7b7515109068d61d3284fef93f5fdc2e7a",
+        "before": "c7301390e53c5dcf64819f027b9f10ea0cd6eea3",
+        "commit_urls": [
+          "https://github.com/oh-my-github/generator/commit/856e6fcb951cb5c955b5a05d7dd594491556e6b2",
+          "https://github.com/oh-my-github/generator/commit/c77c05677526fc4da2f9e0f5675fd055c5f88dd6"
+        ]
+      },
+      "event_id": "3513095430",
       "event_type": "PushEvent",
       "created_at": "2016-01-11T08:24:40Z",
       "actor": "1ambda",

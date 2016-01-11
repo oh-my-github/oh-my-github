@@ -170,23 +170,43 @@ describe("githu_model.ts", () => {
   });
 
   describe("GithubEvent", () => {
+
+    /**
+     * sampleActivities1 (4) + sampleActivities2 (4) = 7 (shared 1 activity)
+     * sampleActivities1 (4) + sampleActivities3 (4) = 8 (no shared activity)
+     * sampleActivities2 (4) + sampleActivities3 (4) = 5 (shared 3 shared activity)
+     */
     describe("mergeByEventId", () => {
       it("should return an array given arguments are empty", () => {
         let merged = GithubEvent.mergeByEventId(new Array<GithubEvent>(), new Array<GithubEvent>());
         expect(merged.length).toEqual(0);
       });
 
-      it("should return uniq activity count", () => {
-        /**
-         * sampleActivities1 (4) + sampleActivities (4) = 7 (shared 1 activity)
-         */
-
+      it("should return uniq activity count1", () => {
         let es1 = SampleResources.sampleActivities1;
         let es2 = SampleResources.sampleActivities2;
 
         let merged = GithubEvent.mergeByEventId(es1, es2);
 
         expect(merged.length).toEqual(7);
+      });
+
+      it("should return uniq activity count2", () => {
+        let es1 = SampleResources.sampleActivities1;
+        let es2 = SampleResources.sampleActivities3;
+
+        let merged = GithubEvent.mergeByEventId(es1, es2);
+
+        expect(merged.length).toEqual(8);
+      });
+
+      it("should return uniq activity count3", () => {
+        let es1 = SampleResources.sampleActivities2;
+        let es2 = SampleResources.sampleActivities3;
+
+        let merged = GithubEvent.mergeByEventId(es1, es2);
+
+        expect(merged.length).toEqual(5);
       });
     });
 

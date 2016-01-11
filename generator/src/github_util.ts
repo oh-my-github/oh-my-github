@@ -86,8 +86,12 @@ export class GithubUtil {
 
       axios.get(uri)
       .then(response => {
-          // TODO error handling
-          return resolve(new GithubResponse(response.headers, response.data));
+          return resolve(new GithubResponse(response.headers, response.data))
+        })
+      .catch(response => {
+          if (response instanceof Error) return reject(response);
+          response.data.statusCode = response.status;
+          return reject(response.data);
         });
     });
 

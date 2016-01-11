@@ -78,7 +78,7 @@ describe("GithubUtil", () => {
     });
 
     it("should reject promise with the `Not Found` message given invalid uri", callback => {
-      let invalidUri = "i-n-v-a-l-i-d";
+      let invalidUri = "/i-n-v-a-l-i-d";
 
       GithubUtil.getGithubResponseBody(GITHUB_TOKEN, invalidUri)
         .then(result => {
