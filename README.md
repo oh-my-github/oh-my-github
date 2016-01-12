@@ -4,19 +4,37 @@ Create your `gh-pages` in 1 minute
 
 ## Usage
 
-### Installation
+### 1. Installation
 
 - OSX
 - NodeJS 5.2.0+
 
 ```
 $ npm install -g oh-my-github
-$ mkdir oh-my-github && cd oh-my-github
-$ omg init 
-$ omg 
 ```
 
-### Creating Your Github Profile
+### 2. Generating Your Github Profile
+
+You need to create an access token to send 50+ github API requests ([Link: Creating Access Token](https://github.com/settings/tokens/new))
+
+```
+$ mkdir oh-my-github && cd oh-my-github
+$ omg init 
+$ omg generate [GITHUB_TOKEN] [GITHUB_ID]
+$ omg preview
+```
+
+### 3. Pushing gh-pages
+
+TODO
+
+```
+$ npm install -g yo-omg-basic
+$ yo omg-basic
+$ npm init
+$ npm commit -A -m "first commit" && git checkout -b gh-pages
+$ git push origin HEAD
+```
 
 ## Development
 
