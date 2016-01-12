@@ -3,7 +3,7 @@
 
 import {
   CommandFactory, ParsedOption, ParsedCommand,
-  ProfileOptions, OptionSetting, CommandSetting
+  GenerateOptions, OptionSetting, CommandSetting
 } from "../../src/command";
 
 describe("command.ts", () => {
@@ -17,7 +17,7 @@ describe("command.ts", () => {
       ///** command validation: profile */
       //let profileCommands = commands.filter(c => c.name === CommandSetting.COMMAND_NAME_GENERATE);
       //expect(profileCommands.length).toEqual(1);
-      //expect(profileCommands[0].options.length).toEqual(ProfileOptions.ALL_PROFILE_OPTIONS.length);
+      //expect(profileCommands[0].options.length).toEqual(GenerateOptions.ALL_PROFILE_OPTIONS.length);
       //
       ///** command validation: init */
       //let initCommands = commands.filter(c => c.name === CommandSetting.COMMAND_NAME_INIT);

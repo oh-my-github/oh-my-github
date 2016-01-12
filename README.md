@@ -1,5 +1,23 @@
 # Generator 
 
+Create your `gh-pages` in 1 minute
+
+## Usage
+
+### Installation
+
+- OSX
+- NodeJS 5.2.0+
+
+```
+$ npm install -g oh-my-github
+$ mkdir oh-my-github && cd oh-my-github
+$ omg init 
+$ omg 
+```
+
+### Creating Your Github Profile
+
 ## Development
 
 ### Build 

@@ -36,27 +36,12 @@ export class OptionSetting {
   constructor(public specifiers: string, public description: string) {}
 }
 
-export class ProfileOptions {
-  public static PROFILE_OPTION_SPECIFIER_LANGUAGE   = "-l, --language";
-  public static PROFILE_OPTION_SPECIFIER_REPOSITORY = "-r, --repository";
-  public static PROFILE_OPTION_SPECIFIER_ACTIVITY   = "-a, --activity";
+export class GenerateOptions {
+  public static GENERATE_OPTION_SPECIFIER_IGNORE_REPOS = "-i, --ignore [repository...]";
+  public static GENERATE_OPTION_IGNORE_REPOS = new OptionSetting(
+    GenerateOptions.GENERATE_OPTION_SPECIFIER_IGNORE_REPOS, "ignore specified repositories");
 
-  public static PROFILE_OPTION_LANGUAGE   =
-    new OptionSetting(ProfileOptions.PROFILE_OPTION_SPECIFIER_LANGUAGE, "show language summary");
-  public static PROFILE_OPTION_REPOSITORY =
-    new OptionSetting(ProfileOptions.PROFILE_OPTION_SPECIFIER_REPOSITORY, "show repository summary");
-  public static PROFILE_OPTION_ACTIVITY   =
-    new OptionSetting(ProfileOptions.PROFILE_OPTION_SPECIFIER_ACTIVITY, "show activity summary");
-
-  public static ALL_PROFILE_OPTIONS = [
-    ProfileOptions.PROFILE_OPTION_LANGUAGE,
-    ProfileOptions.PROFILE_OPTION_REPOSITORY,
-    ProfileOptions.PROFILE_OPTION_ACTIVITY
-  ];
-
-  language: boolean;
-  repository: boolean;
-  activity: boolean;
+  ignore: Array<string>;
 }
 
 export class CommandSetting {
@@ -78,13 +63,13 @@ export class CommandSetting {
 
   public static COMMAND_NAME_GENERATE = "generate";
   public static COMMAND_GENERATE = new CommandSetting(
-    `${CommandSetting.COMMAND_NAME_GENERATE} <token> <user>`,
+    `${CommandSetting.COMMAND_NAME_GENERATE} <token> <user> [ignoredRepos...]`,
     "generate a github profile using the provided token for the user",
-    function(token: string, user: string, options: ProfileOptions) {
+    function(token: string, user: string, ignoredRepos: Array<string>, options: GenerateOptions) {
       let profPath = FileUtil.getProfilePath();
       let prevProf: Profile = FileUtil.readFileIfExist(profPath);
 
-      createProfile(token, user, options)
+      createProfile(token, user, ignoredRepos, options)
         .then(currentProf => {
 
           let uniqActs = GithubEvent.mergeByEventId(prevProf.activities, currentProf.activities);
@@ -150,9 +135,7 @@ export class CommandFactory {
     parser
       .command(CommandSetting.COMMAND_GENERATE.specifiers)
       .description(CommandSetting.COMMAND_GENERATE.description)
-      .option(ProfileOptions.PROFILE_OPTION_LANGUAGE.specifiers, ProfileOptions.PROFILE_OPTION_LANGUAGE.description)
-      .option(ProfileOptions.PROFILE_OPTION_REPOSITORY.specifiers, ProfileOptions.PROFILE_OPTION_REPOSITORY.description)
-      .option(ProfileOptions.PROFILE_OPTION_ACTIVITY.specifiers, ProfileOptions.PROFILE_OPTION_ACTIVITY.description)
+      .option(GenerateOptions.GENERATE_OPTION_IGNORE_REPOS.specifiers, GenerateOptions.GENERATE_OPTION_IGNORE_REPOS.description)
       .action(CommandSetting.COMMAND_GENERATE.action);
 
     parser
@@ -220,24 +203,13 @@ function printProfile(user: GithubUser,
 
 async function createProfile(token: string,
                              user: string,
-                             options: ProfileOptions): Promise<Profile> {
+                             ignoredRepos: Array<string>,
+                             options: GenerateOptions): Promise<Profile> {
+
   let githubUser = await GithubUtil.getGithubUser(token, user);
-
-  let langs = new Array<LanguageInformation>();
-  let repos = new Array<Repository>();
-  let acts = new Array<GithubEvent>();
-
-  if (options.repository) {
-    repos = await GithubUtil.getUserRepositories(token, user);
-  }
-
-  if (options.language) {
-    langs = await GithubUtil.getUserLanguages(token, user);
-  }
-
-  if (options.activity) {
-    acts = await GithubUtil.getUserActivities(token, user);
-  }
+  let repos = await GithubUtil.getUserRepositories(token, user);
+  let langs = await GithubUtil.getUserLanguages(token, user);
+  let acts = await GithubUtil.getUserActivities(token, user);
 
   // TODO: add repo name to language
   printProfile(githubUser, langs, repos, acts);
