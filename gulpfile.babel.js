@@ -42,6 +42,7 @@ const TASK_NAME_COMPILE_JSX  = "compile-jsx";
 const TASK_NAME_COMPILE_CSS  = "compile-css";
 const TASK_NAME_INJECT       = "inject";
 const TASK_NAME_PREVIEW      = "preview";
+const TASK_NAME_RELEASE      = "release";
 const TASK_NAME_CLEAN_GENERATOR = "clean-generator";
 const TASK_NAME_CLEAN_VIEWER    = "clean-viewer";
 

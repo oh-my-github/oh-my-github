@@ -1,8 +1,11 @@
 {
-  "name": "generator",
-  "version": "0.0.1",
+  "name": "oh-my-github",
+  "version": "0.0.5",
   "description": "",
   "main": "build/generator/src/generator.js",
+  "bin": {
+    "oh-my-github": "./bin/oh-my-github"
+  },
   "scripts": {
     "test": "gulp clean && gulp compile && gulp test"
   },
@@ -28,7 +31,6 @@
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
-    "babel-runtime": "^6.3.19",
     "babelify": "^7.2.0",
     "browserify": "^12.0.1",
     "browserify-shim": "^3.8.11",
@@ -58,6 +60,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "babel-runtime": "^6.3.19",
     "axios": "^0.8.1",
     "browser-sync": "^2.11.0",
     "cerialize": "^0.1.3",
