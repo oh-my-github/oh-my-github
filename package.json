@@ -1,10 +1,10 @@
 {
   "name": "oh-my-github",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "",
   "main": "build/generator/src/generator.js",
   "bin": {
-    "oh-my-github": "./bin/oh-my-github"
+    "omg": "./bin/omg"
   },
   "scripts": {
     "test": "gulp clean && gulp compile && gulp test"
