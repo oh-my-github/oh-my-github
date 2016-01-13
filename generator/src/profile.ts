@@ -21,32 +21,33 @@ export class MetaField extends Deserializable {
   public static PROFILE_SCHEMA_VERSION = 1;
   public static CURRENT_DATE = new Date().toISOString();
 
-  @deserialize public publish_repository: string;
   @deserialize public agent: string;
+  @deserialize public github_repository: string;
+  @deserialize public github_user: string;
 
   /** since cerialize overwrite values even if it is `null`, we need to use `OnDeserialize` */
   // TODO: create PR (preventing from overwriting field to `null`)
-  public profile_schema_version = MetaField.PROFILE_SCHEMA_VERSION;
-  public created_at: string = MetaField.CURRENT_DATE;
-  public collected_ats: Array<string> = new Array<string>(MetaField.CURRENT_DATE);
+  public schema_version = MetaField.PROFILE_SCHEMA_VERSION;
+  public schema_created_at: string = MetaField.CURRENT_DATE;
+  public schema_collected_ats: Array<string> = new Array<string>(MetaField.CURRENT_DATE);
 
   public static OnDeserialized(instance: MetaField, json: any): void {
-    let profSchemaVersion = json.profile_schema_version;
+    let profSchemaVersion = json.schema_version;
 
     if (null !== profSchemaVersion && profSchemaVersion !== MetaField.PROFILE_SCHEMA_VERSION) {
-      throw new Error(`${chalkRed("Invalid profile_schema_version: ")} ${profSchemaVersion}`)
+      throw new Error(`${chalkRed("Invalid schema_version: ")} ${profSchemaVersion}`)
     }
 
     if (_.isEmpty(profSchemaVersion)) profSchemaVersion = MetaField.PROFILE_SCHEMA_VERSION;
-    instance.profile_schema_version = profSchemaVersion;
+    instance.schema_version = profSchemaVersion;
 
-    let created_at = json.created_at;
+    let created_at = json.schema_created_at;
     if (_.isEmpty(created_at)) created_at = MetaField.CURRENT_DATE;
-    instance.created_at = created_at;
+    instance.schema_created_at = created_at;
 
-    let collected_ats = json.collected_ats;
+    let collected_ats = json.schema_collected_ats;
     if (_.isEmpty(collected_ats)) collected_ats = new Array<string>(MetaField.CURRENT_DATE);
-    instance.collected_ats = collected_ats;
+    instance.schema_collected_ats = collected_ats;
   }
 }
 
@@ -73,11 +74,11 @@ export class Profile extends Deserializable {
   }
 
   public static updateMeta(profile: Profile, meta: MetaField): Profile {
-    let collectedAts = meta.collected_ats.slice(); /** copy array */
+    let collectedAts = meta.schema_collected_ats.slice(); /** copy array */
     collectedAts.push(MetaField.CURRENT_DATE);
 
     profile._$meta = copyObject(meta);
-    profile._$meta.collected_ats = collectedAts;
+    profile._$meta.schema_collected_ats = collectedAts;
     return profile;
   }
 

@@ -7,13 +7,14 @@ export class SampleProfile {
   static V0_INITIAL_PROFILE = {
     "activities": [],
     "_$meta": {
-      "profile_schema_version": 0,
-      "created_at": "2016-01-03T05:39:39.436Z",
-      "collected_ats": [
+      "schema_version": 0,
+      "schema_created_at": "2016-01-03T05:39:39.436Z",
+      "schema_collected_ats": [
         "2016-01-03T05:39:39.436Z"
       ],
-      "publish_repository": "repo",
-      "agent": "cli-generator"
+      "agent": "cli-generator",
+      "github_user": "1ambda",
+      "github_repository": "repo"
     },
     "user": {
       "login": null,
@@ -40,12 +41,13 @@ export class SampleProfile {
   static V1_INITIAL_PROFILE = {
     "activities": [],
     "_$meta": {
-      "profile_schema_version": 1,
-      "created_at": "2016-01-03T05:39:39.436Z",
-      "collected_ats": [
+      "schema_version": 1,
+      "schema_created_at": "2016-01-03T05:39:39.436Z",
+      "schema_collected_ats": [
         "2016-01-03T05:39:39.436Z"
       ],
-      "publish_repository": "repo",
+      "github_repository": "repo",
+      "github_user": "1ambda",
       "agent": "cli-generator"
     },
     "user": {

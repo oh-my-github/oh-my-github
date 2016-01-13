@@ -19,8 +19,8 @@ You need to create an access token to send 50+ github API requests ([Link: Creat
 
 ```
 $ mkdir oh-my-github && cd oh-my-github
-$ omg init 
-$ omg generate [GITHUB_TOKEN] [GITHUB_ID]
+$ omg init [GITHUB_ID] [GITHUB_REPO]      # (e.g) omg init 1ambda oh-my-github 
+$ omg generate [GITHUB_TOKEN]
 $ omg preview
 ```
 
@@ -31,7 +31,7 @@ TODO
 ```
 $ npm install -g yo-omg-basic
 $ yo omg-basic
-$ npm init
+$ git init
 $ npm commit -A -m "first commit" && git checkout -b gh-pages
 $ git push origin HEAD
 ```

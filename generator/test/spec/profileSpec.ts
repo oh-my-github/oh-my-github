@@ -26,29 +26,32 @@ describe("profile.ts", () => {
       let deserialized = Profile.deserialize(Profile, v1Prof)._$meta;
 
       expect(deserialized.agent).toEqual(v1Meta.agent);
-      expect(deserialized.profile_schema_version).toEqual(v1Meta.profile_schema_version);
-      expect(deserialized.publish_repository).toEqual(v1Meta.publish_repository);
-      expect(deserialized.created_at).toEqual(v1Meta.created_at);
-      expect(deserialized.collected_ats).toEqual(v1Meta.collected_ats);
+      expect(deserialized.github_user).toEqual(v1Meta.github_user);
+      expect(deserialized.schema_version).toEqual(v1Meta.schema_version);
+      expect(deserialized.github_repository).toEqual(v1Meta.github_repository);
+      expect(deserialized.schema_created_at).toEqual(v1Meta.schema_created_at);
+      expect(deserialized.schema_collected_ats).toEqual(v1Meta.schema_collected_ats);
     });
 
-    it("should deserialize template while adding the current date to collected_ats ", () => {
+    it("should deserialize template while adding the current date to schema_collected_ats ", () => {
       let template = getTemplate();
       let templateMeta = template._$meta;
       let initialProf = Profile.deserialize(Profile, template);
       let initialMeta = initialProf._$meta;
 
       expect(templateMeta.agent).toEqual("cli-generator");
-      expect(templateMeta.publish_repository).toBeNull();
-      expect(templateMeta.profile_schema_version).toBeNull();
-      expect(templateMeta.created_at).toBeNull();
-      expect(templateMeta.collected_ats.length).toEqual(0);
+      expect(templateMeta.github_user).toBeNull();
+      expect(templateMeta.github_repository).toBeNull();
+      expect(templateMeta.schema_version).toBeNull();
+      expect(templateMeta.schema_created_at).toBeNull();
+      expect(templateMeta.schema_collected_ats.length).toEqual(0);
 
       expect(initialMeta.agent).toEqual("cli-generator");
-      expect(initialMeta.publish_repository).toBeNull();
-      expect(initialMeta.profile_schema_version).toEqual(MetaField.PROFILE_SCHEMA_VERSION);
-      expect(initialMeta.created_at).toEqual(MetaField.CURRENT_DATE);
-      expect(initialMeta.collected_ats.length).toEqual(1);
+      expect(initialMeta.github_user).toBeNull();
+      expect(initialMeta.github_repository).toBeNull();
+      expect(initialMeta.schema_version).toEqual(MetaField.PROFILE_SCHEMA_VERSION);
+      expect(initialMeta.schema_created_at).toEqual(MetaField.CURRENT_DATE);
+      expect(initialMeta.schema_collected_ats.length).toEqual(1);
     });
   });
 
@@ -57,8 +60,9 @@ describe("profile.ts", () => {
       let v1InitialProf = copyObject(SampleProfile.V1_INITIAL_PROFILE);
       let deserialized = Profile.deserialize(Profile, v1InitialProf);
 
-      expect(deserialized._$meta.profile_schema_version).toEqual(v1InitialProf._$meta.profile_schema_version);
-      expect(deserialized._$meta.publish_repository).toEqual(v1InitialProf._$meta.publish_repository);
+      expect(deserialized._$meta.schema_version).toEqual(v1InitialProf._$meta.schema_version);
+      expect(deserialized._$meta.github_user).toEqual(v1InitialProf._$meta.github_user);
+      expect(deserialized._$meta.github_repository).toEqual(v1InitialProf._$meta.github_repository);
       expect(deserialized._$meta.agent).toEqual(v1InitialProf._$meta.agent);
       expect(deserialized.languages.length).toEqual(0);
       expect(deserialized.repositories.length).toEqual(0);
@@ -67,7 +71,7 @@ describe("profile.ts", () => {
   });
 
   describe("Profile.updateMeta", () => {
-    it("should update collected_ats while keeping other meta fields", () => {
+    it("should update schema_collected_ats while keeping other meta fields", () => {
       let v1InitialProf = copyObject(SampleProfile.V1_INITIAL_PROFILE);
       let prevProf = Profile.deserialize(Profile, v1InitialProf);
       let prevMeta = prevProf._$meta;
@@ -77,14 +81,15 @@ describe("profile.ts", () => {
       let meta = currentProf._$meta;
 
       /** KEEP previous meta fields */
-      expect(meta.profile_schema_version).toEqual(prevMeta.profile_schema_version);
       expect(meta.agent).toEqual(prevMeta.agent);
-      expect(meta.publish_repository).toEqual(prevMeta.publish_repository);
-      expect(meta.created_at).toEqual(prevMeta.created_at);
+      expect(meta.schema_version).toEqual(prevMeta.schema_version);
+      expect(meta.schema_created_at).toEqual(prevMeta.schema_created_at);
+      expect(meta.github_repository).toEqual(prevMeta.github_repository);
+      expect(meta.github_user).toEqual(prevMeta.github_user);
 
       /** updated meta fields */
-      expect(Array.isArray(prevMeta.collected_ats)).toBeTruthy();
-      expect(meta.collected_ats.length).toEqual(prevMeta.collected_ats.length + 1);
+      expect(Array.isArray(prevMeta.schema_collected_ats)).toBeTruthy();
+      expect(meta.schema_collected_ats.length).toEqual(prevMeta.schema_collected_ats.length + 1);
     });
   });
 
@@ -92,10 +97,11 @@ describe("profile.ts", () => {
     it("should be deserialized", () => {
       let templateProfile = getDeserializedTemplateProfile();
       expect(templateProfile._$meta.agent).toEqual("cli-generator");
-      expect(templateProfile._$meta.profile_schema_version).toBeGreaterThan(0);
-      expect(templateProfile._$meta.created_at).not.toBeNull();
-      expect(templateProfile._$meta.collected_ats.length).toBe(1);
-      expect(templateProfile._$meta.publish_repository).toBeNull();
+      expect(templateProfile._$meta.schema_version).toBeGreaterThan(0);
+      expect(templateProfile._$meta.schema_created_at).not.toBeNull();
+      expect(templateProfile._$meta.schema_collected_ats.length).toBe(1);
+      expect(templateProfile._$meta.github_repository).toBeNull();
+      expect(templateProfile._$meta.github_user).toBeNull();
     });
   });
 });

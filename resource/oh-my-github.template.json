@@ -1,10 +1,11 @@
 {
   "_$meta": {
-    "publish_repository": null,
     "agent": "cli-generator",
-    "profile_schema_version": null,
-    "created_at": null,
-    "collected_ats": [
+    "github_user": null,
+    "github_repository": null,
+    "schema_version": null,
+    "schema_created_at": null,
+    "schema_collected_ats": [
 
     ]
   },
