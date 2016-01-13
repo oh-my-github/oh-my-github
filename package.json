@@ -1,6 +1,6 @@
 {
   "name": "oh-my-github",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "",
   "main": "build/generator/src/generator.js",
   "bin": {
