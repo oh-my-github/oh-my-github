@@ -36,6 +36,8 @@ $ npm commit -A -m "first commit" && git checkout -b gh-pages
 $ git push origin HEAD
 ```
 
+<br />
+
 ## Development
 
 ### Build 

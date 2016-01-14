@@ -33,23 +33,25 @@ import jasmineBrowser from "gulp-jasmine-browser";
 const TASK_NAME_TEST         = "test";
 const TASK_NAME_TSLINT       = "tslint";
 const TASK_NAME_JSLINT       = "jslint";
-const TASK_NAME_DIST         = "dist";
 const TASK_NAME_BUILD        = "build";
 const TASK_NAME_BS_START     = "bs-start";
 const TASK_NAME_BS_RELOAD    = "bs-reload";
-const TASK_NAME_COMPILE_TS   = "compile-ts";
-const TASK_NAME_COMPILE_JSX  = "compile-jsx";
-const TASK_NAME_COMPILE_CSS  = "compile-css";
 const TASK_NAME_INJECT       = "inject";
 const TASK_NAME_PREVIEW      = "preview";
 const TASK_NAME_RELEASE      = "release";
-const TASK_NAME_CLEAN_GENERATOR = "clean-generator";
-const TASK_NAME_CLEAN_VIEWER    = "clean-viewer";
+const TASK_NAME_COMPILE_JSX  = "compile-jsx";
+const TASK_NAME_COMPILE_CSS  = "compile-css";
+
+const TASK_NAME_COMPILE_TS            = "compile-ts";  /** noEmitError: false */
+const TASK_NAME_COMPILE_TS_NO_EMIT_ERROR = "compile-ts-no-emit-error";
+const TASK_NAME_CLEAN_GENERATOR       = "clean-generator";
+const TASK_NAME_CLEAN_VIEWER          = "clean-viewer";
+const TASK_NAME_CONT_GENERATOR_BUILD  = "cont-generator-build";
 
 /** constants for FILEs */
 
 const GENERATOR_WATCH_TARGET = [
-  env.FILE.GENERATOR.SOURCE_TS,
+  env.FILE.GENERATOR.SRC_TS,
   env.FILE.GENERATOR.TEST_TS,
   env.FILE.IGNORED_ALL_D_TS
 ];
@@ -122,26 +124,11 @@ gulp.task(TASK_NAME_TEST, () => {
 });
 
 gulp.task(TASK_NAME_COMPILE_TS, () => {
-  const tsProject = ts.createProject("tsconfig.json", {
-    declaration: true
-  });
+  return compileTypescript(false);
+});
 
-  const tsResult =
-    tsProject
-      .src(GENERATOR_WATCH_TARGET, { base: "." })
-      .pipe(ts(tsProject));
-
-  return merge([
-    tsResult /** create `d.ts` */
-      .dts
-      .pipe(gulp.dest("./", {overwrite: true})),
-    tsResult /** create `js`, `js.map` */
-      .js /** ES6 */
-      .pipe(sourcemaps.init())
-      .pipe(babel()) /** ES5 */
-      .pipe(sourcemaps.write("."))
-      .pipe(gulp.dest(env.DIR.BUILD))
-  ]);
+gulp.task(TASK_NAME_COMPILE_TS_NO_EMIT_ERROR, () => {
+  return compileTypescript(true);
 });
 
 gulp.task(TASK_NAME_BS_RELOAD, callback => {
@@ -228,10 +215,41 @@ gulp.task(TASK_NAME_PREVIEW, callback => {
     callback);
 });
 
+gulp.task(TASK_NAME_CONT_GENERATOR_BUILD, () => {
+  gulp.watch(GENERATOR_WATCH_TARGET).on("change", () => {
+    runSequence(TASK_NAME_CLEAN_GENERATOR, TASK_NAME_COMPILE_TS_NO_EMIT_ERROR);
+  });
+});
+
+
 function assertEnv(envVar) {
   const envValue = process.env[envVar];
 
   if ("undefined" === typeof envValue || "" === envValue)
     throw new Error(`Invalid ENV Variable: ${envVar}`)
+}
+
+function compileTypescript(noEmitError) {
+  const tsProject = ts.createProject("tsconfig.json", {
+    declaration: true,
+    noEmitOnError: noEmitError
+  });
+
+  const tsResult =
+    tsProject
+      .src(GENERATOR_WATCH_TARGET, { base: "." })
+      .pipe(ts(tsProject));
+
+  return merge([
+    tsResult /** create `d.ts` */
+      .dts
+      .pipe(gulp.dest("./", {overwrite: true})),
+    tsResult /** create `js`, `js.map` */
+      .js /** ES6 */
+      .pipe(sourcemaps.init())
+      .pipe(babel()) /** ES5 */
+      .pipe(sourcemaps.write("."))
+      .pipe(gulp.dest(env.DIR.BUILD))
+  ]);
 }
 
