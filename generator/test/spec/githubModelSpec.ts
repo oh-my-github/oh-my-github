@@ -26,7 +26,7 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
 let pretty = require("prettyjson");
 
-describe("githu_model.ts", () => {
+describe("github_model.ts", () => {
 
   describe("GithubUser", () => {
     it("should be deserialized", () => {

@@ -7,11 +7,12 @@ import {
   red as chalkRed, blue as chalkBlue, green as chalkGreen,
   yellow as chalkYellow, magenta as chalkMagenta, bold as chalkBold
 } from "chalk";
+let pretty      = require("prettyjson");
 
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
 import {GithubUtil} from "./github_util";
 import {
-  GithubUser, Repository, Language, LanguageInformation,
+  GithubUser, Repository, Language, LanguageInformation, RepositorySummary,
   GithubEvent, GithubPushEvent, GithubPullRequestEvent,
   GithubIssuesEvent, GithubIssueCommentEvent, GithubReleaseEvent,
   GithubWatchEvent, GithubForkEvent, GithubCreateEvent } from "./github_model";
@@ -85,6 +86,72 @@ export class Profile extends Deserializable {
   public updateMeta(meta: MetaField): Profile {
     return Profile.updateMeta(this, meta);
   }
+}
+
+export function printProfile(user: GithubUser,
+                             langInfos: Array<LanguageInformation>,
+                             repos: Array<Repository>,
+                             acts: Array<GithubEvent>): void {
+
+  /** debug info */
+  console.log(`\n${chalkBlue("[USER]")}`);
+  console.log(pretty.render(user));
+
+  console.log(`\n${chalkBlue("[LANGUAGE]")}`);
+
+  if (!_.isEmpty(langInfos)) {
+    let langSet = langInfos.reduce((acc, langInfo) => {
+      if (_.isEmpty(langInfo.languages) || langInfo.languages.length === 0) return acc;
+
+      langInfo.languages.map(lang => lang.name).forEach(name => {
+        acc.add(name);
+      });
+
+      return acc;
+    }, new Set<string>());
+
+    console.log(`Language Count: ${langSet.size}`);
+    console.log(`Supported Languages: ${Array.from(langSet).join(", ")}`);
+  }
+
+  console.log(`\n${chalkBlue("[REPOSITORY]")}`);
+  if (!_.isEmpty(repos)) {
+    let repoSummary = new RepositorySummary();
+    repos.reduce((sum, repo) => {
+      sum.repository_names.push(repo.name);
+      sum.repository_count += 1;
+      sum.watchers_count += repo.watchers_count;
+      sum.stargazers_count += repo.stargazers_count;
+      sum.forks_count += repo.forks_count;
+
+      return sum;
+    }, repoSummary);
+
+    console.log(`Repository Count: ${repoSummary.repository_count}`);
+  }
+
+  console.log(`\n${chalkBlue("[ACTIVITY]")}`);
+}
+
+export async function createProfile(token: string,
+                                    user: string,
+                                    ignoredRepos: Array<string>): Promise<Profile> {
+
+  let githubUser = await GithubUtil.getGithubUser(token, user);
+  let repos = await GithubUtil.getUserRepositories(token, user);
+  let langs = await GithubUtil.getUserLanguages(token, user);
+  let acts = await GithubUtil.getUserActivities(token, user);
+
+  // TODO: add repo name to language
+  printProfile(githubUser, langs, repos, acts);
+
+  let profile = new Profile();
+  profile.user = githubUser;
+  profile.languages = langs;
+  profile.repositories = repos;
+  profile.activities = acts;
+
+  return profile;
 }
 
 function copyObject(object: any): any {
