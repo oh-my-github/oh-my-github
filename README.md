@@ -1,4 +1,4 @@
-# Generator 
+# Generator
 
 Create your `gh-pages` in 1 minute
 
@@ -10,7 +10,7 @@ Create your `gh-pages` in 1 minute
 - NodeJS 5.2.0+
 
 ```
-$ npm install -g oh-my-github
+$ npm install -g oh-my-github@0.1.0
 ```
 
 ### 2. Generating Your Github Profile
@@ -19,21 +19,17 @@ You need to create an access token to send 50+ github API requests ([Link: Creat
 
 ```
 $ mkdir oh-my-github && cd oh-my-github
-$ omg init [GITHUB_ID] [GITHUB_REPO]      # (e.g) omg init 1ambda oh-my-github 
+$ omg init [GITHUB_ID] [GITHUB_REPO]      # (e.g) omg init 1ambda oh-my-github
 $ omg generate [GITHUB_TOKEN]
 $ omg preview
 ```
 
 ### 3. Pushing gh-pages
 
-TODO
-
 ```
 $ npm install -g yo-omg-basic
 $ yo omg-basic
-$ git init
-$ npm commit -A -m "first commit" && git checkout -b gh-pages
-$ git push origin HEAD
+$ omg publish
 ```
 
 <br />
@@ -70,7 +66,7 @@ Use TypeScript and ES6 compiler
 --experimentalDecorators -t es6 --emitDecoratorMetadata
 ```
 
-- IDEA TypeScript Compiler Error: `TypeError: hosts.fileExists` 
+- IDEA TypeScript Compiler Error: `TypeError: hosts.fileExists`
 
 See, https://gist.github.com/1ambda/d04b4406dbb4bed7daa4
 
