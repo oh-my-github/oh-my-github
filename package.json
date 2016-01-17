@@ -1,6 +1,6 @@
 {
   "name": "oh-my-github",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "",
   "main": "build/generator/src/generator.js",
   "bin": {
@@ -21,7 +21,7 @@
     "url": "git+https://github.com/oh-my-github/generator.git"
   },
   "author": "1ambda <1amb4a@gmail.com>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/oh-my-github/generator/issues"
   },

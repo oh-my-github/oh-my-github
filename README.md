@@ -1,21 +1,25 @@
 # Generator
 
+[![npm version](https://badge.fury.io/js/oh-my-github.svg)](https://badge.fury.io/js/oh-my-github)
+[![Dependency Status](https://david-dm.org/oh-my-github/generator.svg)](https://david-dm.org/oh-my-github/generator)
+[![devDependency Status](https://david-dm.org/oh-my-github/generator/dev-status.svg)](https://david-dm.org/oh-my-github/generator#info=devDependencies)
+
 Create your `gh-pages` in 1 minute
 
 ## Usage
 
 ### 1. Installation
 
-- OSX
+- OSX, Linux
 - NodeJS 5.2.0+
 
 ```
-$ npm install -g oh-my-github@0.1.0
+$ npm install -g oh-my-github@0.1.6
 ```
 
 ### 2. Generating Your Github Profile
 
-You need to create an access token to send 50+ github API requests ([Link: Creating Access Token](https://github.com/settings/tokens/new))
+You should create an access token to send 50+ github API requests ([Link: Creating Access Token](https://github.com/settings/tokens/new))
 
 ```
 $ mkdir oh-my-github && cd oh-my-github
@@ -24,7 +28,7 @@ $ omg generate [GITHUB_TOKEN]
 $ omg preview
 ```
 
-### 3. Pushing gh-pages
+### 3. Pushing gh-pages (TODO)
 
 ```
 $ npm install -g yo-omg-basic
