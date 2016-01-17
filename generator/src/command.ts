@@ -201,3 +201,4 @@ function reportMessageAndExit(message: string) {
   console.error(`${chalkRed("  [ERROR]:")} ${message}`);
   process.exit(-1);
 }
+
