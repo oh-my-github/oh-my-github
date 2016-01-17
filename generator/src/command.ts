@@ -104,7 +104,6 @@ export class CommandSetting {
       try {
         FileUtil.readFileIfExist(FileUtil.getProfilePath());
         bs.init(BS_OPTION);
-        exitProcess();
       } catch (error) { reportErrorAndExit(error); }
     }
   );
