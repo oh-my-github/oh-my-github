@@ -61,7 +61,7 @@ export async function addAllAndCommit(path: string,
   let head = await nodegit.Reference.nameToId(repo, "HEAD");
   let parent = await repo.getCommit(head);
 
-  await repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
+  return await repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
 }
 
 export async function checkoutGhPagesBranch(path: string, user: string) {
@@ -103,10 +103,12 @@ export async function checkoutGhPagesBranch(path: string, user: string) {
 
     repo = await nodegit.Repository.open(path);
 
-    await repo.checkoutBranch("gh-pages", {
+    return await repo.checkoutBranch("gh-pages", {
       checkoutStrategy: nodegit.Checkout.STRATEGY.SAFE | nodegit.Checkout.STRATEGY.RECREATE_MISSING
     });
   }
+
+  return await Promise.resolve();
 }
 
 /**
@@ -128,7 +130,7 @@ export async function push(path: string, branchName: string, remoteName: string,
   }
 
   nodegitLog(`git push origin ${branchName}:${branchName} --force`);
-  await remote.push(
+  return await remote.push(
     [`+refs/heads/${branchName}:refs/heads/${branchName}`],
     { callbacks: {
       credentials: function(url, userName) {
@@ -148,7 +150,3 @@ export async function publish(user: string, repoName: string) {
   await addAllAndCommit(path, user, commitMessage, false);
   await push(path, branchName, remoteName, gitUrl);
 }
-
-//addAllAndCommit(process.cwd(), "1ambda", "message", false)
-//  .then(() => console.log("done"))
-//  .catch(error => console.error(error.message));

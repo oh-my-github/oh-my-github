@@ -21,7 +21,7 @@ const bs = browserSync.create();
 
 import {BS_OPTION} from "./file_util";
 import {publish} from "./nodegit_util";
-import { FileUtil, GENERATOR_VERSION, FILE_PATH_PROFILE_TEMPLATE_JSON } from "./file_util";
+import {FileUtil, GENERATOR_VERSION, FILE_PATH_PROFILE_TEMPLATE_JSON} from "./file_util";
 import {
   GithubUser, GithubEvent,
   LanguageInformation, LanguageSummary,
@@ -59,7 +59,9 @@ export class CommandSetting {
 
         prof._$meta.github_repository = repo;
         prof._$meta.github_user = user;
+
         FileUtil.writeFileIfNotExist(profPath, prof);
+        exitProcess();
       } catch (error) { reportErrorAndExit(error); }
     }
   );
@@ -89,6 +91,7 @@ export class CommandSetting {
           currentProf.updateMeta(prevProf._$meta);
           currentProf.activities = uniqActs;    /* ㄱset unique activities */
           FileUtil.overwriteFile(profPath, currentProf);
+          exitProcess();
         })
         .catch(error => { reportErrorAndExit(error); }); }
   );
@@ -101,6 +104,7 @@ export class CommandSetting {
       try {
         FileUtil.readFileIfExist(FileUtil.getProfilePath());
         bs.init(BS_OPTION);
+        exitProcess();
       } catch (error) { reportErrorAndExit(error); }
     }
   );
@@ -109,21 +113,23 @@ export class CommandSetting {
     `publish`,
     "publish gh-pages using the generated profile",
     () => {
-      let profPath = FileUtil.getProfilePath();
-      let profile: Profile = FileUtil.readFileIfExist(profPath);
+      try {
+        let profPath = FileUtil.getProfilePath();
+        let profile: Profile = FileUtil.readFileIfExist(profPath);
 
-      let user = profile._$meta.github_user;
-      let repo = profile._$meta.github_repository;
+        let user = profile._$meta.github_user;
+        let repo = profile._$meta.github_repository;
 
-      if (!user || user === "") reportMessageAndExit(`invalid user name \`${user}\``);
-      if (!repo || repo === "") reportMessageAndExit(`invalid repo name \`${repo}\``);
+        if (!user || user === "") reportMessageAndExit(`invalid user name \`${user}\``);
+        if (!repo || repo === "") reportMessageAndExit(`invalid repo name \`${repo}\``);
 
-      publish(user, repo).catch(error => {
-        reportErrorAndExit(error);
-      });
+        publish(user, repo)
+          .then(() => exitProcess())
+          .catch(error => console.log(error));
+
+      } catch (error) { reportErrorAndExit(error); }
     }
   );
-
 }
 
 export class ParsedOption {
@@ -202,3 +208,6 @@ function reportMessageAndExit(message: string) {
   process.exit(-1);
 }
 
+function exitProcess() {
+  process.exit(1);
+}
