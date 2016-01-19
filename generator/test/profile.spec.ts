@@ -1,7 +1,7 @@
-/// <reference path="../../../typings/jasmine/jasmine.d.ts" />
-/// <reference path="../../../typings/node/node.d.ts" />
+/// <reference path="../../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
 
-import {MetaField, Profile} from "../../src/profile";
+import {MetaField, Profile} from "../src/profile";
 import {
   FileUtil,
   PROJECT_DIR,
@@ -9,7 +9,7 @@ import {
   GENERATOR_VERSION,
   FILE_NAME_PROFILE_JSON,
   FILE_PATH_PROFILE_TEMPLATE_JSON
-} from "../../src/file_util";
+} from "../src/file_util";
 
 import {SampleProfile} from "./sampleProfile";
 

@@ -1,5 +1,5 @@
-/// <reference path="../../../typings/jasmine/jasmine.d.ts" />
-/// <reference path="../../../typings/node/node.d.ts" />
+/// <reference path="../../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
 
 import {
   GithubUser,
@@ -14,9 +14,9 @@ import {
   GithubForkEvent, GithubForkEventPayload,
   GithubReleaseEvent, GithubReleaseEventPayload,
   GithubCreateEvent, GithubCreateEventPayload
-} from "../../src/github_model";
+} from "../src/github_model";
 
-import {GithubUtil, GithubResponse } from "../../src/github_util";
+import {GithubUtil, GithubResponse } from "../src/github_util";
 import {SampleResources} from "./sampleResponse";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;

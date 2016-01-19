@@ -1,10 +1,10 @@
-/// <reference path="../../../typings/node/node.d.ts" />
-/// <reference path="../../../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/jasmine/jasmine.d.ts" />
 
 import {
   CommandFactory, ParsedOption, ParsedCommand,
   GenerateOptions, OptionSetting, CommandSetting
-} from "../../src/command";
+} from "../src/command";
 
 describe("command.ts", () => {
   describe("CommandFactory.create", () => {

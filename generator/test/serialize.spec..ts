@@ -1,8 +1,8 @@
-/// <reference path="../../../typings/node/node.d.ts" />
-/// <reference path="../../../typings/lodash/lodash.d.ts" />
-/// <reference path="../../../typings/jasmine/jasmine.d.ts" />
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
+/// <reference path="../../typings/jasmine/jasmine.d.ts" />
 
-import {deserialize, Deserializable} from "../../src/serialize";
+import {deserialize, Deserializable} from "../src/serialize";
 import {SampleResources} from "./sampleResponse";
 
 class Car extends Deserializable {
