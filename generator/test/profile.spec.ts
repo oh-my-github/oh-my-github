@@ -5,7 +5,6 @@ import {MetaField, Profile} from "../src/profile";
 import {
   FileUtil,
   PROJECT_DIR,
-  ENV_JSON,
   GENERATOR_VERSION,
   FILE_NAME_PROFILE_JSON,
   FILE_PATH_PROFILE_TEMPLATE_JSON

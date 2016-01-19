@@ -3,6 +3,7 @@
 import env   from "./env.json";
 
 import ts    from "gulp-typescript";
+import ncp   from "ncp";
 import gulp  from "gulp";
 import path  from "path";
 import shim  from "browserify-shim";
@@ -33,6 +34,7 @@ import jasmineBrowser from "gulp-jasmine-browser";
 const TASK_NAME_TEST         = "test";
 const TASK_NAME_TSLINT       = "tslint";
 const TASK_NAME_JSLINT       = "jslint";
+const TASK_NAME_DIST         = "dist";
 const TASK_NAME_BUILD        = "build";
 const TASK_NAME_BS_START     = "bs-start";
 const TASK_NAME_BS_RELOAD    = "bs-reload";
@@ -90,7 +92,7 @@ gulp.task(TASK_NAME_CLEAN_VIEWER, () => {
 });
 
 gulp.task(TASK_NAME_TSLINT, () => {
-  return gulp.src(GENERATOR_WATCH_TARGET.concat(["!generator/test/spec/sampleResponse.ts", "!generator/test/spec/sampleProfile.ts"]))
+  return gulp.src(GENERATOR_WATCH_TARGET.concat(["!generator/test/resource/sampleResponse.ts", "!generator/test/resource/sampleProfile.ts"]))
     .pipe(tslint())
     .pipe(tslint.report("full"));
 });
@@ -253,3 +255,27 @@ function compileTypescript(noEmitError) {
   ]);
 }
 
+gulp.task(TASK_NAME_DIST, callback => {
+  dist()
+    .then(() => callback())
+    .catch(error => {
+      console.error(error);
+      callback();
+    });
+});
+
+async function dist() {
+  let buildSrcDirGenerator = env.DIR.BUILD_GENERATOR_SRC;
+  let buildDirViewer       = env.DIR.BUILD_VIEWER;
+  let distDirGenerator = env.DIR.DIST_GENERATOR;
+  let distDirViewer    = env.DIR.DIST_VIEWER;
+
+  await copy(buildSrcDirGenerator, distDirGenerator);
+  await copy(buildDirViewer, distDirViewer);
+}
+
+function copy(src, dest) {
+  return new Promise((resolve, reject) => {
+    ncp(src, dest, err => err ? reject(err) : resolve());
+  });
+}

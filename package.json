@@ -2,7 +2,7 @@
   "name": "oh-my-github",
   "version": "0.1.6",
   "description": "",
-  "main": "build/generator/src/generator.js",
+  "main": "dist/generator/generator.js",
   "bin": {
     "omg": "./bin/omg"
   },
@@ -55,14 +55,16 @@
     "gulp-watch": "^4.3.5",
     "main-bower-files": "^2.11.0",
     "merge2": "^0.3.6",
-    "run-sequence": "^1.1.5",
-    "tslint": "^3.2.1",
+    "ncp": "^2.0.0",
     "react": "^0.14.5",
     "react-dom": "^0.14.5",
+    "run-sequence": "^1.1.5",
+    "tslint": "^3.2.1",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
   },
   "dependencies": {
+    "app-root-path": "^1.0.0",
     "axios": "^0.8.1",
     "babel-runtime": "^6.3.19",
     "browser-sync": "^2.11.0",
