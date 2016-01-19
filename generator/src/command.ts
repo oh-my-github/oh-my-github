@@ -89,7 +89,7 @@ export class CommandSetting {
           console.log(`unique   Profile Activity: ${uniqActs.length}`);
 
           currentProf.updateMeta(prevProf._$meta);
-          currentProf.activities = uniqActs;    /* ㄱset unique activities */
+          currentProf.activities = uniqActs;    /* set unique activities */
           FileUtil.overwriteFile(profPath, currentProf);
           exitProcess();
         })

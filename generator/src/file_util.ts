@@ -9,16 +9,16 @@ let path = require("path");
 
 /** file_util.js exists in build/src */
 export const PROJECT_DIR = require('app-root-path').path;
-export const ENV_JSON = require(path.join(PROJECT_DIR, "env.json"));
+export const CONFIG = require(path.join(PROJECT_DIR, "config.js"));
 
-export const GENERATOR_VERSION = require(path.join(PROJECT_DIR, ENV_JSON.FILE.PACKAGE_JSON)).version;
-export const FILE_PATH_PROFILE_TEMPLATE_JSON = path.join(PROJECT_DIR, ENV_JSON.FILE.PROFILE_TEMPLATE_JSON);
-export const FILE_NAME_PROFILE_JSON = ENV_JSON.FILE.PROFILE_JSON;
+export const GENERATOR_VERSION = require(path.join(PROJECT_DIR, CONFIG.FILE.PACKAGE_JSON)).version;
+export const FILE_PATH_PROFILE_TEMPLATE_JSON = path.join(PROJECT_DIR, CONFIG.FILE.PROFILE_TEMPLATE_JSON);
+export const FILE_NAME_PROFILE_JSON = CONFIG.FILE.PROFILE_JSON;
 
 export const BS_OPTION = { server: {
-  baseDir: [ `${PROJECT_DIR}${ENV_JSON.DIR.BUILD_VIEWER}` ],
+  baseDir: [ `${PROJECT_DIR}/${CONFIG.DIR.DIST_VIEWER}` ],
   routes: {
-    "/bower_components": `${PROJECT_DIR}${ENV_JSON.DIR.BOWER_COMPONENTS}/`,
+    "/bower_components": `${PROJECT_DIR}/${CONFIG.DIR.BOWER_COMPONENTS}/`,
     "/resource": process.cwd()
   }
 }};

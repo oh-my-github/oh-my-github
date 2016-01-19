@@ -1,6 +1,6 @@
 'use strict';
 
-import env   from "./env.json";
+import env   from "./config.js";
 
 import ts    from "gulp-typescript";
 import ncp   from "ncp";
