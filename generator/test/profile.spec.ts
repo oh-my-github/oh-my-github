@@ -11,7 +11,7 @@ import {
   FILE_PATH_PROFILE_TEMPLATE_JSON
 } from "../src/file_util";
 
-import {SampleProfile} from "./sampleProfile";
+import {SampleProfile} from "./resource/sampleProfile";
 
 describe("profile.ts", () => {
   describe("MetaField.deserialize", () => {

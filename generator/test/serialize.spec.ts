@@ -3,7 +3,7 @@
 /// <reference path="../../typings/jasmine/jasmine.d.ts" />
 
 import {deserialize, Deserializable} from "../src/serialize";
-import {SampleResources} from "./sampleResponse";
+import {SampleResources} from "./resource/sampleResponse";
 
 class Car extends Deserializable {
   @deserialize public engine: string;
