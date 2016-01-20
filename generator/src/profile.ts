@@ -2,7 +2,6 @@
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 
 import * as _ from "lodash";
-let pretty      = require("prettyjson");
 
 import {Util, Log} from "./util"
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
@@ -33,7 +32,7 @@ export class MetaField extends Deserializable {
     let profSchemaVersion = json.schema_version;
 
     if (null !== profSchemaVersion && profSchemaVersion !== MetaField.PROFILE_SCHEMA_VERSION) {
-      Util.reportMessageAndExit(`Invalid _$meta.schema_version: ${profSchemaVersion}`);
+      Util.reportMessageAndExit(`Invalid \`_$meta.schema_version\`: ${profSchemaVersion}`);
     }
 
     if (_.isEmpty(profSchemaVersion)) profSchemaVersion = MetaField.PROFILE_SCHEMA_VERSION;

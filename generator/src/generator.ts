@@ -3,8 +3,6 @@
 
 "use strict";
 
-let pretty = require("prettyjson");
-
 import {CommandFactory} from "./command";
 
 let command = CommandFactory.create(process.argv);

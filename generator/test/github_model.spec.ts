@@ -20,11 +20,8 @@ import {GithubUtil, GithubResponse } from "../src/github_util";
 import {SampleResources} from "./resource/sampleResponse";
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const user1 = "1ambda";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
-
-let pretty = require("prettyjson");
 
 describe("github_model.ts", () => {
 

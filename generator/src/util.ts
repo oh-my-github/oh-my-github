@@ -19,12 +19,12 @@ export class Util {
   }
 
   static reportErrorAndExit(error: Error) {
-    Log.red(`  [${error.name}]:`, error.message);
+    Log.red(`  [${error.name}] `, error.message);
     process.exit(-1);
   }
 
   static reportMessageAndExit(message: string) {
-    Log.red(`  [ERROR]:`, message);
+    Log.red(`  [ERROR] `, message);
     process.exit(-1);
   }
 

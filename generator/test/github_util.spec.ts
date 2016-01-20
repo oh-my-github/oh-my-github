@@ -24,8 +24,6 @@ const user1 = "1ambda";
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
-let pretty = require("prettyjson");
-
 describe("GithubUtil", () => {
   describe("getGithubUser", () => {
     it("should return a GithubUser instance", callback => {

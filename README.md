@@ -2,9 +2,8 @@
 
 [![npm version](https://badge.fury.io/js/oh-my-github.svg)](https://badge.fury.io/js/oh-my-github)
 [![Dependency Status](https://david-dm.org/oh-my-github/generator.svg)](https://david-dm.org/oh-my-github/generator)
-[![devDependency Status](https://david-dm.org/oh-my-github/generator/dev-status.svg)](https://david-dm.org/oh-my-github/generator#info=devDependencies)
 
-Create your `gh-pages` in 1 minute
+Create your **Github Profile** in 1 minute
 
 ## Usage
 
@@ -14,7 +13,7 @@ Create your `gh-pages` in 1 minute
 - NodeJS 5.2.0+
 
 ```
-$ npm install -g oh-my-github@0.1.6
+$ npm install -g oh-my-github@0.1.7
 ```
 
 ### 2. Generating Your Github Profile
