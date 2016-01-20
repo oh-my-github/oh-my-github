@@ -14,7 +14,8 @@ export class SampleProfile {
       ],
       "agent": "cli-generator",
       "github_user": "1ambda",
-      "github_repository": "repo"
+      "github_repository": "repo",
+      "ignored_repositories": []
     },
     "user": {
       "login": null,
@@ -46,9 +47,12 @@ export class SampleProfile {
       "schema_collected_ats": [
         "2016-01-03T05:39:39.436Z"
       ],
-      "github_repository": "repo",
+      "agent": "cli-generator",
       "github_user": "1ambda",
-      "agent": "cli-generator"
+      "github_repository": "repo",
+      "ignored_repositories": [
+        "1ambda.github.io"
+      ]
     },
     "user": {
       "login": null,

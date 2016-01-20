@@ -1,14 +1,10 @@
 /// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/chalk/chalk.d.ts" />
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 /// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
 
 let nodegit = require("nodegit");
+import {Log, Util} from "./util";
 import * as fse from "fs-extra";
-import {
-  red as chalkRed, blue as chalkBlue, green as chalkGreen,
-  yellow as chalkYellow, magenta as chalkMagenta, bold as chalkBold
-} from "chalk";
 
 interface NodeGitCommit { }
 
@@ -37,7 +33,7 @@ interface NodeGitRepository {
 }
 
 function nodegitLog(message: string) {
-  console.log(`  ${chalkBlue("Running Git Command:")} ${message}`);
+  Log.blue("  Running Git Command: ", message);
 }
 
 export async function addAllAndCommit(path: string,

@@ -3,6 +3,9 @@
     "agent": "cli-generator",
     "github_user": null,
     "github_repository": null,
+    "ignored_repositories": [
+
+    ],
     "schema_version": null,
     "schema_created_at": null,
     "schema_collected_ats": [

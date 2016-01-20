@@ -147,10 +147,14 @@ export class GithubUtil {
     return GithubUser.deserialize(GithubUser, raw);
   }
 
-  public static async getUserLanguages(token: string, user: string): Promise<Array<LanguageInformation>> {
+  public static async getUserLanguages(token: string,
+                                       user: string,
+                                       ignoredRepos: Array<string>): Promise<Array<LanguageInformation>> {
     let repos = await GithubUtil.getUserRepositories(token, user);
 
-    let repoNames = repos.map(r => r.name);
+    let repoNames = repos
+      .map(r => r.name)
+      .filter(name => !_.contains(ignoredRepos, name)); /** filter out ignored repos */
 
     if (repos.length === 0) return new Array<LanguageInformation>();
 

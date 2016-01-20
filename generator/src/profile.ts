@@ -1,14 +1,10 @@
 /// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/chalk/chalk.d.ts" />
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 
 import * as _ from "lodash";
-import {
-  red as chalkRed, blue as chalkBlue, green as chalkGreen,
-  yellow as chalkYellow, magenta as chalkMagenta, bold as chalkBold
-} from "chalk";
 let pretty      = require("prettyjson");
 
+import {Util, Log} from "./util"
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
 import {GithubUtil} from "./github_util";
 import {
@@ -23,8 +19,9 @@ export class MetaField extends Deserializable {
   public static CURRENT_DATE = new Date().toISOString();
 
   @deserialize public agent: string;
-  @deserialize public github_repository: string;
   @deserialize public github_user: string;
+  @deserialize public github_repository: string;
+  @deserialize public ignored_repositories: Array<string> = new Array<string>();
 
   /** since cerialize overwrite values even if it is `null`, we need to use `OnDeserialize` */
   // TODO: create PR (preventing from overwriting field to `null`)
@@ -36,7 +33,7 @@ export class MetaField extends Deserializable {
     let profSchemaVersion = json.schema_version;
 
     if (null !== profSchemaVersion && profSchemaVersion !== MetaField.PROFILE_SCHEMA_VERSION) {
-      throw new Error(`${chalkRed("Invalid schema_version: ")} ${profSchemaVersion}`)
+      Util.reportMessageAndExit(`Invalid _$meta.schema_version: ${profSchemaVersion}`);
     }
 
     if (_.isEmpty(profSchemaVersion)) profSchemaVersion = MetaField.PROFILE_SCHEMA_VERSION;
@@ -53,7 +50,7 @@ export class MetaField extends Deserializable {
 }
 
 export class Profile extends Deserializable {
-  @deserializeAs(MetaField) public _$meta: MetaField;
+  @deserializeAs(MetaField) public _$meta: MetaField = new MetaField();
   @deserializeAs(GithubUser) public user: GithubUser;
   @deserializeAs(LanguageInformation) public languages: Array<LanguageInformation>;
   @deserializeAs(Repository) public repositories: Array<Repository>;
@@ -74,30 +71,47 @@ export class Profile extends Deserializable {
     instance.activities = activities;
   }
 
-  public static updateMeta(profile: Profile, meta: MetaField): Profile {
-    let collectedAts = meta.schema_collected_ats.slice(); /** copy array */
-    collectedAts.push(MetaField.CURRENT_DATE);
+  public static updateMeta(currentProfile: Profile, prevMeta: MetaField): Profile {
+    let currentMeta = currentProfile._$meta;
+    let meta: MetaField = Util.copyObject(prevMeta);
 
-    profile._$meta = copyObject(meta);
-    profile._$meta.schema_collected_ats = collectedAts;
-    return profile;
+    /** 1. update schema_collected_ats */
+    meta.schema_collected_ats.push(MetaField.CURRENT_DATE);
+
+    /** 2. update ignored_repositories */
+    meta.ignored_repositories = _.union(
+      currentMeta.ignored_repositories, prevMeta.ignored_repositories
+    );
+
+    currentProfile._$meta = meta;
+
+    return currentProfile;
   }
 
-  public updateMeta(meta: MetaField): Profile {
-    return Profile.updateMeta(this, meta);
+  public updateMeta(prevMeta: MetaField): Profile {
+    return Profile.updateMeta(this, prevMeta);
   }
 }
 
 export function printProfile(user: GithubUser,
                              langInfos: Array<LanguageInformation>,
                              repos: Array<Repository>,
-                             acts: Array<GithubEvent>): void {
+                             prevProfile: Profile,
+                             currentProfile: Profile,
+                             ignoredRepos: Array<string>): void {
 
-  /** debug info */
-  console.log(`\n${chalkBlue("[USER]")}`);
-  console.log(pretty.render(user));
 
-  console.log(`\n${chalkBlue("[LANGUAGE]")}`);
+  /** user */
+  Log.blue("\n[USER]", "");
+  Log.greenReverse("Github User: ", user.login);
+  Log.greenReverse("Created At:  ", user.created_at);
+  Log.greenReverse("Following:   ", user.following);
+  Log.greenReverse("Follower :   ", user.followers);
+  Log.greenReverse("Public Repo: ", user.public_repos);
+  Log.greenReverse("Public Gist: ", user.public_gists);
+
+  /** langauge */
+  Log.blue("\n[LANGUAGE]", "");
 
   if (!_.isEmpty(langInfos)) {
     let langSet = langInfos.reduce((acc, langInfo) => {
@@ -110,11 +124,17 @@ export function printProfile(user: GithubUser,
       return acc;
     }, new Set<string>());
 
-    console.log(`Language Count: ${langSet.size}`);
-    console.log(`Supported Languages: ${Array.from(langSet).join(", ")}`);
+    Log.magentaReverse("Language Count: ", langSet.size);
+    Log.magentaReverse("Supported Languages: ", Array.from(langSet).join(", "));
+    // TODO converts to ir, il options (ignoreLanguage, ignoreRepository)
+    Log.magentaReverse("Ignored Repositories: ", ignoredRepos);
   }
 
-  console.log(`\n${chalkBlue("[REPOSITORY]")}`);
+  /** repository */
+  Log.blue("\n[REPOSITORY]", "");
+
+  // TODO refactor, print ignored repos
+  // TODO featured reos
   if (!_.isEmpty(repos)) {
     let repoSummary = new RepositorySummary();
     repos.reduce((sum, repo) => {
@@ -127,35 +147,72 @@ export function printProfile(user: GithubUser,
       return sum;
     }, repoSummary);
 
-    console.log(`Repository Count: ${repoSummary.repository_count}`);
+    Log.magentaReverse("Repository Count: ", repoSummary.repository_count);
   }
 
-  console.log(`\n${chalkBlue("[ACTIVITY]")}`);
+  /** activity */
+  Log.blue("\n[ACTIVITY]", "");
+
+  let prevActs    = prevProfile.activities;
+  let prevActIds  = new Set(prevActs.map(act => act.event_id));
+  let currentActs = currentProfile.activities;
+  let newActs = currentActs.filter(act =>
+    !prevActIds.has(act.event_id)
+  );
+
+  Log.magentaReverse("Current Profile Activity: ", currentActs.length);
+  if (prevActs.length !== currentActs.length) {
+    Log.magentaReverse("Previous Profile Activity: ", prevActs.length);
+
+    console.log("New Activity Details:");
+    let eventTypeToCount = {};
+
+    for (let i = 0; i < newActs.length; i++) {
+      let act = newActs[i];
+      if (!eventTypeToCount.hasOwnProperty(act.type))
+        eventTypeToCount[act.type] = 0;
+
+      eventTypeToCount[act.type] += 1;
+    }
+
+    let eventTypes = Object
+      .keys(eventTypeToCount)
+      .filter(type => eventTypeToCount.hasOwnProperty(type));
+
+    for(let j = 0; j < eventTypes.length; j++) {
+      let type = eventTypes[j];
+      Log.magenta(`  ${type} (${eventTypeToCount[type]})`, "");
+    }
+  }
 }
 
 export async function createProfile(token: string,
-                                    user: string,
+                                    prevProf: Profile,
                                     ignoredRepos: Array<string>): Promise<Profile> {
+
+  let user = prevProf._$meta.github_user;
+
+  let currentProf = new Profile();
+  currentProf._$meta.ignored_repositories = ignoredRepos;
+
+  let allIgnoredRepos = _.union(ignoredRepos, prevProf._$meta.ignored_repositories);
 
   let githubUser = await GithubUtil.getGithubUser(token, user);
   let repos = await GithubUtil.getUserRepositories(token, user);
-  let langs = await GithubUtil.getUserLanguages(token, user);
-  let acts = await GithubUtil.getUserActivities(token, user);
+  let langs = await GithubUtil.getUserLanguages(token, user, allIgnoredRepos);
+  let currentActs = await GithubUtil.getUserActivities(token, user);
 
-  // TODO: add repo name to language
-  printProfile(githubUser, langs, repos, acts);
+  let uniqActs = GithubEvent.mergeByEventId(prevProf.activities, currentActs);
+  currentProf.activities = uniqActs;
+  currentProf.repositories = repos;
+  currentProf.languages = langs;
+  currentProf.user = githubUser;
 
-  let profile = new Profile();
-  profile.user = githubUser;
-  profile.languages = langs;
-  profile.repositories = repos;
-  profile.activities = acts;
+  /** printProfile before updating meta */
+  printProfile(githubUser, langs, repos, prevProf, currentProf, allIgnoredRepos);
 
-  return profile;
+  currentProf.updateMeta(prevProf._$meta);
+
+  return currentProf;
 }
-
-function copyObject(object: any): any {
-  return JSON.parse(JSON.stringify(object));
-}
-
 

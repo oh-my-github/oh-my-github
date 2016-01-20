@@ -1,5 +1,4 @@
 /// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/chalk/chalk.d.ts" />
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 /// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
 
@@ -7,7 +6,6 @@ import * as fse from "fs-extra";
 
 let path = require("path");
 
-/** file_util.js exists in build/src */
 export const PROJECT_DIR = require('app-root-path').path;
 export const CONFIG = require(path.join(PROJECT_DIR, "config.js"));
 

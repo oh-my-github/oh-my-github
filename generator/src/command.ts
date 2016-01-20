@@ -1,5 +1,4 @@
 /// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/chalk/chalk.d.ts" />
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 /// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
 /// <reference path="../../typings/commander/commander.d.ts" />
@@ -10,10 +9,6 @@
 import * as _ from "lodash";
 import * as CircularJSON from "circular-json";
 import * as fse from "fs-extra";
-import {
-  red as chalkRed, blue as chalkBlue, green as chalkGreen,
-  yellow as chalkYellow, magenta as chalkMagenta, bold as chalkBold
-} from "chalk";
 
 let path        = require("path");
 let browserSync = require("browser-sync");
@@ -29,14 +24,15 @@ import {
 } from "./github_model";
 import {GithubUtil} from "./github_util";
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
-import {Profile, printProfile, createProfile} from "./profile";
+import {Profile, createProfile} from "./profile";
+import {Util} from "./util";
 
 export class OptionSetting {
   constructor(public specifiers: string, public description: string) {}
 }
 
 export class GenerateOptions {
-  public static GENERATE_OPTION_SPECIFIER_IGNORE_REPOS = "-i, --ignore [repository...]";
+  public static GENERATE_OPTION_SPECIFIER_IGNORE_REPOS = "-i, --ignore [repository]";
   public static GENERATE_OPTION_IGNORE_REPOS = new OptionSetting(
     GenerateOptions.GENERATE_OPTION_SPECIFIER_IGNORE_REPOS, "ignore specified repositories");
 
@@ -61,15 +57,15 @@ export class CommandSetting {
         prof._$meta.github_user = user;
 
         FileUtil.writeFileIfNotExist(profPath, prof);
-        exitProcess();
-      } catch (error) { reportErrorAndExit(error); }
+        Util.exitProcess();
+      } catch (error) { Util.reportErrorAndExit(error); }
     }
   );
 
   public static COMMAND_GENERATE = new CommandSetting(
-    `generate <token> [ignoredRepos...]`,
+    `generate <token>`,
     "fill `oh-my-github.json` using github API",
-    function(token: string, ignoredRepos: Array<string>, options: GenerateOptions) {
+    function(token: string, options: GenerateOptions) {
 
       let profPath = null;
       let prevProf: Profile = null;
@@ -77,23 +73,14 @@ export class CommandSetting {
       try {
         profPath = FileUtil.getProfilePath();
         prevProf = FileUtil.readFileIfExist(profPath);
-      } catch (error) { reportErrorAndExit(error); }
+      } catch (error) { Util.reportErrorAndExit(error); }
 
-      createProfile(token, prevProf._$meta.github_user, ignoredRepos)
+      createProfile(token, prevProf, options.ignore)
         .then(currentProf => {
-
-          let uniqActs = GithubEvent.mergeByEventId(prevProf.activities, currentProf.activities);
-
-          console.log(`previous Profile Activity: ${prevProf.activities.length}`);
-          console.log(`current  Profile Activity: ${currentProf.activities.length}`);
-          console.log(`unique   Profile Activity: ${uniqActs.length}`);
-
-          currentProf.updateMeta(prevProf._$meta);
-          currentProf.activities = uniqActs;    /* set unique activities */
           FileUtil.overwriteFile(profPath, currentProf);
-          exitProcess();
+          Util.exitProcess();
         })
-        .catch(error => { reportErrorAndExit(error); }); }
+        .catch(error => { Util.reportErrorAndExit(error); }); }
   );
 
   public static COMMAND_PREVIEW = new CommandSetting(
@@ -104,7 +91,7 @@ export class CommandSetting {
       try {
         FileUtil.readFileIfExist(FileUtil.getProfilePath());
         bs.init(BS_OPTION);
-      } catch (error) { reportErrorAndExit(error); }
+      } catch (error) { Util.reportErrorAndExit(error); }
     }
   );
 
@@ -119,14 +106,14 @@ export class CommandSetting {
         let user = profile._$meta.github_user;
         let repo = profile._$meta.github_repository;
 
-        if (!user || user === "") reportMessageAndExit(`invalid user name \`${user}\``);
-        if (!repo || repo === "") reportMessageAndExit(`invalid repo name \`${repo}\``);
+        if (!user || user === "") Util.reportMessageAndExit(`invalid user name \`${user}\``);
+        if (!repo || repo === "") Util.reportMessageAndExit(`invalid repo name \`${repo}\``);
 
         publish(user, repo)
-          .then(() => exitProcess())
+          .then(() => Util.exitProcess())
           .catch(error => console.log(error));
 
-      } catch (error) { reportErrorAndExit(error); }
+      } catch (error) { Util.reportErrorAndExit(error); }
     }
   );
 }
@@ -166,7 +153,11 @@ export class CommandFactory {
     parser
       .command(CommandSetting.COMMAND_GENERATE.specifiers)
       .description(CommandSetting.COMMAND_GENERATE.description)
-      //.option(GenerateOptions.GENERATE_OPTION_IGNORE_REPOS.specifiers, GenerateOptions.GENERATE_OPTION_IGNORE_REPOS.description)
+      .option(
+        GenerateOptions.GENERATE_OPTION_IGNORE_REPOS.specifiers,
+        GenerateOptions.GENERATE_OPTION_IGNORE_REPOS.description,
+        (val, memo) => { memo.push(val); return memo; }, []
+      )
       .action(CommandSetting.COMMAND_GENERATE.action);
 
     parser
@@ -190,6 +181,13 @@ export class CommandFactory {
         console.log("");
       });
 
+    parser
+      .command("*")
+      .action((command) => {
+        console.log("");
+        Util.reportMessageAndExit(`unknown command: ${command}\n`);
+      });
+
     /** use circular-json to avoid cyclic references */
     let serialized = CircularJSON.stringify(parser.parse(argv));
     let circularDeserialized = CircularJSON.parse(serialized);
@@ -198,15 +196,4 @@ export class CommandFactory {
   }
 }
 
-function reportErrorAndExit(error: Error) {
-  reportMessageAndExit(error.message);
-}
 
-function reportMessageAndExit(message: string) {
-  console.error(`${chalkRed("  [ERROR]:")} ${message}`);
-  process.exit(-1);
-}
-
-function exitProcess() {
-  process.exit(1);
-}

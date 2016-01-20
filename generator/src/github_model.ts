@@ -1,15 +1,12 @@
 /// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/chalk/chalk.d.ts" />
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 
 "use strict";
 
 import {deserialize, deserializeAs, Deserializable, inheritSerialization} from "./serialize";
+import {Util, Log} from "./util";
+
 import * as _ from "lodash";
-import {
-  red as chalkRed, blue as chalkBlue, green as chalkGreen,
-  yellow as chalkYellow, magenta as chalkMagenta, bold as chalkBold
-} from "chalk";
 
 export class GithubUser extends Deserializable {
   @deserialize public login: string = null;
@@ -132,26 +129,12 @@ export class GithubEvent extends Deserializable {
   public static mergeByEventId(es1: Array<GithubEvent>, es2: Array<GithubEvent>): Array<GithubEvent> {
     if (_.isEmpty(es1) && _.isEmpty(es2)) return new Array<GithubEvent>();
 
-    /** copy and concat */
-    let allEvents: Array<GithubEvent> =
-      JSON.parse(JSON.stringify(es1)).concat(JSON.parse(JSON.stringify(es2)));
+    let events1 = Util.copyObject(es1);
+    let events2 = Util.copyObject(es2);
 
-    let uniqIds = new Set<string>();
-    let uniqEvents = new Array<GithubEvent>();
+    let uniq = Util.unionBy(events1, events2, event => event.event_id);
 
-    allEvents.forEach(event => {
-      if (uniqIds.has(event.event_id)) return;
-
-      if (!event.event_id) {
-        console.log(event);
-        return;
-      }
-
-      uniqIds.add(event.event_id);
-      uniqEvents.push(event);
-    });
-
-    return uniqEvents;
+    return uniq;
   }
 
   public static deserializeGithubEvent(events: Array<any>): Array<GithubEvent> {
@@ -185,9 +168,10 @@ export class GithubEvent extends Deserializable {
       }
     });
 
+    // TODO print profile
     if (droppedEvents.length > 0) {
       let uniq = Array.from(new Set(droppedEvents)).join(", ");
-      console.log(`\n${chalkRed("dropped events")} (${droppedEvents.length}) ${uniq}`);
+      Log.red(`\n  [WARN] dropped events (${droppedEvents.length}): `, uniq);
     }
 
     return deserializedEvents.filter(e => e !== null);

@@ -1,6 +1,6 @@
 {
   "name": "oh-my-github",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "",
   "main": "dist/generator/generator.js",
   "bin": {
@@ -74,6 +74,7 @@
     "commander": "^2.9.0",
     "fs-extra": "^0.26.3",
     "lodash": "^3.10.1",
+    "lodash.unionby": "^4.0.1",
     "nodegit": "^0.8.0",
     "prettyjson": "^1.1.3"
   },
