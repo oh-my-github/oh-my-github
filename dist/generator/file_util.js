@@ -25,7 +25,10 @@ var path = require("path"); /// <reference path="../../typings/node/node.d.ts" /
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 /// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
 
-var PROJECT_DIR = exports.PROJECT_DIR = require('app-root-path').path;
+var projectDir = require('app-root-path').path;
+/** since globally installed version runs on `oh-my-github/bin` we should remove `/bin` */
+if (projectDir.endsWith("/bin")) projectDir = projectDir.substring(0, projectDir.length - 4);
+var PROJECT_DIR = exports.PROJECT_DIR = projectDir;
 var CONFIG = exports.CONFIG = require(path.join(PROJECT_DIR, "config.js"));
 var GENERATOR_VERSION = exports.GENERATOR_VERSION = require(path.join(PROJECT_DIR, CONFIG.FILE.PACKAGE_JSON)).version;
 var FILE_PATH_PROFILE_TEMPLATE_JSON = exports.FILE_PATH_PROFILE_TEMPLATE_JSON = path.join(PROJECT_DIR, CONFIG.FILE.PROFILE_TEMPLATE_JSON);

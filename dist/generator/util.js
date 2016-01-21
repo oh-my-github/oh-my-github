@@ -43,13 +43,13 @@ var Util = exports.Util = function () {
     }, {
         key: "reportErrorAndExit",
         value: function reportErrorAndExit(error) {
-            Log.red("  [" + error.name + "]:", error.message);
+            Log.red("  [" + error.name + "] ", error.message);
             process.exit(-1);
         }
     }, {
         key: "reportMessageAndExit",
         value: function reportMessageAndExit(message) {
-            Log.red("  [ERROR]:", message);
+            Log.red("  [ERROR] ", message);
             process.exit(-1);
         }
     }, {

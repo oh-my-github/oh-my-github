@@ -1,6 +1,6 @@
 {
   "name": "oh-my-github",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "",
   "main": "dist/generator/generator.js",
   "bin": {
@@ -75,8 +75,7 @@
     "fs-extra": "^0.26.3",
     "lodash": "^3.10.1",
     "lodash.unionby": "^4.0.1",
-    "nodegit": "^0.8.0",
-    "prettyjson": "^1.1.3"
+    "nodegit": "^0.8.0"
   },
   "browser": {
     "c3": "./bower_components/c3/c3.min.js",

@@ -115,8 +115,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
     });
 };
 
-var pretty = require("prettyjson");
-
 var MetaField = exports.MetaField = function (_Deserializable) {
     (0, _inherits3.default)(MetaField, _Deserializable);
 
@@ -145,7 +143,7 @@ var MetaField = exports.MetaField = function (_Deserializable) {
         value: function OnDeserialized(instance, json) {
             var profSchemaVersion = json.schema_version;
             if (null !== profSchemaVersion && profSchemaVersion !== MetaField.PROFILE_SCHEMA_VERSION) {
-                _util.Util.reportMessageAndExit("Invalid _$meta.schema_version: " + profSchemaVersion);
+                _util.Util.reportMessageAndExit("Invalid `_$meta.schema_version`: " + profSchemaVersion);
             }
             if (_.isEmpty(profSchemaVersion)) profSchemaVersion = MetaField.PROFILE_SCHEMA_VERSION;
             instance.schema_version = profSchemaVersion;

@@ -13,7 +13,7 @@ Create your **Github Profile** in 1 minute
 - NodeJS 5.2.0+
 
 ```
-$ npm install -g oh-my-github@0.1.7
+$ npm install -g oh-my-github@latest
 ```
 
 ### 2. Generating Your Github Profile

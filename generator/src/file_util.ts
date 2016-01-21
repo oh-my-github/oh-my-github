@@ -6,7 +6,13 @@ import * as fse from "fs-extra";
 
 let path = require("path");
 
-export const PROJECT_DIR = require('app-root-path').path;
+
+let projectDir = require('app-root-path').path;
+
+/** since globally installed version runs on `oh-my-github/bin` we should remove `/bin` */
+if (projectDir.endsWith("/bin")) projectDir = projectDir.substring(0, projectDir.length - 4);
+
+export const PROJECT_DIR = projectDir;
 export const CONFIG = require(path.join(PROJECT_DIR, "config.js"));
 
 export const GENERATOR_VERSION = require(path.join(PROJECT_DIR, CONFIG.FILE.PACKAGE_JSON)).version;

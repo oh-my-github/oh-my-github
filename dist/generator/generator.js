@@ -33,7 +33,6 @@ var __awaiter = undefined && undefined.__awaiter || function (thisArg, _argument
         step("next", void 0);
     });
 };
-var pretty = require("prettyjson");
 
 var command = _command.CommandFactory.create(process.argv);
 //# sourceMappingURL=generator.js.map
