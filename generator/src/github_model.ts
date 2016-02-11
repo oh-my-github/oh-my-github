@@ -66,17 +66,20 @@ export class LanguageInformation extends Deserializable {
   }
 }
 
-
 export class Repository extends Deserializable {
   @deserialize public name: string;
+  @deserialize public description: string;
   @deserialize public full_name: string;
+  @deserialize public fork: boolean;
   @deserialize public forks_count: number;
   @deserialize public stargazers_count: number;
   @deserialize public watchers_count: number;
   @deserialize public language: string;
-  @deserialize public fork: boolean;
   @deserialize public open_issues_count: number;
-
+  @deserialize public default_branch: string;
+  @deserialize public created_at: string;
+  @deserialize public updated_at: string;
+  @deserialize public pushed_at: string;
   @deserializeAs("html_url") public url: string;
 }
 

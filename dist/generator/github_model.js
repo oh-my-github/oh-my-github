@@ -229,13 +229,18 @@ var Repository = exports.Repository = function (_Deserializable4) {
 }(_serialize.Deserializable);
 
 __decorate([_serialize.deserialize], Repository.prototype, "name", void 0);
+__decorate([_serialize.deserialize], Repository.prototype, "description", void 0);
 __decorate([_serialize.deserialize], Repository.prototype, "full_name", void 0);
+__decorate([_serialize.deserialize], Repository.prototype, "fork", void 0);
 __decorate([_serialize.deserialize], Repository.prototype, "forks_count", void 0);
 __decorate([_serialize.deserialize], Repository.prototype, "stargazers_count", void 0);
 __decorate([_serialize.deserialize], Repository.prototype, "watchers_count", void 0);
 __decorate([_serialize.deserialize], Repository.prototype, "language", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "fork", void 0);
 __decorate([_serialize.deserialize], Repository.prototype, "open_issues_count", void 0);
+__decorate([_serialize.deserialize], Repository.prototype, "default_branch", void 0);
+__decorate([_serialize.deserialize], Repository.prototype, "created_at", void 0);
+__decorate([_serialize.deserialize], Repository.prototype, "updated_at", void 0);
+__decorate([_serialize.deserialize], Repository.prototype, "pushed_at", void 0);
 __decorate([(0, _serialize.deserializeAs)("html_url")], Repository.prototype, "url", void 0);
 
 var RepositorySummary = exports.RepositorySummary = function RepositorySummary() {
