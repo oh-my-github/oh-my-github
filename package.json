@@ -1,7 +1,7 @@
 {
   "name": "oh-my-github",
   "version": "0.1.9",
-  "description": "",
+  "description": "oh-my-github",
   "main": "dist/generator/generator.js",
   "bin": {
     "omg": "./bin/omg"
