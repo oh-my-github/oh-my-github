@@ -4,8 +4,6 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.Profile = exports.MetaField = undefined;
-exports.printProfile = printProfile;
-exports.createProfile = createProfile;
 
 var _regenerator = require("babel-runtime/regenerator");
 
@@ -58,6 +56,9 @@ var _typeof3 = _interopRequireDefault(_typeof2);
 var _getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-property-descriptor");
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
+
+exports.printProfile = printProfile;
+exports.createProfile = createProfile;
 
 var _lodash = require("lodash");
 
@@ -223,16 +224,22 @@ __decorate([(0, _serialize.deserializeAs)(_github_model.GithubUser)], Profile.pr
 __decorate([(0, _serialize.deserializeAs)(_github_model.LanguageInformation)], Profile.prototype, "languages", void 0);
 __decorate([(0, _serialize.deserializeAs)(_github_model.Repository)], Profile.prototype, "repositories", void 0);
 function printProfile(user, langInfos, repos, prevProfile, currentProfile, ignoredRepos) {
+    function renderTitle(tag) {
+        _util.Log.blue("\n  " + tag, "");
+    }
+    function renderText(tag, message) {
+        _util.Log.magentaReverse("    " + tag, message);
+    }
     /** user */
-    _util.Log.blue("\n[USER]", "");
-    _util.Log.greenReverse("Github User: ", user.login);
-    _util.Log.greenReverse("Created At:  ", user.created_at);
-    _util.Log.greenReverse("Following:   ", user.following);
-    _util.Log.greenReverse("Follower :   ", user.followers);
-    _util.Log.greenReverse("Public Repo: ", user.public_repos);
-    _util.Log.greenReverse("Public Gist: ", user.public_gists);
+    renderTitle("[USER]");
+    renderText("Github User: ", user.login);
+    renderText("Created At:  ", user.created_at);
+    renderText("Following:   ", user.following);
+    renderText("Follower :   ", user.followers);
+    renderText("Public Repo: ", user.public_repos);
+    renderText("Public Gist: ", user.public_gists);
     /** langauge */
-    _util.Log.blue("\n[LANGUAGE]", "");
+    renderTitle("[LANGUAGE]");
     if (!_.isEmpty(langInfos)) {
         var langSet = langInfos.reduce(function (acc, langInfo) {
             if (_.isEmpty(langInfo.languages) || langInfo.languages.length === 0) return acc;
@@ -243,13 +250,13 @@ function printProfile(user, langInfos, repos, prevProfile, currentProfile, ignor
             });
             return acc;
         }, new _set2.default());
-        _util.Log.magentaReverse("Language Count: ", langSet.size);
-        _util.Log.magentaReverse("Supported Languages: ", (0, _from2.default)(langSet).join(", "));
+        renderText("Language Count: ", langSet.size);
+        renderText("Supported Languages: ", (0, _from2.default)(langSet).join(", "));
         // TODO converts to ir, il options (ignoreLanguage, ignoreRepository)
-        _util.Log.magentaReverse("Ignored Repositories: ", ignoredRepos);
+        renderText("Ignored Repositories: ", ignoredRepos);
     }
     /** repository */
-    _util.Log.blue("\n[REPOSITORY]", "");
+    renderTitle("[REPOSITORY]");
     // TODO refactor, print ignored repos
     // TODO featured reos
     if (!_.isEmpty(repos)) {
@@ -262,10 +269,10 @@ function printProfile(user, langInfos, repos, prevProfile, currentProfile, ignor
             sum.forks_count += repo.forks_count;
             return sum;
         }, repoSummary);
-        _util.Log.magentaReverse("Repository Count: ", repoSummary.repository_count);
+        renderText("Repository Count: ", repoSummary.repository_count);
     }
     /** activity */
-    _util.Log.blue("\n[ACTIVITY]", "");
+    renderTitle("[ACTIVITY]");
     var prevActs = prevProfile.activities;
     var prevActIds = new _set2.default(prevActs.map(function (act) {
         return act.event_id;
@@ -274,11 +281,11 @@ function printProfile(user, langInfos, repos, prevProfile, currentProfile, ignor
     var newActs = currentActs.filter(function (act) {
         return !prevActIds.has(act.event_id);
     });
-    _util.Log.magentaReverse("Current Profile Activity: ", currentActs.length);
+    renderText("Current Profile Activity: ", currentActs.length);
     if (prevActs.length !== currentActs.length) {
         (function () {
-            _util.Log.magentaReverse("Previous Profile Activity: ", prevActs.length);
-            console.log("New Activity Details:");
+            renderText("Previous Profile Activity: ", prevActs.length);
+            renderText("New Activity Details:", "");
             var eventTypeToCount = {};
             for (var i = 0; i < newActs.length; i++) {
                 var act = newActs[i];
@@ -290,7 +297,7 @@ function printProfile(user, langInfos, repos, prevProfile, currentProfile, ignor
             });
             for (var j = 0; j < eventTypes.length; j++) {
                 var type = eventTypes[j];
-                _util.Log.magenta("  " + type + " (" + eventTypeToCount[type] + ")", "");
+                renderText("  " + type + ": ", "" + eventTypeToCount[type]);
             }
         })();
     }

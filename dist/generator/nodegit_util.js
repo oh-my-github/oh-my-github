@@ -3,10 +3,6 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.addAllAndCommit = addAllAndCommit;
-exports.checkoutGhPagesBranch = checkoutGhPagesBranch;
-exports.push = push;
-exports.publish = publish;
 
 var _regenerator = require("babel-runtime/regenerator");
 
@@ -15,6 +11,11 @@ var _regenerator2 = _interopRequireDefault(_regenerator);
 var _promise = require("babel-runtime/core-js/promise");
 
 var _promise2 = _interopRequireDefault(_promise);
+
+exports.addAllAndCommit = addAllAndCommit;
+exports.checkoutGhPagesBranch = checkoutGhPagesBranch;
+exports.push = push;
+exports.publish = publish;
 
 var _util = require("./util");
 

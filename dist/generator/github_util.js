@@ -127,6 +127,7 @@ var GithubResponse = exports.GithubResponse = function () {
      * return null if failed to parse github pagination response
      */
 
+
     (0, _createClass3.default)(GithubResponse, null, [{
         key: "parseLastLinkCount",
         value: function parseLastLinkCount(link) {

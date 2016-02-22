@@ -9,8 +9,7 @@ Create your **Github Profile** in 1 minute
 
 ### 1. Installation
 
-- OSX, Linux
-- NodeJS 5.2.0+
+- NodeJS 5.0.0+
 
 ```
 $ npm install -g oh-my-github@latest
@@ -22,12 +21,12 @@ You should create an access token to send 50+ github API requests ([Link: Creati
 
 ```
 $ mkdir oh-my-github && cd oh-my-github
-$ omg init [GITHUB_ID] [GITHUB_REPO]      # (e.g) omg init 1ambda oh-my-github
+$ omg init [GITHUB_ID] oh-my-github      # (e.g) omg init 1ambda oh-my-github
 $ omg generate [GITHUB_TOKEN]
 $ omg preview
 ```
 
-### 3. Pushing gh-pages (TODO)
+### 3. Pushing gh-pages
 
 ```
 $ npm install -g yo-omg-basic

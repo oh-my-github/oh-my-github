@@ -339,7 +339,7 @@ var GithubEvent = exports.GithubEvent = function (_Deserializable5) {
             // TODO print profile
             if (droppedEvents.length > 0) {
                 var uniq = (0, _from2.default)(new _set2.default(droppedEvents)).join(", ");
-                _util.Log.red("\n  [WARN] dropped events (" + droppedEvents.length + "): ", uniq);
+                _util.Log.warn("dropped events (" + droppedEvents.length + "): " + uniq);
             }
             return deserializedEvents.filter(function (e) {
                 return e !== null;

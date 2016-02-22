@@ -127,6 +127,9 @@ var CommandSetting = exports.CommandSetting = function CommandSetting(specifiers
 
 CommandSetting.COMMAND_INIT = new CommandSetting("init <user> <repo>", "initialize `oh-my-github.json`", function (user, repo) {
     try {
+        console.log("\n");
+        _util.Log.info("Initializing `oh-my-github.json`");
+        console.log("\n");
         var profPath = _file_util.FileUtil.getProfilePath();
         var prof = _profile.Profile.deserialize(_profile.Profile, _file_util.FileUtil.readFileIfExist(_file_util.FILE_PATH_PROFILE_TEMPLATE_JSON));
         prof._$meta.github_repository = repo;
@@ -138,6 +141,8 @@ CommandSetting.COMMAND_INIT = new CommandSetting("init <user> <repo>", "initiali
     }
 });
 CommandSetting.COMMAND_GENERATE = new CommandSetting("generate <token>", "fill `oh-my-github.json` using github API", function (token, options) {
+    console.log("\n");
+    _util.Log.info("Collecting Github Info...");
     var profPath = null;
     var prevProf = null;
     try {
@@ -148,6 +153,8 @@ CommandSetting.COMMAND_GENERATE = new CommandSetting("generate <token>", "fill `
     }
     (0, _profile.createProfile)(token, prevProf, options.ignore).then(function (currentProf) {
         _file_util.FileUtil.overwriteFile(profPath, currentProf);
+        _util.Log.info("`oh-my-github.json` was created");
+        console.log("\n");
         _util.Util.exitProcess();
     }).catch(function (error) {
         _util.Util.reportErrorAndExit(error);

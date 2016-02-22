@@ -35,10 +35,7 @@ var FILE_PATH_PROFILE_TEMPLATE_JSON = exports.FILE_PATH_PROFILE_TEMPLATE_JSON = 
 var FILE_NAME_PROFILE_JSON = exports.FILE_NAME_PROFILE_JSON = CONFIG.FILE.PROFILE_JSON;
 var BS_OPTION = exports.BS_OPTION = { server: {
         baseDir: [PROJECT_DIR + "/" + CONFIG.DIR.DIST_VIEWER],
-        routes: {
-            "/bower_components": PROJECT_DIR + "/" + CONFIG.DIR.BOWER_COMPONENTS + "/",
-            "/resource": process.cwd()
-        }
+        routes: { "/oh-my-github": process.cwd() }
     } };
 
 var FileUtil = exports.FileUtil = function () {
