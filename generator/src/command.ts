@@ -25,7 +25,7 @@ import {
 import {GithubUtil} from "./github_util";
 import {deserialize, deserializeAs, Deserializable} from "./serialize";
 import {Profile, createProfile} from "./profile";
-import {Util} from "./util";
+import {Util, Log} from "./util";
 
 export class OptionSetting {
   constructor(public specifiers: string, public description: string) {}
@@ -50,6 +50,11 @@ export class CommandSetting {
     "initialize `oh-my-github.json`",
     function(user: string, repo: string) {
       try {
+
+        console.log("\n");
+        Log.info("Initializing `oh-my-github.json`")
+        console.log("\n");
+
         let profPath = FileUtil.getProfilePath();
         let prof = Profile.deserialize(Profile, FileUtil.readFileIfExist(FILE_PATH_PROFILE_TEMPLATE_JSON));
 
@@ -67,6 +72,9 @@ export class CommandSetting {
     "fill `oh-my-github.json` using github API",
     function(token: string, options: GenerateOptions) {
 
+      console.log("\n");
+      Log.info("Collecting Github Info...")
+
       let profPath = null;
       let prevProf: Profile = null;
 
@@ -78,6 +86,10 @@ export class CommandSetting {
       createProfile(token, prevProf, options.ignore)
         .then(currentProf => {
           FileUtil.overwriteFile(profPath, currentProf);
+
+          Log.info("`oh-my-github.json` was created");
+          console.log("\n");
+
           Util.exitProcess();
         })
         .catch(error => { Util.reportErrorAndExit(error); }); }

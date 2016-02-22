@@ -99,18 +99,25 @@ export function printProfile(user: GithubUser,
                              currentProfile: Profile,
                              ignoredRepos: Array<string>): void {
 
+  function renderTitle(tag: any): void {
+    Log.blue(`\n  ${tag}`, "");
+  }
+
+  function renderText(tag: string, message: any): void {
+    Log.magentaReverse(`    ${tag}`, message);
+  }
 
   /** user */
-  Log.blue("\n[USER]", "");
-  Log.greenReverse("Github User: ", user.login);
-  Log.greenReverse("Created At:  ", user.created_at);
-  Log.greenReverse("Following:   ", user.following);
-  Log.greenReverse("Follower :   ", user.followers);
-  Log.greenReverse("Public Repo: ", user.public_repos);
-  Log.greenReverse("Public Gist: ", user.public_gists);
+  renderTitle("[USER]");
+  renderText("Github User: ", user.login);
+  renderText("Created At:  ", user.created_at);
+  renderText("Following:   ", user.following);
+  renderText("Follower :   ", user.followers);
+  renderText("Public Repo: ", user.public_repos);
+  renderText("Public Gist: ", user.public_gists);
 
   /** langauge */
-  Log.blue("\n[LANGUAGE]", "");
+  renderTitle("[LANGUAGE]");
 
   if (!_.isEmpty(langInfos)) {
     let langSet = langInfos.reduce((acc, langInfo) => {
@@ -123,14 +130,14 @@ export function printProfile(user: GithubUser,
       return acc;
     }, new Set<string>());
 
-    Log.magentaReverse("Language Count: ", langSet.size);
-    Log.magentaReverse("Supported Languages: ", Array.from(langSet).join(", "));
+    renderText("Language Count: ", langSet.size);
+    renderText("Supported Languages: ", Array.from(langSet).join(", "));
     // TODO converts to ir, il options (ignoreLanguage, ignoreRepository)
-    Log.magentaReverse("Ignored Repositories: ", ignoredRepos);
+    renderText("Ignored Repositories: ", ignoredRepos);
   }
 
   /** repository */
-  Log.blue("\n[REPOSITORY]", "");
+  renderTitle("[REPOSITORY]")
 
   // TODO refactor, print ignored repos
   // TODO featured reos
@@ -146,11 +153,11 @@ export function printProfile(user: GithubUser,
       return sum;
     }, repoSummary);
 
-    Log.magentaReverse("Repository Count: ", repoSummary.repository_count);
+    renderText("Repository Count: ", repoSummary.repository_count);
   }
 
   /** activity */
-  Log.blue("\n[ACTIVITY]", "");
+  renderTitle("[ACTIVITY]");
 
   let prevActs    = prevProfile.activities;
   let prevActIds  = new Set(prevActs.map(act => act.event_id));
@@ -159,11 +166,11 @@ export function printProfile(user: GithubUser,
     !prevActIds.has(act.event_id)
   );
 
-  Log.magentaReverse("Current Profile Activity: ", currentActs.length);
+  renderText("Current Profile Activity: ", currentActs.length);
   if (prevActs.length !== currentActs.length) {
-    Log.magentaReverse("Previous Profile Activity: ", prevActs.length);
+    renderText("Previous Profile Activity: ", prevActs.length);
 
-    console.log("New Activity Details:");
+    renderText("New Activity Details:", "");
     let eventTypeToCount = {};
 
     for (let i = 0; i < newActs.length; i++) {
@@ -180,7 +187,7 @@ export function printProfile(user: GithubUser,
 
     for(let j = 0; j < eventTypes.length; j++) {
       let type = eventTypes[j];
-      Log.magenta(`  ${type} (${eventTypeToCount[type]})`, "");
+      renderText(`  ${type}: `, `${eventTypeToCount[type]}`);
     }
   }
 }

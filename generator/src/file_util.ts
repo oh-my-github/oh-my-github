@@ -5,8 +5,6 @@
 import * as fse from "fs-extra";
 
 let path = require("path");
-
-
 let projectDir = require('app-root-path').path;
 
 /** since globally installed version runs on `oh-my-github/bin` we should remove `/bin` */
@@ -21,10 +19,7 @@ export const FILE_NAME_PROFILE_JSON = CONFIG.FILE.PROFILE_JSON;
 
 export const BS_OPTION = { server: {
   baseDir: [ `${PROJECT_DIR}/${CONFIG.DIR.DIST_VIEWER}` ],
-  routes: {
-    "/bower_components": `${PROJECT_DIR}/${CONFIG.DIR.BOWER_COMPONENTS}/`,
-    "/resource": process.cwd()
-  }
+  routes: { "/oh-my-github": process.cwd() }
 }};
 
 export class FileUtil {

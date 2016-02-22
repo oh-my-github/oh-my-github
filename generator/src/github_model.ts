@@ -174,7 +174,7 @@ export class GithubEvent extends Deserializable {
     // TODO print profile
     if (droppedEvents.length > 0) {
       let uniq = Array.from(new Set(droppedEvents)).join(", ");
-      Log.red(`\n  [WARN] dropped events (${droppedEvents.length}): `, uniq);
+      Log.warn(`dropped events (${droppedEvents.length}): ${uniq}`);
     }
 
     return deserializedEvents.filter(e => e !== null);

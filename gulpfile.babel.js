@@ -6,7 +6,6 @@ import ts    from "gulp-typescript";
 import ncp   from "ncp";
 import gulp  from "gulp";
 import path  from "path";
-import shim  from "browserify-shim";
 import babel from "gulp-babel";
 import watch from "gulp-watch";
 import clean from "gulp-clean";
@@ -16,19 +15,13 @@ import source         from "vinyl-source-stream";
 import tslint         from "gulp-tslint";
 import rename         from "gulp-rename";
 import notify         from "gulp-notify";
-import uglify         from "gulp-uglify";
-import inject         from "gulp-inject";
 import buffer         from "vinyl-buffer";
 import jasmine        from "gulp-jasmine";
 import jsonlint       from "gulp-jsonlint";
 import babelify       from "babelify";
 import streamify      from "gulp-streamify";
-import bowerFiles     from "main-bower-files";
-import browserify     from "browserify";
 import sourcemaps     from "gulp-sourcemaps";
-import browserSync    from 'browser-sync';
 import runSequence    from "run-sequence";
-import jasmineBrowser from "gulp-jasmine-browser";
 
 /** constants for TASK name */
 const TASK_NAME_TEST         = "test";
@@ -36,18 +29,11 @@ const TASK_NAME_TSLINT       = "tslint";
 const TASK_NAME_JSLINT       = "jslint";
 const TASK_NAME_DIST         = "dist";
 const TASK_NAME_BUILD        = "build";
-const TASK_NAME_BS_START     = "bs-start";
-const TASK_NAME_BS_RELOAD    = "bs-reload";
-const TASK_NAME_INJECT       = "inject";
-const TASK_NAME_PREVIEW      = "preview";
 const TASK_NAME_RELEASE      = "release";
-const TASK_NAME_COMPILE_JSX  = "compile-jsx";
-const TASK_NAME_COMPILE_CSS  = "compile-css";
 
 const TASK_NAME_COMPILE_TS            = "compile-ts";  /** noEmitError: false */
 const TASK_NAME_COMPILE_TS_NO_EMIT_ERROR = "compile-ts-no-emit-error";
 const TASK_NAME_CLEAN_GENERATOR       = "clean-generator";
-const TASK_NAME_CLEAN_VIEWER          = "clean-viewer";
 const TASK_NAME_CONT_GENERATOR_BUILD  = "cont-generator-build";
 
 /** constants for FILEs */
@@ -67,7 +53,6 @@ const CLEAN_TARGET_VIEWER = [
   env.DIR.BUILD_VIEWER
 ];
 
-let bs = browserSync.create();
 
 /** tasks */
 
@@ -83,11 +68,6 @@ gulp.task(TASK_NAME_BUILD, callback => {
 
 gulp.task(TASK_NAME_CLEAN_GENERATOR, () => {
   return gulp.src(CLEAN_TARGET_GENERATOR, {read: false})
-    .pipe(clean());
-});
-
-gulp.task(TASK_NAME_CLEAN_VIEWER, () => {
-  return gulp.src(CLEAN_TARGET_VIEWER, {read: false})
     .pipe(clean());
 });
 
@@ -117,7 +97,7 @@ gulp.task(TASK_NAME_TEST, () => {
     "random": false
   };
 
-  return gulp.src([env.FILE.VIEWER.BUILD_TEST_JS, env.FILE.GENERATOR.BUILD_TEST_JS])
+  return gulp.src([env.FILE.GENERATOR.BUILD_TEST_JS])
     .pipe(jasmine({
       config: jasmineConfig,
       includeStackTrace: true,
@@ -131,90 +111,6 @@ gulp.task(TASK_NAME_COMPILE_TS, () => {
 
 gulp.task(TASK_NAME_COMPILE_TS_NO_EMIT_ERROR, () => {
   return compileTypescript(true);
-});
-
-gulp.task(TASK_NAME_BS_RELOAD, callback => {
-  bs.reload();
-  callback();
-});
-
-gulp.task(TASK_NAME_COMPILE_JSX, () => {
-  let entryJSX = env.FILE.VIEWER.ENTRY_JSX;
-
-  return browserify({
-    entries: [entryJSX],
-    extensions: [".jsx"]
-    , debug: true
-  })
-    .bundle()
-    .on('error', notify.onError({
-      title: "JSX Compile Error",
-      message: "<%= error.message %>"
-    }))
-    .pipe(source(entryJSX))
-    .pipe(rename((path) => { path.extname = ".js"; return path; }))
-    .pipe(gulp.dest(env.DIR.BUILD));
-});
-
-gulp.task(TASK_NAME_INJECT, () => {
-  var target = gulp.src(env.FILE.VIEWER.ENTRY_HTML, {base: "."});
-
-  return target
-    .pipe(inject(gulp.src(bowerFiles({ overrides: {
-      bootstrap: { main: [ './dist/js/bootstrap.js', './dist/css/*.min.*', './dist/fonts/*.*' ]},
-      "font-awesome": { main: [ './css/*.min.*', './fonts/*.*' ]}
-    }}), {read: false}), { name: "bower" }))
-    .pipe(inject(gulp.src([env.FILE.VIEWER.BUILD_ENTRY_CSS], {read: false}), {
-      transform: (path) => {
-        arguments[0] = path.replace(`/${env.DIR.BUILD_VIEWER}`, "");
-        return inject.transform.apply(inject.transform, arguments);
-      }
-    }))
-    .pipe(inject(gulp.src([env.FILE.VIEWER.BUILD_ENTRY_JS], {read: false}), {
-      transform: (path) => {
-        arguments[0] = path.replace(`/${env.DIR.BUILD_VIEWER}`, "");
-        return inject.transform.apply(inject.transform, arguments);
-      }
-    }))
-    .pipe(gulp.dest(env.DIR.BUILD));
-});
-
-gulp.task(TASK_NAME_BS_START, callback => {
-  bs.init({ server: {
-    baseDir: [ env.DIR.BUILD_VIEWER ],
-    routes: {
-      "/bower_components": `${env.DIR.BOWER_COMPONENTS}/`,
-      "/resource": process.cwd()
-    }
-  }});
-
-  callback();
-});
-
-gulp.task(TASK_NAME_COMPILE_CSS, () => {
-  gulp.src(env.FILE.VIEWER.ENTRY_CSS, {base: "."})
-    .pipe(gulp.dest(env.DIR.BUILD));
-});
-
-gulp.task(TASK_NAME_PREVIEW, callback => {
-  gulp.watch(env.FILE.VIEWER.ALL_FILES_JSX).on("change", () => {
-    runSequence(TASK_NAME_COMPILE_JSX, TASK_NAME_BS_RELOAD);
-  });
-
-  gulp.watch(env.FILE.VIEWER.ENTRY_CSS).on("change", () => {
-    runSequence(TASK_NAME_COMPILE_CSS, TASK_NAME_BS_RELOAD);
-  });
-
-  gulp.watch(env.FILE.VIEWER.ENTRY_HTML).on("change", () => {
-    runSequence(TASK_NAME_INJECT, TASK_NAME_BS_RELOAD);
-  });
-
-  runSequence(
-    TASK_NAME_COMPILE_CSS,
-    TASK_NAME_COMPILE_JSX,
-    TASK_NAME_INJECT,
-    TASK_NAME_BS_START,
-    callback);
 });
 
 gulp.task(TASK_NAME_CONT_GENERATOR_BUILD, () => {
@@ -266,12 +162,12 @@ gulp.task(TASK_NAME_DIST, callback => {
 
 async function dist() {
   let buildSrcDirGenerator = env.DIR.BUILD_GENERATOR_SRC;
-  let buildDirViewer       = env.DIR.BUILD_VIEWER;
+  let srcDirViewer       = env.DIR.VIEWER;
   let distDirGenerator = env.DIR.DIST_GENERATOR;
   let distDirViewer    = env.DIR.DIST_VIEWER;
 
   await copy(buildSrcDirGenerator, distDirGenerator);
-  await copy(buildDirViewer, distDirViewer);
+  await copy(srcDirViewer, distDirViewer);
 }
 
 function copy(src, dest) {

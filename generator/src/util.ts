@@ -9,6 +9,8 @@ import {
 
 let unionBy = require('lodash.unionby');
 
+const indent = '  ';
+
 export class Util {
   static copyObject<T>(object: T): T {
     return JSON.parse(JSON.stringify(object));
@@ -19,12 +21,12 @@ export class Util {
   }
 
   static reportErrorAndExit(error: Error) {
-    Log.red(`  [${error.name}] `, error.message);
+    Log.red(`${indent}[${error.name}] `, error.message);
     process.exit(-1);
   }
 
   static reportMessageAndExit(message: string) {
-    Log.red(`  [ERROR] `, message);
+    Log.red(`${indent}[ERROR] `, message);
     process.exit(-1);
   }
 
@@ -34,6 +36,7 @@ export class Util {
 }
 
 export class Log {
+
   static blue(tag: any, message: any) {
     console.log(`${chalkBlue(tag)}${message}`)
   }
@@ -73,4 +76,13 @@ export class Log {
   static magentaReverse(tag: any, message: any) {
     console.log(`${tag}${chalkMagenta(message)}`)
   }
+
+  static info(message: any) {
+    Log.green(`${indent}[INFO] `, message)
+  }
+
+  static warn(message: any) {
+    Log.red(`${indent}[WARN] `, message)
+  }
+
 }

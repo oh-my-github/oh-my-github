@@ -50,20 +50,6 @@ module.exports = {
       "BUILD_TEST_JS": DIR_BUILD + "/" + DIR_GENERATOR_TEST + "/" + ALL_JS
     },
 
-    "VIEWER": {
-      "ALL_FILES": DIR_VIEWER + "/**/*.*",
-      "ALL_FILES_JSX": DIR_VIEWER_APP + "/" + ALL_JSX,
-      "ALL_FILES_SPEC": DIR_VIEWER_APP + "/" + ALL_SPEC_JS,
-
-      "ENTRY_JSX": DIR_VIEWER_APP + "/index.jsx",
-      "ENTRY_HTML": DIR_VIEWER + "/index.html",
-      "ENTRY_CSS": DIR_VIEWER_STYLE + "/app.css",
-
-      "BUILD_ENTRY_JS": DIR_BUILD_VIEWER + "/app/index.js",
-      "BUILD_ENTRY_CSS": DIR_BUILD_VIEWER + "/style/app.css",
-      "BUILD_TEST_JS": DIR_BUILD_VIEWER + "/app/**/*.spec.js"
-    },
-
     "IGNORED_ALL_D_TS": "!" + ALL_D_TS,
 
     "PACKAGE_JSON": "package.json",
@@ -78,7 +64,6 @@ module.exports = {
 
     "BUILD_GENERATOR": DIR_BUILD_GENERATOR,
     "BUILD_GENERATOR_SRC": DIR_BUILD_GENERATOR + "/" + DIR_SRC,
-    "BUILD_VIEWER": DIR_BUILD_VIEWER,
 
     "BUILD": DIR_BUILD,
     "RESOURCE": DIR_RESOURCE,
