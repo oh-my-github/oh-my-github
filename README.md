@@ -3,7 +3,11 @@
 [![npm version](https://badge.fury.io/js/oh-my-github.svg)](https://badge.fury.io/js/oh-my-github)
 [![Dependency Status](https://david-dm.org/oh-my-github/generator.svg)](https://david-dm.org/oh-my-github/generator)
 
-Create your **Github Profile** in 1 minute
+Create your **Github Profile** in 5 minute
+
+## Demo
+
+[Demo: 1ambda.gihub.io/oh-my-github](https://http://1ambda.github.io/oh-my-github/)
 
 ## Usage
 
@@ -28,8 +32,14 @@ $ omg preview
 
 ### 3. Pushing gh-pages
 
+You should have your own **oh-my-github** repository before publishing
+
+- The repository name must be **oh-my-github** (e.g. *1ambda/oh-my-github*)
+- You can create new repository ([Link: New Repository])
+
 ```
-$ npm install -g yo-omg-basic
+$ npm install -g yo
+$ npm install -g generator-omg-basic
 $ yo omg-basic
 $ omg publish
 ```
