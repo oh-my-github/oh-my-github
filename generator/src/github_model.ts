@@ -189,15 +189,15 @@ export class GithubPushEventPayload {
   @deserializeAs("head") public head: string;
   @deserializeAs("before") public before: string;
 
-  public commit_urls: Array<string>;
+  public commit_shas: Array<string>;
   public static COMMIT_URI_PREFIX: string = "https://github.com/oh-my-github/generator/commit/";
 
   public static OnDeserialized(instance: GithubPushEventPayload, payload: any): void {
     if (_.isEmpty(payload)) return;
 
     if (!_.isEmpty(payload.commits) && Array.isArray(payload.commits))
-      instance.commit_urls = payload.commits.map(c => {
-        return `${GithubPushEventPayload.COMMIT_URI_PREFIX}${c.sha}`;
+      instance.commit_shas = payload.commits.map(c => {
+        return c.sha;
       });
   }
 }

@@ -46,9 +46,9 @@ export class SampleResources {
         "ref": "refs/heads/master",
         "head": "d57ba37c7d980e600e9e4698c9264972c8eed18f",
         "before": "13b66a7b7515109068d61d3284fef93f5fdc2e7a",
-        "commit_urls": [
-          "https://github.com/oh-my-github/generator/commit/ada68e000ffd64b5b8056e54a31448d14479ed56",
-          "https://github.com/oh-my-github/generator/commit/d57ba37c7d980e600e9e4698c9264972c8eed18f"
+        "commit_shas": [
+          "ada68e000ffd64b5b8056e54a31448d14479ed56",
+          "d57ba37c7d980e600e9e4698c9264972c8eed18f"
         ]
       },
       "event_id": "3513132265",
@@ -65,9 +65,9 @@ export class SampleResources {
         "ref": "refs/heads/master",
         "head": "13b66a7b7515109068d61d3284fef93f5fdc2e7a",
         "before": "c7301390e53c5dcf64819f027b9f10ea0cd6eea3",
-        "commit_urls": [
-          "https://github.com/oh-my-github/generator/commit/856e6fcb951cb5c955b5a05d7dd594491556e6b2",
-          "https://github.com/oh-my-github/generator/commit/c77c05677526fc4da2f9e0f5675fd055c5f88dd6"
+        "commit_shas": [
+          "856e6fcb951cb5c955b5a05d7dd594491556e6b2",
+          "c77c05677526fc4da2f9e0f5675fd055c5f88dd6"
         ]
       },
       "event_id": "3513095439",
@@ -87,9 +87,9 @@ export class SampleResources {
         "ref": "refs/heads/master",
         "head": "13b66a7b7515109068d61d3284fef93f5fdc2e7a",
         "before": "c7301390e53c5dcf64819f027b9f10ea0cd6eea3",
-        "commit_urls": [
-          "https://github.com/oh-my-github/generator/commit/856e6fcb951cb5c955b5a05d7dd594491556e6b2",
-          "https://github.com/oh-my-github/generator/commit/c77c05677526fc4da2f9e0f5675fd055c5f88dd6"
+        "commit_shas": [
+          "856e6fcb951cb5c955b5a05d7dd594491556e6b2",
+          "c77c05677526fc4da2f9e0f5675fd055c5f88dd6"
         ]
       },
       "event_id": "3513095439",
@@ -106,9 +106,9 @@ export class SampleResources {
         "ref": "refs/heads/develop",
         "head": "c618ff3e225e1f72b6184aed73411f45ee306889",
         "before": "0fd03010b31fbedc15897416427e8ad8145f8346",
-        "commit_urls": [
-          "https://github.com/oh-my-github/generator/commit/c6ec13ef5a713d40bd6cac957caa6b3ae5f159b6",
-          "https://github.com/oh-my-github/generator/commit/77c90d2c988713b26e793785bfee422c12d0a151"
+        "commit_shas": [
+          "c6ec13ef5a713d40bd6cac957caa6b3ae5f159b6",
+          "77c90d2c988713b26e793785bfee422c12d0a151"
         ]
       },
       "event_id": "3513094761",
@@ -125,8 +125,8 @@ export class SampleResources {
         "ref": "refs/heads/master",
         "head": "d87c68e020eaca7f3f3a3d0562ccd365c70d9f14",
         "before": "ad94fc39a7e4d26b653d1fa3d9be413178c075e1",
-        "commit_urls": [
-          "https://github.com/oh-my-github/generator/commit/d87c68e020eaca7f3f3a3d0562ccd365c70d9f14"
+        "commit_shas": [
+          "d87c68e020eaca7f3f3a3d0562ccd365c70d9f14"
         ]
       },
       "event_id": "3512661098",
@@ -160,9 +160,9 @@ export class SampleResources {
         "ref": "refs/heads/master",
         "head": "13b66a7b7515109068d61d3284fef93f5fdc2e7a",
         "before": "c7301390e53c5dcf64819f027b9f10ea0cd6eea3",
-        "commit_urls": [
-          "https://github.com/oh-my-github/generator/commit/856e6fcb951cb5c955b5a05d7dd594491556e6b2",
-          "https://github.com/oh-my-github/generator/commit/c77c05677526fc4da2f9e0f5675fd055c5f88dd6"
+        "commit_shas": [
+          "856e6fcb951cb5c955b5a05d7dd594491556e6b2",
+          "c77c05677526fc4da2f9e0f5675fd055c5f88dd6"
         ]
       },
       "event_id": "3513095430",
@@ -179,9 +179,9 @@ export class SampleResources {
         "ref": "refs/heads/develop",
         "head": "c618ff3e225e1f72b6184aed73411f45ee306889",
         "before": "0fd03010b31fbedc15897416427e8ad8145f8346",
-        "commit_urls": [
-          "https://github.com/oh-my-github/generator/commit/c6ec13ef5a713d40bd6cac957caa6b3ae5f159b6",
-          "https://github.com/oh-my-github/generator/commit/77c90d2c988713b26e793785bfee422c12d0a151"
+        "commit_shas": [
+          "c6ec13ef5a713d40bd6cac957caa6b3ae5f159b6",
+          "77c90d2c988713b26e793785bfee422c12d0a151"
         ]
       },
       "event_id": "3513094761",
@@ -198,8 +198,8 @@ export class SampleResources {
         "ref": "refs/heads/master",
         "head": "d87c68e020eaca7f3f3a3d0562ccd365c70d9f14",
         "before": "ad94fc39a7e4d26b653d1fa3d9be413178c075e1",
-        "commit_urls": [
-          "https://github.com/oh-my-github/generator/commit/d87c68e020eaca7f3f3a3d0562ccd365c70d9f14"
+        "commit_shas": [
+          "d87c68e020eaca7f3f3a3d0562ccd365c70d9f14"
         ]
       },
       "event_id": "3512661098",

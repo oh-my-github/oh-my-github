@@ -101,7 +101,7 @@ gulp.task(TASK_NAME_TEST, () => {
     .pipe(jasmine({
       config: jasmineConfig,
       includeStackTrace: true,
-      verbose: false
+      verbose:true
     }));
 });
 

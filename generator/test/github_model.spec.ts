@@ -228,9 +228,8 @@ describe("github_model.ts", () => {
         expect(payload.head).toEqual(raw.payload.head);
         expect(payload.before).toEqual(raw.payload.before);
 
-        expect(payload.commit_urls.length).toEqual(1);
-        expect(payload.commit_urls[0])
-          .toEqual(`${GithubPushEventPayload.COMMIT_URI_PREFIX}7f6d1d80f5458e37db9b48958dd9fb2a07a78fd3`);
+        expect(payload.commit_shas.length).toEqual(1);
+        expect(payload.commit_shas[0]).toEqual(raw.payload.commits[0].sha);
       });
     });
 

@@ -362,8 +362,8 @@ var GithubPushEventPayload = exports.GithubPushEventPayload = function () {
         key: "OnDeserialized",
         value: function OnDeserialized(instance, payload) {
             if (_.isEmpty(payload)) return;
-            if (!_.isEmpty(payload.commits) && Array.isArray(payload.commits)) instance.commit_urls = payload.commits.map(function (c) {
-                return "" + GithubPushEventPayload.COMMIT_URI_PREFIX + c.sha;
+            if (!_.isEmpty(payload.commits) && Array.isArray(payload.commits)) instance.commit_shas = payload.commits.map(function (c) {
+                return c.sha;
             });
         }
     }]);
