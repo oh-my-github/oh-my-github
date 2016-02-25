@@ -49,6 +49,7 @@ $ cd oh-my-github
 
 $ omg init [GITHUB_ID] oh-my-github       # (e.g) omg init 1ambda oh-my-github
 $ omg generate [GITHUB_TOKEN]             # (e.g) omg generate 394fbad49191aca
+$ omg preview
 $ omg publish
 ```
 
@@ -57,7 +58,7 @@ $ omg publish
 ```
 $ cd oh-my-github                         # where `oh-my-github.json` exists
 $ omg generate [GITHUB_TOKEN]             # (e.g) omg generate 394fbad49191aca
-$ omg publish
+$ omg publish                             # publish
 ```
 
 <br/>
