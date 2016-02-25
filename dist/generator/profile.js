@@ -1,17 +1,10 @@
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Profile = exports.MetaField = undefined;
 
 var _regenerator = require("babel-runtime/regenerator");
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _promise = require("babel-runtime/core-js/promise");
-
-var _promise2 = _interopRequireDefault(_promise);
 
 var _keys = require("babel-runtime/core-js/object/keys");
 
@@ -45,6 +38,10 @@ var _inherits2 = require("babel-runtime/helpers/inherits");
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _defineProperty = require("babel-runtime/core-js/object/define-property");
 
 var _defineProperty2 = _interopRequireDefault(_defineProperty);
@@ -57,27 +54,8 @@ var _getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-pr
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
-exports.printProfile = printProfile;
-exports.createProfile = createProfile;
-
-var _lodash = require("lodash");
-
-var _ = _interopRequireWildcard(_lodash);
-
-var _util = require("./util");
-
-var _serialize = require("./serialize");
-
-var _github_util = require("./github_util");
-
-var _github_model = require("./github_model");
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/lodash/lodash.d.ts" />
 var __decorate = undefined && undefined.__decorate || function (decorators, target, key, desc) {
     var c = arguments.length,
         r = c < 3 ? target : desc === null ? desc = (0, _getOwnPropertyDescriptor2.default)(target, key) : desc,
@@ -86,38 +64,38 @@ var __decorate = undefined && undefined.__decorate || function (decorators, targ
         if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     }return c > 3 && r && (0, _defineProperty2.default)(target, key, r), r;
 };
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, Promise, generator) {
-    return new Promise(function (resolve, reject) {
-        generator = generator.call(thisArg, _arguments);
-        function cast(value) {
-            return value instanceof Promise && value.constructor === Promise ? value : new Promise(function (resolve) {
-                resolve(value);
-            });
-        }
-        function onfulfill(value) {
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = _promise2.default))(function (resolve, reject) {
+        function fulfilled(value) {
             try {
-                step("next", value);
+                step(generator.next(value));
             } catch (e) {
                 reject(e);
             }
         }
-        function onreject(value) {
+        function rejected(value) {
             try {
-                step("throw", value);
+                step(generator.throw(value));
             } catch (e) {
                 reject(e);
             }
         }
-        function step(verb, value) {
-            var result = generator[verb](value);
-            result.done ? resolve(result.value) : cast(result.value).then(onfulfill, onreject);
+        function step(result) {
+            result.done ? resolve(result.value) : new P(function (resolve) {
+                resolve(result.value);
+            }).then(fulfilled, rejected);
         }
-        step("next", void 0);
+        step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
+var _ = require("lodash");
+var util_1 = require("./util");
+var serialize_1 = require("./serialize");
+var github_util_1 = require("./github_util");
+var github_model_1 = require("./github_model");
 
-var MetaField = exports.MetaField = function (_Deserializable) {
-    (0, _inherits3.default)(MetaField, _Deserializable);
+var MetaField = function (_serialize_1$Deserial) {
+    (0, _inherits3.default)(MetaField, _serialize_1$Deserial);
 
     function MetaField() {
         var _Object$getPrototypeO;
@@ -144,7 +122,7 @@ var MetaField = exports.MetaField = function (_Deserializable) {
         value: function OnDeserialized(instance, json) {
             var profSchemaVersion = json.schema_version;
             if (null !== profSchemaVersion && profSchemaVersion !== MetaField.PROFILE_SCHEMA_VERSION) {
-                _util.Util.reportMessageAndExit("Invalid `_$meta.schema_version`: " + profSchemaVersion);
+                util_1.Util.reportMessageAndExit("Invalid `_$meta.schema_version`: " + profSchemaVersion);
             }
             if (_.isEmpty(profSchemaVersion)) profSchemaVersion = MetaField.PROFILE_SCHEMA_VERSION;
             instance.schema_version = profSchemaVersion;
@@ -157,17 +135,18 @@ var MetaField = exports.MetaField = function (_Deserializable) {
         }
     }]);
     return MetaField;
-}(_serialize.Deserializable);
+}(serialize_1.Deserializable);
 
 MetaField.PROFILE_SCHEMA_VERSION = 1;
 MetaField.CURRENT_DATE = new Date().toISOString();
-__decorate([_serialize.deserialize], MetaField.prototype, "agent", void 0);
-__decorate([_serialize.deserialize], MetaField.prototype, "github_user", void 0);
-__decorate([_serialize.deserialize], MetaField.prototype, "github_repository", void 0);
-__decorate([_serialize.deserialize], MetaField.prototype, "ignored_repositories", void 0);
+__decorate([serialize_1.deserialize], MetaField.prototype, "agent", void 0);
+__decorate([serialize_1.deserialize], MetaField.prototype, "github_user", void 0);
+__decorate([serialize_1.deserialize], MetaField.prototype, "github_repository", void 0);
+__decorate([serialize_1.deserialize], MetaField.prototype, "ignored_repositories", void 0);
+exports.MetaField = MetaField;
 
-var Profile = exports.Profile = function (_Deserializable2) {
-    (0, _inherits3.default)(Profile, _Deserializable2);
+var Profile = function (_serialize_1$Deserial2) {
+    (0, _inherits3.default)(Profile, _serialize_1$Deserial2);
 
     function Profile() {
         var _Object$getPrototypeO2;
@@ -200,14 +179,14 @@ var Profile = exports.Profile = function (_Deserializable2) {
         value: function OnDeserialized(instance, json) {
             if (_.isEmpty(json)) return;
             if (_.isEmpty(json.activities)) return;
-            var activities = _github_model.GithubEvent.deserializeGithubEvent(json.activities);
+            var activities = github_model_1.GithubEvent.deserializeGithubEvent(json.activities);
             instance.activities = activities;
         }
     }, {
         key: "updateMeta",
         value: function updateMeta(currentProfile, prevMeta) {
             var currentMeta = currentProfile._$meta;
-            var meta = _util.Util.copyObject(prevMeta);
+            var meta = util_1.Util.copyObject(prevMeta);
             /** 1. update schema_collected_ats */
             meta.schema_collected_ats.push(MetaField.CURRENT_DATE);
             /** 2. update ignored_repositories */
@@ -217,18 +196,19 @@ var Profile = exports.Profile = function (_Deserializable2) {
         }
     }]);
     return Profile;
-}(_serialize.Deserializable);
+}(serialize_1.Deserializable);
 
-__decorate([(0, _serialize.deserializeAs)(MetaField)], Profile.prototype, "_$meta", void 0);
-__decorate([(0, _serialize.deserializeAs)(_github_model.GithubUser)], Profile.prototype, "user", void 0);
-__decorate([(0, _serialize.deserializeAs)(_github_model.LanguageInformation)], Profile.prototype, "languages", void 0);
-__decorate([(0, _serialize.deserializeAs)(_github_model.Repository)], Profile.prototype, "repositories", void 0);
+__decorate([serialize_1.deserializeAs(MetaField)], Profile.prototype, "_$meta", void 0);
+__decorate([serialize_1.deserializeAs(github_model_1.GithubUser)], Profile.prototype, "user", void 0);
+__decorate([serialize_1.deserializeAs(github_model_1.LanguageInformation)], Profile.prototype, "languages", void 0);
+__decorate([serialize_1.deserializeAs(github_model_1.Repository)], Profile.prototype, "repositories", void 0);
+exports.Profile = Profile;
 function printProfile(user, langInfos, repos, prevProfile, currentProfile, ignoredRepos) {
     function renderTitle(tag) {
-        _util.Log.blue("\n  " + tag, "");
+        util_1.Log.blue("\n  " + tag, "");
     }
     function renderText(tag, message) {
-        _util.Log.magentaReverse("    " + tag, message);
+        util_1.Log.magentaReverse("    " + tag, message);
     }
     /** user */
     renderTitle("[USER]");
@@ -260,7 +240,7 @@ function printProfile(user, langInfos, repos, prevProfile, currentProfile, ignor
     // TODO refactor, print ignored repos
     // TODO featured reos
     if (!_.isEmpty(repos)) {
-        var repoSummary = new _github_model.RepositorySummary();
+        var repoSummary = new github_model_1.RepositorySummary();
         repos.reduce(function (sum, repo) {
             sum.repository_names.push(repo.name);
             sum.repository_count += 1;
@@ -302,6 +282,7 @@ function printProfile(user, langInfos, repos, prevProfile, currentProfile, ignor
         })();
     }
 }
+exports.printProfile = printProfile;
 function createProfile(token, prevProf, ignoredRepos) {
     return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee() {
         var user, currentProf, allIgnoredRepos, githubUser, repos, langs, currentActs, uniqActs;
@@ -315,26 +296,26 @@ function createProfile(token, prevProf, ignoredRepos) {
                         currentProf._$meta.ignored_repositories = ignoredRepos;
                         allIgnoredRepos = _.union(ignoredRepos, prevProf._$meta.ignored_repositories);
                         _context.next = 6;
-                        return _github_util.GithubUtil.getGithubUser(token, user);
+                        return github_util_1.GithubUtil.getGithubUser(token, user);
 
                     case 6:
                         githubUser = _context.sent;
                         _context.next = 9;
-                        return _github_util.GithubUtil.getUserRepositories(token, user);
+                        return github_util_1.GithubUtil.getUserRepositories(token, user);
 
                     case 9:
                         repos = _context.sent;
                         _context.next = 12;
-                        return _github_util.GithubUtil.getUserLanguages(token, user, allIgnoredRepos);
+                        return github_util_1.GithubUtil.getUserLanguages(token, user, allIgnoredRepos);
 
                     case 12:
                         langs = _context.sent;
                         _context.next = 15;
-                        return _github_util.GithubUtil.getUserActivities(token, user);
+                        return github_util_1.GithubUtil.getUserActivities(token, user);
 
                     case 15:
                         currentActs = _context.sent;
-                        uniqActs = _github_model.GithubEvent.mergeByEventId(prevProf.activities, currentActs);
+                        uniqActs = github_model_1.GithubEvent.mergeByEventId(prevProf.activities, currentActs);
 
                         currentProf.activities = uniqActs;
                         currentProf.repositories = repos;
@@ -353,4 +334,5 @@ function createProfile(token, prevProf, ignoredRepos) {
         }, _callee, this);
     }));
 }
+exports.createProfile = createProfile;
 //# sourceMappingURL=profile.js.map

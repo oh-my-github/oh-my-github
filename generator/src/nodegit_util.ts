@@ -3,7 +3,7 @@
 /// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
 
 let nodegit = require("nodegit");
-import {Log, Util} from "./util";
+import { Log, Util } from "./util";
 import * as fse from "fs-extra";
 
 interface NodeGitCommit { }
@@ -32,15 +32,14 @@ interface NodeGitRepository {
   defaultSignature(): any
 }
 
-function nodegitLog(message: string) {
-  Log.blue("  Running Git Command: ", message);
-}
+const HEAD = "HEAD";
+const ORIGIN = "ORIGIN";
 
 export async function addAllAndCommit(path: string,
                                       user: string,
                                       commitMessage: string,
                                       initial: boolean): Promise<void> {
-  nodegitLog(`git commit -a -m "${commitMessage}"`);
+  Log.info(`git commit -a -m "${commitMessage}"`);
 
   let repo: NodeGitRepository = await nodegit.Repository.open(path);
   let index = await repo.openIndex();
@@ -52,12 +51,12 @@ export async function addAllAndCommit(path: string,
   var committer = nodegit.Signature.now(user, user);
 
   if (initial)
-    return await repo.createCommit("HEAD", author, committer, commitMessage, oid, []);
+    return await repo.createCommit(HEAD, author, committer, commitMessage, oid, []);
 
-  let head = await nodegit.Reference.nameToId(repo, "HEAD");
+  let head = await nodegit.Reference.nameToId(repo, HEAD);
   let parent = await repo.getCommit(head);
 
-  return await repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
+  return await repo.createCommit(HEAD, author, committer, commitMessage, oid, [parent]);
 }
 
 export async function checkoutGhPagesBranch(path: string, user: string) {
@@ -67,7 +66,7 @@ export async function checkoutGhPagesBranch(path: string, user: string) {
   try {
     repo = await nodegit.Repository.open(path);
   } catch (error) {
-    nodegitLog("git init");
+    Log.info("git init");
     repo = await nodegit.Repository.init(path, 0);
   }
 
@@ -86,7 +85,7 @@ export async function checkoutGhPagesBranch(path: string, user: string) {
   try {
     let ghPagesBranch = await repo.getBranch("gh-pages");
   } catch (error) {
-    nodegitLog("git branch gh-pages HEAD");
+    Log.info("git branch gh-pages HEAD");
 
     let headCommit = await repo.getHeadCommit();
     await repo.createBranch("gh-pages", headCommit, 0, repo.defaultSignature(), "message");
@@ -95,7 +94,7 @@ export async function checkoutGhPagesBranch(path: string, user: string) {
   /** checkout gh-pages */
   let branchName = branch.name();
   if (!branchName.endsWith("/gh-pages")) {
-    nodegitLog("git checkout gh-pages");
+    Log.info("git checkout gh-pages");
 
     repo = await nodegit.Repository.open(path);
 
@@ -120,12 +119,12 @@ export async function push(path: string, branchName: string, remoteName: string,
   try {
     remote = await nodegit.Remote.lookup(repo, remoteName);
   } catch (error) {
-    nodegitLog(`git remote add ${remoteName} ${nodegit.rl}`);
+    Log.info(`git remote add ${remoteName} ${gitUrl}`);
 
     remote = await nodegit.Remote.create(repo, remoteName, gitUrl);
   }
 
-  nodegitLog(`git push origin ${branchName}:${branchName} --force`);
+  Log.info(`git push ${ORIGIN} ${branchName}:${branchName} --force`);
   return await remote.push(
     [`+refs/heads/${branchName}:refs/heads/${branchName}`],
     { callbacks: {

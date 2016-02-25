@@ -1,61 +1,55 @@
-'use strict';
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/chalk/chalk.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
+"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.Log = exports.Util = undefined;
-
-var _stringify = require('babel-runtime/core-js/json/stringify');
+var _stringify = require("babel-runtime/core-js/json/stringify");
 
 var _stringify2 = _interopRequireDefault(_stringify);
 
-var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
 
-var _createClass2 = require('babel-runtime/helpers/createClass');
+var _createClass2 = require("babel-runtime/helpers/createClass");
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _chalk = require('chalk');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var _unionBy = require('lodash.unionby'); /// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/chalk/chalk.d.ts" />
-/// <reference path="../../typings/lodash/lodash.d.ts" />
-
+var chalk_1 = require("chalk");
+var _unionBy = require('lodash.unionby');
 var indent = '  ';
 
-var Util = exports.Util = function () {
+var Util = function () {
     function Util() {
         (0, _classCallCheck3.default)(this, Util);
     }
 
     (0, _createClass3.default)(Util, null, [{
-        key: 'copyObject',
+        key: "copyObject",
         value: function copyObject(object) {
             return JSON.parse((0, _stringify2.default)(object));
         }
     }, {
-        key: 'unionBy',
+        key: "unionBy",
         value: function unionBy(ts1, ts2, filter) {
             return _unionBy(ts1, ts2, filter);
         }
     }, {
-        key: 'reportErrorAndExit',
+        key: "reportErrorAndExit",
         value: function reportErrorAndExit(error) {
-            Log.red(indent + '[' + error.name + '] ', error.message);
+            Log.red(indent + "[" + error.name + "] ", error.message);
             process.exit(-1);
         }
     }, {
-        key: 'reportMessageAndExit',
+        key: "reportMessageAndExit",
         value: function reportMessageAndExit(message) {
-            Log.red(indent + '[ERROR] ', message);
+            Log.red(indent + "[ERROR] ", message);
             process.exit(-1);
         }
     }, {
-        key: 'exitProcess',
+        key: "exitProcess",
         value: function exitProcess() {
             process.exit(1);
         }
@@ -63,72 +57,76 @@ var Util = exports.Util = function () {
     return Util;
 }();
 
-var Log = exports.Log = function () {
+exports.Util = Util;
+
+var Log = function () {
     function Log() {
         (0, _classCallCheck3.default)(this, Log);
     }
 
     (0, _createClass3.default)(Log, null, [{
-        key: 'blue',
+        key: "blue",
         value: function blue(tag, message) {
-            console.log('' + (0, _chalk.blue)(tag) + message);
+            console.log("" + chalk_1.blue(tag) + message);
         }
     }, {
-        key: 'red',
+        key: "red",
         value: function red(tag, message) {
-            console.log('' + (0, _chalk.red)(tag) + message);
+            console.log("" + chalk_1.red(tag) + message);
         }
     }, {
-        key: 'green',
+        key: "green",
         value: function green(tag, message) {
-            console.log('' + (0, _chalk.green)(tag) + message);
+            console.log("" + chalk_1.green(tag) + message);
         }
     }, {
-        key: 'yellow',
+        key: "yellow",
         value: function yellow(tag, message) {
-            console.log('' + (0, _chalk.yellow)(tag) + message);
+            console.log("" + chalk_1.yellow(tag) + message);
         }
     }, {
-        key: 'magenta',
+        key: "magenta",
         value: function magenta(tag, message) {
-            console.log('' + (0, _chalk.magenta)(tag) + message);
+            console.log("" + chalk_1.magenta(tag) + message);
         }
     }, {
-        key: 'blueReverse',
+        key: "blueReverse",
         value: function blueReverse(tag, message) {
-            console.log('' + tag + (0, _chalk.blue)(message));
+            console.log("" + tag + chalk_1.blue(message));
         }
     }, {
-        key: 'redReverse',
+        key: "redReverse",
         value: function redReverse(tag, message) {
-            console.log('' + tag + (0, _chalk.red)(message));
+            console.log("" + tag + chalk_1.red(message));
         }
     }, {
-        key: 'greenReverse',
+        key: "greenReverse",
         value: function greenReverse(tag, message) {
-            console.log('' + tag + (0, _chalk.green)(message));
+            console.log("" + tag + chalk_1.green(message));
         }
     }, {
-        key: 'yellowReverse',
+        key: "yellowReverse",
         value: function yellowReverse(tag, message) {
-            console.log('' + tag + (0, _chalk.yellow)(message));
+            console.log("" + tag + chalk_1.yellow(message));
         }
     }, {
-        key: 'magentaReverse',
+        key: "magentaReverse",
         value: function magentaReverse(tag, message) {
-            console.log('' + tag + (0, _chalk.magenta)(message));
+            console.log("" + tag + chalk_1.magenta(message));
         }
     }, {
-        key: 'info',
+        key: "info",
         value: function info(message) {
-            Log.green(indent + '[INFO] ', message);
+            Log.green(indent + "[INFO] ", message);
         }
     }, {
-        key: 'warn',
+        key: "warn",
         value: function warn(message) {
-            Log.red(indent + '[WARN] ', message);
+            Log.red(indent + "[WARN] ", message);
         }
     }]);
     return Log;
 }();
+
+exports.Log = Log;
 //# sourceMappingURL=util.js.map

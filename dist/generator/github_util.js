@@ -1,17 +1,10 @@
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.GithubUtil = exports.GithubResponse = exports.GithubError = undefined;
 
 var _regenerator = require("babel-runtime/regenerator");
 
 var _regenerator2 = _interopRequireDefault(_regenerator);
-
-var _promise = require("babel-runtime/core-js/promise");
-
-var _promise2 = _interopRequireDefault(_promise);
 
 var _createClass2 = require("babel-runtime/helpers/createClass");
 
@@ -33,6 +26,10 @@ var _inherits2 = require("babel-runtime/helpers/inherits");
 
 var _inherits3 = _interopRequireDefault(_inherits2);
 
+var _promise = require("babel-runtime/core-js/promise");
+
+var _promise2 = _interopRequireDefault(_promise);
+
 var _defineProperty = require("babel-runtime/core-js/object/define-property");
 
 var _defineProperty2 = _interopRequireDefault(_defineProperty);
@@ -45,20 +42,8 @@ var _getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-pr
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
-var _github_model = require("./github_model");
-
-var _serialize = require("./serialize");
-
-var _lodash = require("lodash");
-
-var _ = _interopRequireWildcard(_lodash);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/lodash/lodash.d.ts" />
 var __decorate = undefined && undefined.__decorate || function (decorators, target, key, desc) {
     var c = arguments.length,
         r = c < 3 ? target : desc === null ? desc = (0, _getOwnPropertyDescriptor2.default)(target, key) : desc,
@@ -67,40 +52,37 @@ var __decorate = undefined && undefined.__decorate || function (decorators, targ
         if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     }return c > 3 && r && (0, _defineProperty2.default)(target, key, r), r;
 };
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, Promise, generator) {
-    return new Promise(function (resolve, reject) {
-        generator = generator.call(thisArg, _arguments);
-        function cast(value) {
-            return value instanceof Promise && value.constructor === Promise ? value : new Promise(function (resolve) {
-                resolve(value);
-            });
-        }
-        function onfulfill(value) {
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = _promise2.default))(function (resolve, reject) {
+        function fulfilled(value) {
             try {
-                step("next", value);
+                step(generator.next(value));
             } catch (e) {
                 reject(e);
             }
         }
-        function onreject(value) {
+        function rejected(value) {
             try {
-                step("throw", value);
+                step(generator.throw(value));
             } catch (e) {
                 reject(e);
             }
         }
-        function step(verb, value) {
-            var result = generator[verb](value);
-            result.done ? resolve(result.value) : cast(result.value).then(onfulfill, onreject);
+        function step(result) {
+            result.done ? resolve(result.value) : new P(function (resolve) {
+                resolve(result.value);
+            }).then(fulfilled, rejected);
         }
-        step("next", void 0);
+        step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
-
+var github_model_1 = require("./github_model");
+var serialize_1 = require("./serialize");
 var axios = require('axios');
+var _ = require("lodash");
 
-var GithubError = exports.GithubError = function (_Deserializable) {
-    (0, _inherits3.default)(GithubError, _Deserializable);
+var GithubError = function (_serialize_1$Deserial) {
+    (0, _inherits3.default)(GithubError, _serialize_1$Deserial);
 
     function GithubError() {
         (0, _classCallCheck3.default)(this, GithubError);
@@ -108,15 +90,16 @@ var GithubError = exports.GithubError = function (_Deserializable) {
     }
 
     return GithubError;
-}(_serialize.Deserializable);
+}(serialize_1.Deserializable);
 
-__decorate([(0, _serialize.deserializeAs)("name")], GithubError.prototype, "name", void 0);
-__decorate([(0, _serialize.deserializeAs)("message")], GithubError.prototype, "message", void 0);
-__decorate([(0, _serialize.deserializeAs)("statusCode")], GithubError.prototype, "statusCode", void 0);
-__decorate([(0, _serialize.deserializeAs)("headers")], GithubError.prototype, "headers", void 0);
-__decorate([(0, _serialize.deserializeAs)("body")], GithubError.prototype, "body", void 0);
+__decorate([serialize_1.deserializeAs("name")], GithubError.prototype, "name", void 0);
+__decorate([serialize_1.deserializeAs("message")], GithubError.prototype, "message", void 0);
+__decorate([serialize_1.deserializeAs("statusCode")], GithubError.prototype, "statusCode", void 0);
+__decorate([serialize_1.deserializeAs("headers")], GithubError.prototype, "headers", void 0);
+__decorate([serialize_1.deserializeAs("body")], GithubError.prototype, "body", void 0);
+exports.GithubError = GithubError;
 
-var GithubResponse = exports.GithubResponse = function () {
+var GithubResponse = function () {
     function GithubResponse(headers, body) {
         (0, _classCallCheck3.default)(this, GithubResponse);
 
@@ -156,7 +139,9 @@ var GithubResponse = exports.GithubResponse = function () {
     return GithubResponse;
 }();
 
-var GithubUtil = exports.GithubUtil = function () {
+exports.GithubResponse = GithubResponse;
+
+var GithubUtil = function () {
     function GithubUtil() {
         (0, _classCallCheck3.default)(this, GithubUtil);
     }
@@ -315,7 +300,7 @@ var GithubUtil = exports.GithubUtil = function () {
 
                             case 2:
                                 raw = _context5.sent;
-                                return _context5.abrupt("return", _github_model.GithubUser.deserialize(_github_model.GithubUser, raw));
+                                return _context5.abrupt("return", github_model_1.GithubUser.deserialize(github_model_1.GithubUser, raw));
 
                             case 4:
                             case "end":
@@ -378,7 +363,7 @@ var GithubUtil = exports.GithubUtil = function () {
 
                             case 12:
                                 langInfos = rawLangInfos.map(function (rawLangInfo) {
-                                    return _github_model.LanguageInformation.deserialize(_github_model.LanguageInformation, rawLangInfo);
+                                    return github_model_1.LanguageInformation.deserialize(github_model_1.LanguageInformation, rawLangInfo);
                                 });
                                 // TODO try-catch
                                 // TODO filter empty array in languages
@@ -407,7 +392,7 @@ var GithubUtil = exports.GithubUtil = function () {
 
                             case 2:
                                 raw = _context7.sent;
-                                repos = _github_model.Repository.deserializeArray(_github_model.Repository, raw);
+                                repos = github_model_1.Repository.deserializeArray(github_model_1.Repository, raw);
                                 return _context7.abrupt("return", repos);
 
                             case 5:
@@ -432,7 +417,7 @@ var GithubUtil = exports.GithubUtil = function () {
 
                             case 2:
                                 raw = _context8.sent;
-                                events = _github_model.GithubEvent.deserializeGithubEvent(raw);
+                                events = github_model_1.GithubEvent.deserializeGithubEvent(raw);
                                 return _context8.abrupt("return", events.filter(function (e) {
                                     return e !== null;
                                 }));
@@ -448,4 +433,6 @@ var GithubUtil = exports.GithubUtil = function () {
     }]);
     return GithubUtil;
 }();
+
+exports.GithubUtil = GithubUtil;
 //# sourceMappingURL=github_util.js.map

@@ -1,8 +1,7 @@
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
+/// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 
 var _regenerator = require("babel-runtime/regenerator");
 
@@ -12,52 +11,36 @@ var _promise = require("babel-runtime/core-js/promise");
 
 var _promise2 = _interopRequireDefault(_promise);
 
-exports.addAllAndCommit = addAllAndCommit;
-exports.checkoutGhPagesBranch = checkoutGhPagesBranch;
-exports.push = push;
-exports.publish = publish;
-
-var _util = require("./util");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/lodash/lodash.d.ts" />
-/// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, Promise, generator) {
-    return new Promise(function (resolve, reject) {
-        generator = generator.call(thisArg, _arguments);
-        function cast(value) {
-            return value instanceof Promise && value.constructor === Promise ? value : new Promise(function (resolve) {
-                resolve(value);
-            });
-        }
-        function onfulfill(value) {
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = _promise2.default))(function (resolve, reject) {
+        function fulfilled(value) {
             try {
-                step("next", value);
+                step(generator.next(value));
             } catch (e) {
                 reject(e);
             }
         }
-        function onreject(value) {
+        function rejected(value) {
             try {
-                step("throw", value);
+                step(generator.throw(value));
             } catch (e) {
                 reject(e);
             }
         }
-        function step(verb, value) {
-            var result = generator[verb](value);
-            result.done ? resolve(result.value) : cast(result.value).then(onfulfill, onreject);
+        function step(result) {
+            result.done ? resolve(result.value) : new P(function (resolve) {
+                resolve(result.value);
+            }).then(fulfilled, rejected);
         }
-        step("next", void 0);
+        step((generator = generator.apply(thisArg, _arguments)).next());
     });
 };
 var nodegit = require("nodegit");
-
-function nodegitLog(message) {
-    _util.Log.blue("  Running Git Command: ", message);
-}
+var util_1 = require("./util");
+var HEAD = "HEAD";
+var ORIGIN = "ORIGIN";
 function addAllAndCommit(path, user, commitMessage, initial) {
     return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee() {
         var repo, index, oid, author, committer, head, parent;
@@ -65,7 +48,7 @@ function addAllAndCommit(path, user, commitMessage, initial) {
             while (1) {
                 switch (_context.prev = _context.next) {
                     case 0:
-                        nodegitLog("git commit -a -m \"" + commitMessage + "\"");
+                        util_1.Log.info("git commit -a -m \"" + commitMessage + "\"");
                         _context.next = 3;
                         return nodegit.Repository.open(path);
 
@@ -98,14 +81,14 @@ function addAllAndCommit(path, user, commitMessage, initial) {
                         }
 
                         _context.next = 19;
-                        return repo.createCommit("HEAD", author, committer, commitMessage, oid, []);
+                        return repo.createCommit(HEAD, author, committer, commitMessage, oid, []);
 
                     case 19:
                         return _context.abrupt("return", _context.sent);
 
                     case 20:
                         _context.next = 22;
-                        return nodegit.Reference.nameToId(repo, "HEAD");
+                        return nodegit.Reference.nameToId(repo, HEAD);
 
                     case 22:
                         head = _context.sent;
@@ -115,7 +98,7 @@ function addAllAndCommit(path, user, commitMessage, initial) {
                     case 25:
                         parent = _context.sent;
                         _context.next = 28;
-                        return repo.createCommit("HEAD", author, committer, commitMessage, oid, [parent]);
+                        return repo.createCommit(HEAD, author, committer, commitMessage, oid, [parent]);
 
                     case 28:
                         return _context.abrupt("return", _context.sent);
@@ -128,8 +111,9 @@ function addAllAndCommit(path, user, commitMessage, initial) {
         }, _callee, this);
     }));
 }
+exports.addAllAndCommit = addAllAndCommit;
 function checkoutGhPagesBranch(path, user) {
-    return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee2() {
+    return __awaiter(this, void 0, void 0, _regenerator2.default.mark(function _callee2() {
         var repo, branch, ghPagesBranch, headCommit, branchName;
         return _regenerator2.default.wrap(function _callee2$(_context2) {
             while (1) {
@@ -151,7 +135,7 @@ function checkoutGhPagesBranch(path, user) {
                         _context2.prev = 7;
                         _context2.t0 = _context2["catch"](1);
 
-                        nodegitLog("git init");
+                        util_1.Log.info("git init");
                         _context2.next = 12;
                         return nodegit.Repository.init(path, 0);
 
@@ -203,7 +187,7 @@ function checkoutGhPagesBranch(path, user) {
                         _context2.prev = 36;
                         _context2.t2 = _context2["catch"](30);
 
-                        nodegitLog("git branch gh-pages HEAD");
+                        util_1.Log.info("git branch gh-pages HEAD");
                         _context2.next = 41;
                         return repo.getHeadCommit();
 
@@ -221,7 +205,7 @@ function checkoutGhPagesBranch(path, user) {
                             break;
                         }
 
-                        nodegitLog("git checkout gh-pages");
+                        util_1.Log.info("git checkout gh-pages");
                         _context2.next = 49;
                         return nodegit.Repository.open(path);
 
@@ -250,13 +234,14 @@ function checkoutGhPagesBranch(path, user) {
         }, _callee2, this, [[1, 7], [14, 20], [30, 36]]);
     }));
 }
+exports.checkoutGhPagesBranch = checkoutGhPagesBranch;
 /**
  * branchName: e.g 'gh-pages'
  * remoteName: e.g 'origin'
  * gitUrl: e.g 'git@github.com:1ambda/oh-my-github'
  */
 function push(path, branchName, remoteName, gitUrl) {
-    return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee3() {
+    return __awaiter(this, void 0, void 0, _regenerator2.default.mark(function _callee3() {
         var repo, remote;
         return _regenerator2.default.wrap(function _callee3$(_context3) {
             while (1) {
@@ -281,7 +266,7 @@ function push(path, branchName, remoteName, gitUrl) {
                         _context3.prev = 10;
                         _context3.t0 = _context3["catch"](4);
 
-                        nodegitLog("git remote add " + remoteName + " " + nodegit.rl);
+                        util_1.Log.info("git remote add " + remoteName + " " + gitUrl);
                         _context3.next = 15;
                         return nodegit.Remote.create(repo, remoteName, gitUrl);
 
@@ -289,7 +274,7 @@ function push(path, branchName, remoteName, gitUrl) {
                         remote = _context3.sent;
 
                     case 16:
-                        nodegitLog("git push origin " + branchName + ":" + branchName + " --force");
+                        util_1.Log.info("git push " + ORIGIN + " " + branchName + ":" + branchName + " --force");
                         _context3.next = 19;
                         return remote.push(["+refs/heads/" + branchName + ":refs/heads/" + branchName], { callbacks: {
                                 credentials: function credentials(url, userName) {
@@ -308,8 +293,9 @@ function push(path, branchName, remoteName, gitUrl) {
         }, _callee3, this, [[4, 10]]);
     }));
 }
+exports.push = push;
 function publish(user, repoName) {
-    return __awaiter(this, void 0, _promise2.default, _regenerator2.default.mark(function _callee4() {
+    return __awaiter(this, void 0, void 0, _regenerator2.default.mark(function _callee4() {
         var path, branchName, remoteName, gitUrl, commitMessage;
         return _regenerator2.default.wrap(function _callee4$(_context4) {
             while (1) {
@@ -339,4 +325,5 @@ function publish(user, repoName) {
         }, _callee4, this);
     }));
 }
+exports.publish = publish;
 //# sourceMappingURL=nodegit_util.js.map

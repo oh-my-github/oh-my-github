@@ -2,11 +2,6 @@
 /// <reference path="../../typings/lodash/lodash.d.ts" />
 "use strict";
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.GithubCreateEvent = exports.GithubCreateEventPayload = exports.GithubForkEvent = exports.GithubForkEventPayload = exports.GithubWatchEvent = exports.GithubWatchEventPayload = exports.GithubReleaseEvent = exports.GithubReleaseEventPayload = exports.GithubIssueCommentEvent = exports.GithubIssueCommentEventPayload = exports.GithubIssuesEvent = exports.GithubIssuesEventPayload = exports.GithubPullRequestEvent = exports.GithubPullRequestEventPayload = exports.GithubPushEvent = exports.GithubPushEventPayload = exports.GithubEvent = exports.LanguageSummary = exports.RepositorySummary = exports.Repository = exports.LanguageInformation = exports.Language = exports.GithubUser = undefined;
-
 var _set = require("babel-runtime/core-js/set");
 
 var _set2 = _interopRequireDefault(_set);
@@ -47,16 +42,6 @@ var _getOwnPropertyDescriptor = require("babel-runtime/core-js/object/get-own-pr
 
 var _getOwnPropertyDescriptor2 = _interopRequireDefault(_getOwnPropertyDescriptor);
 
-var _serialize = require("./serialize");
-
-var _util = require("./util");
-
-var _lodash = require("lodash");
-
-var _ = _interopRequireWildcard(_lodash);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var __decorate = undefined && undefined.__decorate || function (decorators, target, key, desc) {
@@ -67,38 +52,12 @@ var __decorate = undefined && undefined.__decorate || function (decorators, targ
         if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     }return c > 3 && r && (0, _defineProperty2.default)(target, key, r), r;
 };
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, Promise, generator) {
-    return new Promise(function (resolve, reject) {
-        generator = generator.call(thisArg, _arguments);
-        function cast(value) {
-            return value instanceof Promise && value.constructor === Promise ? value : new Promise(function (resolve) {
-                resolve(value);
-            });
-        }
-        function onfulfill(value) {
-            try {
-                step("next", value);
-            } catch (e) {
-                reject(e);
-            }
-        }
-        function onreject(value) {
-            try {
-                step("throw", value);
-            } catch (e) {
-                reject(e);
-            }
-        }
-        function step(verb, value) {
-            var result = generator[verb](value);
-            result.done ? resolve(result.value) : cast(result.value).then(onfulfill, onreject);
-        }
-        step("next", void 0);
-    });
-};
+var serialize_1 = require("./serialize");
+var util_1 = require("./util");
+var _ = require("lodash");
 
-var GithubUser = exports.GithubUser = function (_Deserializable) {
-    (0, _inherits3.default)(GithubUser, _Deserializable);
+var GithubUser = function (_serialize_1$Deserial) {
+    (0, _inherits3.default)(GithubUser, _serialize_1$Deserial);
 
     function GithubUser() {
         var _Object$getPrototypeO;
@@ -131,28 +90,28 @@ var GithubUser = exports.GithubUser = function (_Deserializable) {
     }
 
     return GithubUser;
-}(_serialize.Deserializable);
+}(serialize_1.Deserializable);
 
-__decorate([
-/* might be null, if repository is just created */_serialize.deserialize], GithubUser.prototype, "login", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "type", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "name", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "avatar_url", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "company", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "blog", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "location", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "email", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "hireable", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "following", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "followers", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "public_repos", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "public_gists", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "created_at", void 0);
-__decorate([_serialize.deserialize], GithubUser.prototype, "updated_at", void 0);
-__decorate([(0, _serialize.deserializeAs)("html_url")], GithubUser.prototype, "url", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "login", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "type", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "name", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "avatar_url", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "company", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "blog", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "location", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "email", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "hireable", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "following", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "followers", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "public_repos", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "public_gists", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "created_at", void 0);
+__decorate([serialize_1.deserialize], GithubUser.prototype, "updated_at", void 0);
+__decorate([serialize_1.deserializeAs("html_url")], GithubUser.prototype, "url", void 0);
+exports.GithubUser = GithubUser;
 
-var Language = exports.Language = function (_Deserializable2) {
-    (0, _inherits3.default)(Language, _Deserializable2);
+var Language = function (_serialize_1$Deserial2) {
+    (0, _inherits3.default)(Language, _serialize_1$Deserial2);
 
     function Language() {
         var _Object$getPrototypeO2;
@@ -171,13 +130,14 @@ var Language = exports.Language = function (_Deserializable2) {
     }
 
     return Language;
-}(_serialize.Deserializable);
+}(serialize_1.Deserializable);
 
-__decorate([_serialize.deserialize], Language.prototype, "name", void 0);
-__decorate([_serialize.deserialize], Language.prototype, "line", void 0);
+__decorate([serialize_1.deserialize], Language.prototype, "name", void 0);
+__decorate([serialize_1.deserialize], Language.prototype, "line", void 0);
+exports.Language = Language;
 
-var LanguageInformation = exports.LanguageInformation = function (_Deserializable3) {
-    (0, _inherits3.default)(LanguageInformation, _Deserializable3);
+var LanguageInformation = function (_serialize_1$Deserial3) {
+    (0, _inherits3.default)(LanguageInformation, _serialize_1$Deserial3);
 
     function LanguageInformation() {
         (0, _classCallCheck3.default)(this, LanguageInformation);
@@ -210,15 +170,16 @@ var LanguageInformation = exports.LanguageInformation = function (_Deserializabl
         }
     }]);
     return LanguageInformation;
-}(_serialize.Deserializable);
+}(serialize_1.Deserializable);
 
-__decorate([_serialize.deserialize], LanguageInformation.prototype, "owner", void 0);
-__decorate([_serialize.deserialize], LanguageInformation.prototype, "repo_name", void 0);
-__decorate([_serialize.deserialize], LanguageInformation.prototype, "url", void 0);
-__decorate([(0, _serialize.deserializeAs)(Language)], LanguageInformation.prototype, "languages", void 0);
+__decorate([serialize_1.deserialize], LanguageInformation.prototype, "owner", void 0);
+__decorate([serialize_1.deserialize], LanguageInformation.prototype, "repo_name", void 0);
+__decorate([serialize_1.deserialize], LanguageInformation.prototype, "url", void 0);
+__decorate([serialize_1.deserializeAs(Language)], LanguageInformation.prototype, "languages", void 0);
+exports.LanguageInformation = LanguageInformation;
 
-var Repository = exports.Repository = function (_Deserializable4) {
-    (0, _inherits3.default)(Repository, _Deserializable4);
+var Repository = function (_serialize_1$Deserial4) {
+    (0, _inherits3.default)(Repository, _serialize_1$Deserial4);
 
     function Repository() {
         (0, _classCallCheck3.default)(this, Repository);
@@ -226,24 +187,25 @@ var Repository = exports.Repository = function (_Deserializable4) {
     }
 
     return Repository;
-}(_serialize.Deserializable);
+}(serialize_1.Deserializable);
 
-__decorate([_serialize.deserialize], Repository.prototype, "name", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "description", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "full_name", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "fork", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "forks_count", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "stargazers_count", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "watchers_count", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "language", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "open_issues_count", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "default_branch", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "created_at", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "updated_at", void 0);
-__decorate([_serialize.deserialize], Repository.prototype, "pushed_at", void 0);
-__decorate([(0, _serialize.deserializeAs)("html_url")], Repository.prototype, "url", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "name", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "description", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "full_name", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "fork", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "forks_count", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "stargazers_count", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "watchers_count", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "language", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "open_issues_count", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "default_branch", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "created_at", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "updated_at", void 0);
+__decorate([serialize_1.deserialize], Repository.prototype, "pushed_at", void 0);
+__decorate([serialize_1.deserializeAs("html_url")], Repository.prototype, "url", void 0);
+exports.Repository = Repository;
 
-var RepositorySummary = exports.RepositorySummary = function RepositorySummary() {
+var RepositorySummary = function RepositorySummary() {
     (0, _classCallCheck3.default)(this, RepositorySummary);
 
     this.repository_names = new Array();
@@ -253,7 +215,9 @@ var RepositorySummary = exports.RepositorySummary = function RepositorySummary()
     this.watchers_count = 0;
 };
 
-var LanguageSummary = exports.LanguageSummary = function () {
+exports.RepositorySummary = RepositorySummary;
+
+var LanguageSummary = function () {
     function LanguageSummary(owner, langauge_lines) {
         (0, _classCallCheck3.default)(this, LanguageSummary);
 
@@ -279,8 +243,10 @@ var LanguageSummary = exports.LanguageSummary = function () {
     return LanguageSummary;
 }();
 
-var GithubEvent = exports.GithubEvent = function (_Deserializable5) {
-    (0, _inherits3.default)(GithubEvent, _Deserializable5);
+exports.LanguageSummary = LanguageSummary;
+
+var GithubEvent = function (_serialize_1$Deserial5) {
+    (0, _inherits3.default)(GithubEvent, _serialize_1$Deserial5);
 
     function GithubEvent() {
         (0, _classCallCheck3.default)(this, GithubEvent);
@@ -299,9 +265,9 @@ var GithubEvent = exports.GithubEvent = function (_Deserializable5) {
         key: "mergeByEventId",
         value: function mergeByEventId(es1, es2) {
             if (_.isEmpty(es1) && _.isEmpty(es2)) return new Array();
-            var events1 = _util.Util.copyObject(es1);
-            var events2 = _util.Util.copyObject(es2);
-            var uniq = _util.Util.unionBy(events1, events2, function (event) {
+            var events1 = util_1.Util.copyObject(es1);
+            var events2 = util_1.Util.copyObject(es2);
+            var uniq = util_1.Util.unionBy(events1, events2, function (event) {
                 return event.event_id;
             });
             return uniq;
@@ -339,7 +305,7 @@ var GithubEvent = exports.GithubEvent = function (_Deserializable5) {
             // TODO print profile
             if (droppedEvents.length > 0) {
                 var uniq = (0, _from2.default)(new _set2.default(droppedEvents)).join(", ");
-                _util.Log.warn("dropped events (" + droppedEvents.length + "): " + uniq);
+                util_1.Log.warn("dropped events (" + droppedEvents.length + "): " + uniq);
             }
             return deserializedEvents.filter(function (e) {
                 return e !== null;
@@ -347,13 +313,14 @@ var GithubEvent = exports.GithubEvent = function (_Deserializable5) {
         }
     }]);
     return GithubEvent;
-}(_serialize.Deserializable);
+}(serialize_1.Deserializable);
 
-__decorate([(0, _serialize.deserializeAs)("id")], GithubEvent.prototype, "event_id", void 0);
-__decorate([(0, _serialize.deserializeAs)("type")], GithubEvent.prototype, "type", void 0);
-__decorate([(0, _serialize.deserializeAs)("created_at")], GithubEvent.prototype, "created_at", void 0);
+__decorate([serialize_1.deserializeAs("id")], GithubEvent.prototype, "event_id", void 0);
+__decorate([serialize_1.deserializeAs("type")], GithubEvent.prototype, "type", void 0);
+__decorate([serialize_1.deserializeAs("created_at")], GithubEvent.prototype, "created_at", void 0);
+exports.GithubEvent = GithubEvent;
 
-var GithubPushEventPayload = exports.GithubPushEventPayload = function () {
+var GithubPushEventPayload = function () {
     function GithubPushEventPayload() {
         (0, _classCallCheck3.default)(this, GithubPushEventPayload);
     }
@@ -371,13 +338,14 @@ var GithubPushEventPayload = exports.GithubPushEventPayload = function () {
 }();
 
 GithubPushEventPayload.COMMIT_URI_PREFIX = "https://github.com/oh-my-github/generator/commit/";
-__decorate([(0, _serialize.deserializeAs)("push_id")], GithubPushEventPayload.prototype, "push_id", void 0);
-__decorate([(0, _serialize.deserializeAs)("size")], GithubPushEventPayload.prototype, "size", void 0);
-__decorate([(0, _serialize.deserializeAs)("distinct_size")], GithubPushEventPayload.prototype, "distinct_size", void 0);
-__decorate([(0, _serialize.deserializeAs)("ref")], GithubPushEventPayload.prototype, "ref", void 0);
-__decorate([(0, _serialize.deserializeAs)("head")], GithubPushEventPayload.prototype, "head", void 0);
-__decorate([(0, _serialize.deserializeAs)("before")], GithubPushEventPayload.prototype, "before", void 0);
-var GithubPushEvent = exports.GithubPushEvent = function (_GithubEvent) {
+__decorate([serialize_1.deserializeAs("push_id")], GithubPushEventPayload.prototype, "push_id", void 0);
+__decorate([serialize_1.deserializeAs("size")], GithubPushEventPayload.prototype, "size", void 0);
+__decorate([serialize_1.deserializeAs("distinct_size")], GithubPushEventPayload.prototype, "distinct_size", void 0);
+__decorate([serialize_1.deserializeAs("ref")], GithubPushEventPayload.prototype, "ref", void 0);
+__decorate([serialize_1.deserializeAs("head")], GithubPushEventPayload.prototype, "head", void 0);
+__decorate([serialize_1.deserializeAs("before")], GithubPushEventPayload.prototype, "before", void 0);
+exports.GithubPushEventPayload = GithubPushEventPayload;
+var GithubPushEvent = function (_GithubEvent) {
     (0, _inherits3.default)(GithubPushEvent, _GithubEvent);
 
     function GithubPushEvent() {
@@ -388,10 +356,11 @@ var GithubPushEvent = exports.GithubPushEvent = function (_GithubEvent) {
     return GithubPushEvent;
 }(GithubEvent);
 GithubPushEvent.EVENT_TYPE = "PushEvent";
-__decorate([(0, _serialize.deserializeAs)(GithubPushEventPayload, "payload")], GithubPushEvent.prototype, "payload", void 0);
-exports.GithubPushEvent = GithubPushEvent = __decorate([(0, _serialize.inheritSerialization)(GithubEvent)], GithubPushEvent);
+__decorate([serialize_1.deserializeAs(GithubPushEventPayload, "payload")], GithubPushEvent.prototype, "payload", void 0);
+GithubPushEvent = __decorate([serialize_1.inheritSerialization(GithubEvent)], GithubPushEvent);
+exports.GithubPushEvent = GithubPushEvent;
 
-var GithubPullRequestEventPayload = exports.GithubPullRequestEventPayload = function () {
+var GithubPullRequestEventPayload = function () {
     function GithubPullRequestEventPayload() {
         (0, _classCallCheck3.default)(this, GithubPullRequestEventPayload);
     }
@@ -423,9 +392,10 @@ GithubPullRequestEventPayload.ACTION_VALUE_UNLABELED = "unlabeled";
 GithubPullRequestEventPayload.ACTION_VALUE_OPENED = "opened";
 GithubPullRequestEventPayload.ACTION_VALUE_CLOSED = "closed";
 GithubPullRequestEventPayload.ACTION_VALUE_SYNCHRONIZED = "synchronize";
-__decorate([(0, _serialize.deserializeAs)("action")], GithubPullRequestEventPayload.prototype, "action", void 0);
-__decorate([(0, _serialize.deserializeAs)("number")], GithubPullRequestEventPayload.prototype, "number", void 0);
-var GithubPullRequestEvent = exports.GithubPullRequestEvent = function (_GithubEvent2) {
+__decorate([serialize_1.deserializeAs("action")], GithubPullRequestEventPayload.prototype, "action", void 0);
+__decorate([serialize_1.deserializeAs("number")], GithubPullRequestEventPayload.prototype, "number", void 0);
+exports.GithubPullRequestEventPayload = GithubPullRequestEventPayload;
+var GithubPullRequestEvent = function (_GithubEvent2) {
     (0, _inherits3.default)(GithubPullRequestEvent, _GithubEvent2);
 
     function GithubPullRequestEvent() {
@@ -436,10 +406,11 @@ var GithubPullRequestEvent = exports.GithubPullRequestEvent = function (_GithubE
     return GithubPullRequestEvent;
 }(GithubEvent);
 GithubPullRequestEvent.EVENT_TYPE = "PullRequestEvent";
-__decorate([(0, _serialize.deserializeAs)(GithubPullRequestEventPayload, "payload")], GithubPullRequestEvent.prototype, "payload", void 0);
-exports.GithubPullRequestEvent = GithubPullRequestEvent = __decorate([(0, _serialize.inheritSerialization)(GithubEvent)], GithubPullRequestEvent);
+__decorate([serialize_1.deserializeAs(GithubPullRequestEventPayload, "payload")], GithubPullRequestEvent.prototype, "payload", void 0);
+GithubPullRequestEvent = __decorate([serialize_1.inheritSerialization(GithubEvent)], GithubPullRequestEvent);
+exports.GithubPullRequestEvent = GithubPullRequestEvent;
 
-var GithubIssuesEventPayload = exports.GithubIssuesEventPayload = function () {
+var GithubIssuesEventPayload = function () {
     function GithubIssuesEventPayload() {
         (0, _classCallCheck3.default)(this, GithubIssuesEventPayload);
     }
@@ -467,8 +438,9 @@ GithubIssuesEventPayload.ACTION_VALUE_UNLABELED = "unlabeled";
 GithubIssuesEventPayload.ACTION_VALUE_OPENED = "opened";
 GithubIssuesEventPayload.ACTION_VALUE_CLOSED = "closed";
 GithubIssuesEventPayload.ACTION_VALUE_REOPENED = "reopened";
-__decorate([(0, _serialize.deserializeAs)("action")], GithubIssuesEventPayload.prototype, "action", void 0);
-var GithubIssuesEvent = exports.GithubIssuesEvent = function (_GithubEvent3) {
+__decorate([serialize_1.deserializeAs("action")], GithubIssuesEventPayload.prototype, "action", void 0);
+exports.GithubIssuesEventPayload = GithubIssuesEventPayload;
+var GithubIssuesEvent = function (_GithubEvent3) {
     (0, _inherits3.default)(GithubIssuesEvent, _GithubEvent3);
 
     function GithubIssuesEvent() {
@@ -479,10 +451,11 @@ var GithubIssuesEvent = exports.GithubIssuesEvent = function (_GithubEvent3) {
     return GithubIssuesEvent;
 }(GithubEvent);
 GithubIssuesEvent.EVENT_TYPE = "IssuesEvent";
-__decorate([(0, _serialize.deserializeAs)(GithubIssuesEventPayload, "payload")], GithubIssuesEvent.prototype, "payload", void 0);
-exports.GithubIssuesEvent = GithubIssuesEvent = __decorate([(0, _serialize.inheritSerialization)(GithubEvent)], GithubIssuesEvent);
+__decorate([serialize_1.deserializeAs(GithubIssuesEventPayload, "payload")], GithubIssuesEvent.prototype, "payload", void 0);
+GithubIssuesEvent = __decorate([serialize_1.inheritSerialization(GithubEvent)], GithubIssuesEvent);
+exports.GithubIssuesEvent = GithubIssuesEvent;
 
-var GithubIssueCommentEventPayload = exports.GithubIssueCommentEventPayload = function () {
+var GithubIssueCommentEventPayload = function () {
     function GithubIssueCommentEventPayload() {
         (0, _classCallCheck3.default)(this, GithubIssueCommentEventPayload);
     }
@@ -507,8 +480,9 @@ var GithubIssueCommentEventPayload = exports.GithubIssueCommentEventPayload = fu
 }();
 
 GithubIssueCommentEventPayload.ACTION_TYPE_CREATED = "created";
-__decorate([(0, _serialize.deserializeAs)("action")], GithubIssueCommentEventPayload.prototype, "action", void 0);
-var GithubIssueCommentEvent = exports.GithubIssueCommentEvent = function (_GithubEvent4) {
+__decorate([serialize_1.deserializeAs("action")], GithubIssueCommentEventPayload.prototype, "action", void 0);
+exports.GithubIssueCommentEventPayload = GithubIssueCommentEventPayload;
+var GithubIssueCommentEvent = function (_GithubEvent4) {
     (0, _inherits3.default)(GithubIssueCommentEvent, _GithubEvent4);
 
     function GithubIssueCommentEvent() {
@@ -519,10 +493,11 @@ var GithubIssueCommentEvent = exports.GithubIssueCommentEvent = function (_Githu
     return GithubIssueCommentEvent;
 }(GithubEvent);
 GithubIssueCommentEvent.EVENT_TYPE = "IssueCommentEvent";
-__decorate([(0, _serialize.deserializeAs)(GithubIssueCommentEventPayload, "payload")], GithubIssueCommentEvent.prototype, "payload", void 0);
-exports.GithubIssueCommentEvent = GithubIssueCommentEvent = __decorate([(0, _serialize.inheritSerialization)(GithubEvent)], GithubIssueCommentEvent);
+__decorate([serialize_1.deserializeAs(GithubIssueCommentEventPayload, "payload")], GithubIssueCommentEvent.prototype, "payload", void 0);
+GithubIssueCommentEvent = __decorate([serialize_1.inheritSerialization(GithubEvent)], GithubIssueCommentEvent);
+exports.GithubIssueCommentEvent = GithubIssueCommentEvent;
 
-var GithubReleaseEventPayload = exports.GithubReleaseEventPayload = function () {
+var GithubReleaseEventPayload = function () {
     function GithubReleaseEventPayload() {
         (0, _classCallCheck3.default)(this, GithubReleaseEventPayload);
     }
@@ -546,8 +521,9 @@ var GithubReleaseEventPayload = exports.GithubReleaseEventPayload = function () 
 }();
 
 GithubReleaseEventPayload.ACTION_TYPE_PUBLISHED = "published";
-__decorate([(0, _serialize.deserializeAs)("action")], GithubReleaseEventPayload.prototype, "action", void 0);
-var GithubReleaseEvent = exports.GithubReleaseEvent = function (_GithubEvent5) {
+__decorate([serialize_1.deserializeAs("action")], GithubReleaseEventPayload.prototype, "action", void 0);
+exports.GithubReleaseEventPayload = GithubReleaseEventPayload;
+var GithubReleaseEvent = function (_GithubEvent5) {
     (0, _inherits3.default)(GithubReleaseEvent, _GithubEvent5);
 
     function GithubReleaseEvent() {
@@ -558,16 +534,18 @@ var GithubReleaseEvent = exports.GithubReleaseEvent = function (_GithubEvent5) {
     return GithubReleaseEvent;
 }(GithubEvent);
 GithubReleaseEvent.EVENT_TYPE = "ReleaseEvent";
-__decorate([(0, _serialize.deserializeAs)(GithubReleaseEventPayload, "payload")], GithubReleaseEvent.prototype, "payload", void 0);
-exports.GithubReleaseEvent = GithubReleaseEvent = __decorate([(0, _serialize.inheritSerialization)(GithubEvent)], GithubReleaseEvent);
+__decorate([serialize_1.deserializeAs(GithubReleaseEventPayload, "payload")], GithubReleaseEvent.prototype, "payload", void 0);
+GithubReleaseEvent = __decorate([serialize_1.inheritSerialization(GithubEvent)], GithubReleaseEvent);
+exports.GithubReleaseEvent = GithubReleaseEvent;
 
-var GithubWatchEventPayload = exports.GithubWatchEventPayload = function GithubWatchEventPayload() {
+var GithubWatchEventPayload = function GithubWatchEventPayload() {
     (0, _classCallCheck3.default)(this, GithubWatchEventPayload);
 };
 
 GithubWatchEventPayload.ACTION_TYPE_STARTED = "started";
-__decorate([(0, _serialize.deserializeAs)("action")], GithubWatchEventPayload.prototype, "action", void 0);
-var GithubWatchEvent = exports.GithubWatchEvent = function (_GithubEvent6) {
+__decorate([serialize_1.deserializeAs("action")], GithubWatchEventPayload.prototype, "action", void 0);
+exports.GithubWatchEventPayload = GithubWatchEventPayload;
+var GithubWatchEvent = function (_GithubEvent6) {
     (0, _inherits3.default)(GithubWatchEvent, _GithubEvent6);
 
     function GithubWatchEvent() {
@@ -578,10 +556,11 @@ var GithubWatchEvent = exports.GithubWatchEvent = function (_GithubEvent6) {
     return GithubWatchEvent;
 }(GithubEvent);
 GithubWatchEvent.EVENT_TYPE = "WatchEvent";
-__decorate([(0, _serialize.deserializeAs)(GithubWatchEventPayload, "payload")], GithubWatchEvent.prototype, "payload", void 0);
-exports.GithubWatchEvent = GithubWatchEvent = __decorate([(0, _serialize.inheritSerialization)(GithubEvent)], GithubWatchEvent);
+__decorate([serialize_1.deserializeAs(GithubWatchEventPayload, "payload")], GithubWatchEvent.prototype, "payload", void 0);
+GithubWatchEvent = __decorate([serialize_1.inheritSerialization(GithubEvent)], GithubWatchEvent);
+exports.GithubWatchEvent = GithubWatchEvent;
 
-var GithubForkEventPayload = exports.GithubForkEventPayload = function () {
+var GithubForkEventPayload = function () {
     function GithubForkEventPayload() {
         (0, _classCallCheck3.default)(this, GithubForkEventPayload);
     }
@@ -603,8 +582,9 @@ var GithubForkEventPayload = exports.GithubForkEventPayload = function () {
     return GithubForkEventPayload;
 }();
 
-__decorate([(0, _serialize.deserializeAs)("action")], GithubForkEventPayload.prototype, "action", void 0);
-var GithubForkEvent = exports.GithubForkEvent = function (_GithubEvent7) {
+__decorate([serialize_1.deserializeAs("action")], GithubForkEventPayload.prototype, "action", void 0);
+exports.GithubForkEventPayload = GithubForkEventPayload;
+var GithubForkEvent = function (_GithubEvent7) {
     (0, _inherits3.default)(GithubForkEvent, _GithubEvent7);
 
     function GithubForkEvent() {
@@ -615,22 +595,25 @@ var GithubForkEvent = exports.GithubForkEvent = function (_GithubEvent7) {
     return GithubForkEvent;
 }(GithubEvent);
 GithubForkEvent.EVENT_TYPE = "ForkEvent";
-__decorate([(0, _serialize.deserializeAs)(GithubForkEventPayload, "payload")], GithubForkEvent.prototype, "payload", void 0);
-exports.GithubForkEvent = GithubForkEvent = __decorate([(0, _serialize.inheritSerialization)(GithubEvent)], GithubForkEvent);
+__decorate([serialize_1.deserializeAs(GithubForkEventPayload, "payload")], GithubForkEvent.prototype, "payload", void 0);
+GithubForkEvent = __decorate([serialize_1.inheritSerialization(GithubEvent)], GithubForkEvent);
+exports.GithubForkEvent = GithubForkEvent;
 
-var GithubCreateEventPayload = exports.GithubCreateEventPayload = function GithubCreateEventPayload() {
+var GithubCreateEventPayload = function GithubCreateEventPayload() {
     (0, _classCallCheck3.default)(this, GithubCreateEventPayload);
 };
 
 GithubCreateEventPayload.REF_TYPE_REPOSITORY = "repository";
 GithubCreateEventPayload.REF_TYPE_BRANCH = "branch";
 GithubCreateEventPayload.REF_TYPE_TAG = "tag";
-__decorate([_serialize.deserialize], GithubCreateEventPayload.prototype, "ref", void 0);
-__decorate([_serialize.deserialize], GithubCreateEventPayload.prototype, "ref_type", void 0);
-__decorate([_serialize.deserialize], GithubCreateEventPayload.prototype, "master_branch", void 0);
-__decorate([_serialize.deserialize], GithubCreateEventPayload.prototype, "description", void 0);
-__decorate([_serialize.deserialize], GithubCreateEventPayload.prototype, "pusher_type", void 0);
-var GithubCreateEvent = exports.GithubCreateEvent = function (_GithubEvent8) {
+__decorate([serialize_1.deserialize], GithubCreateEventPayload.prototype, "ref", void 0);
+__decorate([
+/* might be null, if repository is just created */serialize_1.deserialize], GithubCreateEventPayload.prototype, "ref_type", void 0);
+__decorate([serialize_1.deserialize], GithubCreateEventPayload.prototype, "master_branch", void 0);
+__decorate([serialize_1.deserialize], GithubCreateEventPayload.prototype, "description", void 0);
+__decorate([serialize_1.deserialize], GithubCreateEventPayload.prototype, "pusher_type", void 0);
+exports.GithubCreateEventPayload = GithubCreateEventPayload;
+var GithubCreateEvent = function (_GithubEvent8) {
     (0, _inherits3.default)(GithubCreateEvent, _GithubEvent8);
 
     function GithubCreateEvent() {
@@ -641,6 +624,7 @@ var GithubCreateEvent = exports.GithubCreateEvent = function (_GithubEvent8) {
     return GithubCreateEvent;
 }(GithubEvent);
 GithubCreateEvent.EVENT_TYPE = "CreateEvent";
-__decorate([(0, _serialize.deserializeAs)(GithubCreateEventPayload, "payload")], GithubCreateEvent.prototype, "payload", void 0);
-exports.GithubCreateEvent = GithubCreateEvent = __decorate([(0, _serialize.inheritSerialization)(GithubEvent)], GithubCreateEvent);
+__decorate([serialize_1.deserializeAs(GithubCreateEventPayload, "payload")], GithubCreateEvent.prototype, "payload", void 0);
+GithubCreateEvent = __decorate([serialize_1.inheritSerialization(GithubEvent)], GithubCreateEvent);
+exports.GithubCreateEvent = GithubCreateEvent;
 //# sourceMappingURL=github_model.js.map

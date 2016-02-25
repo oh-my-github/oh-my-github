@@ -11,9 +11,12 @@ Create your Github profile in 5 minute
 
 ## Usage
 
+### Prerequisites
+
 ### 1. Install
 
 - NodeJS 5.0.0+
+- `libstdc`, `g++` is required for **Linux**, See, [Linux Installation Guide](https://github.com/oh-my-github/oh-my-github/wiki/Installation-Guide-for-Linux)
 
 ```
 $ npm install -g oh-my-github@latest
@@ -23,36 +26,33 @@ $ npm install -g oh-my-github@latest
 
 You should create an access token to send 50+ github API requests
 
-- *oh-my-github* does **not** require any write permission. It uses public Github API only (e.g [Activity API](https://developer.github.com/v3/activity/))
 - [Link: Creating Access Token](https://github.com/settings/tokens/new)
+- *oh-my-github* does **not** require any write permission. It uses read only Github APIs
 
-*oh-my-github* will generate `oh-my-github.json` in your current working directory. For example, 
-
-```
-$ omg init [GITHUB_ID] oh-my-github       # (e.g) omg init 1ambda oh-my-github
-$ omg generate [GITHUB_TOKEN]             # (e.g) omg generate 394fbad49191aca
-$ omg preview
-```
-
-### 3. Publish to gh-pages
+### 3. Prepare a viewer
 
 You can publish your `oh-my-github.json` using [Github gh-pages](https://pages.github.com/) with [viewers](https://www.npmjs.com/search?q=oh-my-github%2Cviewer) like the [demo](https://1ambda.github.io/oh-my-github)
 
-- The repository name must be **oh-my-github** (e.g. *1ambda/oh-my-github* )
-- You can create new repository easily ([Link: New Repository](https://github.com/new))
-
-For example, with [Default Viewer](https://github.com/oh-my-github/viewer-default)
+- Create a repository to be published. ([Link: New Repository](https://github.com/new)). The repository name must be **oh-my-github** (e.g. *1ambda/oh-my-github* )
+- You can create your own viewers (In this tutorial, we will use [Default Viewer](https://github.com/oh-my-github/viewer-default))
 
 ```
-$ git clone https://github.com/oh-my-github/viewer-default.git oh-my-github && cd oh-my-github
+$ git clone git@github.com:oh-my-github/viewer-default.git oh-my-github
+$ cd oh-my-github
 $ rm -rf .git
+```
+
+### 4. Publish to gh-pages
+
+```
+$ cd oh-my-github
 
 $ omg init [GITHUB_ID] oh-my-github       # (e.g) omg init 1ambda oh-my-github
 $ omg generate [GITHUB_TOKEN]             # (e.g) omg generate 394fbad49191aca
 $ omg publish
 ```
 
-### 4. Update existing profiles
+### 5. Update existing profiles
 
 ```
 $ cd oh-my-github                         # where `oh-my-github.json` exists

@@ -1,9 +1,7 @@
+/// <reference path="../../typings/node/node.d.ts" />
+/// <reference path="../../typings/lodash/lodash.d.ts" />
+/// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-exports.FileUtil = exports.BS_OPTION = exports.FILE_NAME_PROFILE_JSON = exports.FILE_PATH_PROFILE_TEMPLATE_JSON = exports.GENERATOR_VERSION = exports.CONFIG = exports.PROJECT_DIR = undefined;
 
 var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
 
@@ -13,32 +11,24 @@ var _createClass2 = require("babel-runtime/helpers/createClass");
 
 var _createClass3 = _interopRequireDefault(_createClass2);
 
-var _fsExtra = require("fs-extra");
-
-var fse = _interopRequireWildcard(_fsExtra);
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var path = require("path"); /// <reference path="../../typings/node/node.d.ts" />
-/// <reference path="../../typings/lodash/lodash.d.ts" />
-/// <reference path="../../typings/fs-extra/fs-extra.d.ts" />
-
+var fse = require("fs-extra");
+var path = require("path");
 var projectDir = require('app-root-path').path;
 /** since globally installed version runs on `oh-my-github/bin` we should remove `/bin` */
 if (projectDir.endsWith("/bin")) projectDir = projectDir.substring(0, projectDir.length - 4);
-var PROJECT_DIR = exports.PROJECT_DIR = projectDir;
-var CONFIG = exports.CONFIG = require(path.join(PROJECT_DIR, "config.js"));
-var GENERATOR_VERSION = exports.GENERATOR_VERSION = require(path.join(PROJECT_DIR, CONFIG.FILE.PACKAGE_JSON)).version;
-var FILE_PATH_PROFILE_TEMPLATE_JSON = exports.FILE_PATH_PROFILE_TEMPLATE_JSON = path.join(PROJECT_DIR, CONFIG.FILE.PROFILE_TEMPLATE_JSON);
-var FILE_NAME_PROFILE_JSON = exports.FILE_NAME_PROFILE_JSON = CONFIG.FILE.PROFILE_JSON;
-var BS_OPTION = exports.BS_OPTION = { server: {
-        baseDir: [PROJECT_DIR + "/" + CONFIG.DIR.DIST_VIEWER],
+exports.PROJECT_DIR = projectDir;
+exports.CONFIG = require(path.join(exports.PROJECT_DIR, "config.js"));
+exports.GENERATOR_VERSION = require(path.join(exports.PROJECT_DIR, exports.CONFIG.FILE.PACKAGE_JSON)).version;
+exports.FILE_PATH_PROFILE_TEMPLATE_JSON = path.join(exports.PROJECT_DIR, exports.CONFIG.FILE.PROFILE_TEMPLATE_JSON);
+exports.FILE_NAME_PROFILE_JSON = exports.CONFIG.FILE.PROFILE_JSON;
+exports.BS_OPTION = { server: {
+        baseDir: [exports.PROJECT_DIR + "/" + exports.CONFIG.DIR.DIST_VIEWER],
         routes: { "/oh-my-github": process.cwd() }
     } };
 
-var FileUtil = exports.FileUtil = function () {
+var FileUtil = function () {
     function FileUtil() {
         (0, _classCallCheck3.default)(this, FileUtil);
     }
@@ -73,7 +63,7 @@ var FileUtil = exports.FileUtil = function () {
     }, {
         key: "getProfilePath",
         value: function getProfilePath() {
-            return FileUtil.combinePathWithCwd(FILE_NAME_PROFILE_JSON);
+            return FileUtil.combinePathWithCwd(exports.FILE_NAME_PROFILE_JSON);
         }
     }, {
         key: "combinePathWithCwd",
@@ -83,4 +73,6 @@ var FileUtil = exports.FileUtil = function () {
     }]);
     return FileUtil;
 }();
+
+exports.FileUtil = FileUtil;
 //# sourceMappingURL=file_util.js.map
