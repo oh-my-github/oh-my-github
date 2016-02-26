@@ -34,10 +34,10 @@ You should create an access token to send 50+ github API requests
 You can publish your `oh-my-github.json` using [Github gh-pages](https://pages.github.com/) with [viewers](https://www.npmjs.com/search?q=oh-my-github%2Cviewer) like the [demo](https://1ambda.github.io/oh-my-github)
 
 - Create a repository to be published. ([Link: New Repository](https://github.com/new)). The repository name must be **oh-my-github** (e.g. *1ambda/oh-my-github* )
-- You can create your own viewers (In this tutorial, we will use [Default Viewer](https://github.com/oh-my-github/viewer-default))
+- You can create your own viewers (In this tutorial, we will use [Default Viewer](https://github.com/oh-my-github/viewer))
 
 ```
-$ git clone git@github.com:oh-my-github/viewer-default.git oh-my-github
+$ git clone git@github.com:oh-my-github/viewer.git oh-my-github
 $ cd oh-my-github
 $ rm -rf .git
 ```
