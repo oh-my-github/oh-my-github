@@ -112,6 +112,7 @@ CommandSetting.COMMAND_GENERATE = new CommandSetting("generate <token>", "fill `
     }
     profile_1.createProfile(token, prevProf, options.ignore).then(function (currentProf) {
         file_util_2.FileUtil.overwriteFile(profPath, currentProf);
+        console.log("\n");
         util_1.Log.info("`oh-my-github.json` was created");
         console.log("\n");
         util_1.Util.exitProcess();

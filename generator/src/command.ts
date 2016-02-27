@@ -87,6 +87,7 @@ export class CommandSetting {
         .then(currentProf => {
           FileUtil.overwriteFile(profPath, currentProf);
 
+          console.log("\n");
           Log.info("`oh-my-github.json` was created");
           console.log("\n");
 

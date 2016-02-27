@@ -1,7 +1,7 @@
 # oh-my-github
 
 [![npm version](https://badge.fury.io/js/oh-my-github.svg)](https://badge.fury.io/js/oh-my-github)
-[![Dependency Status](https://david-dm.org/oh-my-github/generator.svg)](https://david-dm.org/oh-my-github/generator)
+[![Dependency Status](https://david-dm.org/oh-my-github/oh-my-github.svg)](https://david-dm.org/oh-my-github/oh-my-github)
 
 Create your Github profile in 5 minute
 
@@ -16,7 +16,7 @@ Create your Github profile in 5 minute
 ### 1. Install
 
 - NodeJS 5.0.0+
-- `libstdc`, `g++` is required for **Linux**, See, [Linux Installation Guide](https://github.com/oh-my-github/oh-my-github/wiki/Installation-Guide-for-Linux)
+- [Linux Installation Guide](https://github.com/oh-my-github/oh-my-github/wiki/Installation-Guide-for-Linux)
 
 ```
 $ npm install -g oh-my-github@latest
@@ -33,7 +33,7 @@ You should create an access token to send 50+ github API requests
 
 You can publish your `oh-my-github.json` using [Github gh-pages](https://pages.github.com/) with [viewers](https://www.npmjs.com/search?q=oh-my-github%2Cviewer) like the [demo](https://1ambda.github.io/oh-my-github)
 
-- Create a repository to be published. ([Link: New Repository](https://github.com/new)). The repository name must be **oh-my-github** (e.g. *1ambda/oh-my-github* )
+- [Create a new repository](https://github.com/new) to be published. The repository name must be **oh-my-github** (e.g. *1ambda/oh-my-github* )
 - You can create your own viewers (In this tutorial, we will use [Default Viewer](https://github.com/oh-my-github/viewer))
 
 ```
@@ -51,6 +51,17 @@ $ omg init [GITHUB_ID] oh-my-github       # (e.g) omg init 1ambda oh-my-github
 $ omg generate [GITHUB_TOKEN]             # (e.g) omg generate 394fbad49191aca
 $ omg preview
 $ omg publish
+```
+
+If you have problems with `omg publish`, use native git commands instead. For example,
+
+```
+git add remote origin git@github.com:[GITHUB_ID]/oh-my-github.git
+git init
+git add --all
+git commit -m "initial commit"
+git checkout -b gh-pages
+git push origin HEAD
 ```
 
 ### 5. Update existing profiles
