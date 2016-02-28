@@ -1,6 +1,7 @@
 # oh-my-github
 
 [![npm version](https://badge.fury.io/js/oh-my-github.svg)](https://badge.fury.io/js/oh-my-github)
+[![Build Status](https://travis-ci.org/oh-my-github/oh-my-github.svg?branch=master)](https://travis-ci.org/oh-my-github/oh-my-github)
 [![Dependency Status](https://david-dm.org/oh-my-github/oh-my-github.svg)](https://david-dm.org/oh-my-github/oh-my-github)
 
 Create your Github profile in 5 minute
