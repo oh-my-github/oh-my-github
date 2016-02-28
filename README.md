@@ -11,8 +11,6 @@ Create your Github profile in 5 minute
 
 ## Usage
 
-### Prerequisites
-
 ### 1. Install
 
 - NodeJS 5.0.0+
@@ -34,12 +32,14 @@ You should create an access token to send 50+ github API requests
 You can publish your `oh-my-github.json` using [Github gh-pages](https://pages.github.com/) with [viewers](https://www.npmjs.com/search?q=oh-my-github%2Cviewer) like the [demo](https://1ambda.github.io/oh-my-github)
 
 - [Create a new repository](https://github.com/new) to be published. The repository name must be **oh-my-github** (e.g. *1ambda/oh-my-github* )
-- You can create your own viewers (In this tutorial, we will use [Default Viewer](https://github.com/oh-my-github/viewer))
+- You can create your own viewers (In this tutorial, we will use the [default viewer](https://github.com/oh-my-github/viewer))
 
 ```
 $ git clone git@github.com:oh-my-github/viewer.git oh-my-github
 $ cd oh-my-github
-$ rm -rf .git
+
+$ git remote remove origin
+$ git remote add upstream git@github.com:oh-my-github/viewer.git
 ```
 
 ### 4. Publish to gh-pages
@@ -56,20 +56,36 @@ $ omg publish
 If you have problems with `omg publish`, use native git commands instead. For example,
 
 ```
-git add remote origin git@github.com:[GITHUB_ID]/oh-my-github.git
-git init
-git add --all
-git commit -m "initial commit"
-git checkout -b gh-pages
-git push origin HEAD
+$ cd oh-my-github                         # where `oh-my-github.json` exists
+
+$ git add remote origin git@github.com:[GITHUB_ID]/oh-my-github.git
+$ git init
+$ git add --all
+$ git commit -m "initial commit"
+$ git checkout -b gh-pages
+$ git push origin HEAD
 ```
 
-### 5. Update existing profiles
+### 5. Update 
+
+#### Profile Database (`oh-my-github.json`)
 
 ```
 $ cd oh-my-github                         # where `oh-my-github.json` exists
+
 $ omg generate [GITHUB_TOKEN]             # (e.g) omg generate 394fbad49191aca
 $ omg publish                             # publish
+```
+
+#### Viewer
+
+```
+$ cd oh-my-github                         # where `oh-my-github.json` exists
+
+$ git checkout master
+$ git pull upstream master --rebase
+$ git checkout gh-pages
+$ git rebase master
 ```
 
 <br/>
@@ -108,7 +124,7 @@ $ omg -help
 
 ## Development
 
-### Build 
+### 1. Install 
 
 ```
 $ npm install -g typescript@next tsd gulp jasmine
@@ -116,13 +132,15 @@ $ npm install
 $ tsd install
 ```
 
-### Test
+### 2. Command 
 
 ```
-GITHUB_TOKEN= gulp watch
+$ GITHUB_TOKEN=[GITHUB_TOKEN] npm run test 
+$ npm run build 
+$ npm run dist
 ```
 
-### IDEA Setting
+### 4. IDEA Setting (Optional)
 
 Use TypeScript and ES6 compiler
 

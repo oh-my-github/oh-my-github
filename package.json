@@ -1,13 +1,15 @@
 {
   "name": "oh-my-github",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "oh-my-github",
   "main": "dist/generator/generator.js",
   "bin": {
     "omg": "./bin/omg"
   },
   "scripts": {
-    "test": "gulp clean && gulp compile && gulp test"
+    "build": "gulp clean-generator && gulp compile-ts",
+    "test": "gulp clean-generator && gulp compile-ts && gulp test",
+    "dist": "gulp clean-generator && gulp compile-ts && gulp dist"
   },
   "engines": {
     "node": ">= 5.0.0"
