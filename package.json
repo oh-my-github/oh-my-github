@@ -1,6 +1,6 @@
 {
   "name": "oh-my-github",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "oh-my-github",
   "main": "dist/generator/generator.js",
   "bin": {
