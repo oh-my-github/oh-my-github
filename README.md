@@ -13,7 +13,7 @@ Create your Github profile in 5 minute
 
 ### 1. Install
 
-- NodeJS 5.0.0+
+- NodeJS 5.0.0+ ([NVM Installation Guide](https://github.com/creationix/nvm))
 - [Linux Installation Guide](https://github.com/oh-my-github/oh-my-github/wiki/Installation-Guide-for-Linux)
 
 ```
