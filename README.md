@@ -59,7 +59,7 @@ If you have problems with `omg publish`, use native git commands instead. For ex
 ```
 $ cd oh-my-github                         # where `oh-my-github.json` exists
 
-$ git add remote origin git@github.com:[GITHUB_ID]/oh-my-github.git
+$ git remote add origin git@github.com:[GITHUB_ID]/oh-my-github.git
 $ git init
 $ git add --all
 $ git commit -m "initial commit"
@@ -67,7 +67,7 @@ $ git checkout -b gh-pages
 $ git push origin HEAD
 ```
 
-### 5. Update 
+### 5. Update
 
 #### Profile Database (`oh-my-github.json`)
 
@@ -125,7 +125,7 @@ $ omg -help
 
 ## Development
 
-### 1. Install 
+### 1. Install
 
 ```
 $ npm install -g typescript@next tsd gulp jasmine
@@ -133,11 +133,11 @@ $ npm install
 $ tsd install
 ```
 
-### 2. Command 
+### 2. Command
 
 ```
-$ GITHUB_TOKEN=[GITHUB_TOKEN] npm run test 
-$ npm run build 
+$ GITHUB_TOKEN=[GITHUB_TOKEN] npm run test
+$ npm run build
 $ npm run dist
 ```
 
@@ -160,5 +160,3 @@ Use TypeScript and ES6 compiler
 - IDEA TypeScript Compiler Error: `TypeError: hosts.fileExists`
 
 See, https://gist.github.com/1ambda/d04b4406dbb4bed7daa4
-
-
